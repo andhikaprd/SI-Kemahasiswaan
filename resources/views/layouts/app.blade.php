@@ -6,43 +6,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'HIMA TI Politala')</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
+    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Bootstrap CSS --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {{-- Custom CSS (pindahkan app.css ke public/css/app.css) --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
 
-    <header class="header">
-        <div class="container navbar">
-            <a href="/" class="logo"><i class="fas fa-university"></i></a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a></li>
-                    <li><a href="#">Divisi</a></li>
-                    <li><a href="#">Pendaftaran</a></li>
-                    <li><a href="#">Berita</a></li>
-                    <li><a href="#">Profil</a></li>
-                    <li><a href="#">Prestasi Mahasiswa</a></li>
+    {{-- Navbar --}}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-university me-2"></i> HIMA TI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link">Divisi</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Pendaftaran</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Berita</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Profil</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Prestasi</a></li>
                 </ul>
-            </nav>
-            <a href="#" class="login-btn">Login</a>
+                <a href="#" class="btn btn-outline-light ms-3">Login</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
+    {{-- Content --}}
     <main>
         @yield('content')
     </main>
 
-    <footer class="footer">
+    {{-- Footer --}}
+    <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            <p>&copy; 2024 HIMA TI - Himpunan Mahasiswa Teknologi Informasi</p>
+            <p class="mb-0">&copy; 2024 HIMA TI - Himpunan Mahasiswa Teknologi Informasi</p>
         </div>
     </footer>
 
+    {{-- Bootstrap JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
