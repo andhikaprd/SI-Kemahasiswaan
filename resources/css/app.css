@@ -1,43 +1,35 @@
-/* File: resources/css/app.css */
-
-/* CSS Reset & Global Styles */
-:root {
-    --primary-blue: #3B82F6;
-    --dark-blue: #2563EB;
-    --light-blue-bg: #EFF6FF;
-    --text-dark: #1F2937;
-    --text-gray: #6B7280;
-    --white: #FFFFFF;
-    --light-gray-bg: #F9FAFB;
-    --footer-bg: #111827;
+/* Navbar */
+.custom-navbar {
+    background-color: var(--primary-blue);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.custom-navbar .nav-link {
+    color: var(--white);
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link.active {
+    color: var(--dark-blue);
+}
+
+.btn-login {
+    background-color: var(--dark-blue);
+    color: var(--white);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 6px 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #1e40af; /* lebih gelap */
+}
+
+/* Footer */
+.custom-footer {
+    background-color: var(--footer-bg);
+    border-top: 1px solid #e5e7eb;
     color: var(--text-dark);
-    line-height: 1.6;
-}
-
-/* ... Salin semua sisa kode CSS lainnya hingga selesai ... */
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 32px;
-    }
-    .stats-grid, .division-grid, .features-grid {
-        grid-template-columns: 1fr;
-    }
-    .division-card {
-        text-align: center;
-    }
-    .division-card .icon-wrapper {
-        margin: 0 auto 20px;
-    }
 }
