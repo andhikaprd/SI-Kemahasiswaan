@@ -22,16 +22,22 @@
 <body>
 
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg custom-navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold text-white" href="/">
-                <i class="fas fa-university me-2"></i> HIMA TI
+            {{-- Logo kiri --}}
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo HIMA TI" height="40" class="me-2">
+                HIMA TI
             </a>
+
+            {{-- Toggle button (mobile) --}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            {{-- Menu --}}
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
                         <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Beranda</a>
                     </li>
@@ -39,9 +45,13 @@
                     <li class="nav-item"><a href="#" class="nav-link">Pendaftaran</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Berita</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Profil</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Prestasi</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Prestasi Mahasiswa</a></li>
+
+                    {{-- Login (paling kanan) --}}
+                    <li class="nav-item ms-lg-3">
+                        <a href="#" class="nav-link {{ request()->is('login') ? 'active' : '' }}">Login</a>
+                    </li>
                 </ul>
-                <a href="#" class="btn btn-login ms-3">Login</a>
             </div>
         </div>
     </nav>
@@ -52,10 +62,9 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="custom-footer text-center py-4 mt-5">
-        <div class="container">
-            <p class="mb-1 fw-semibold">&copy; 2024 HIMA TI</p>
-            <small class="text-muted">Himpunan Mahasiswa Teknologi Informasi - Politeknik Negeri Tanah Laut</small>
+    <footer class="footer-custom mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 HIMA TI - Himpunan Mahasiswa Teknologi Informasi</p>
         </div>
     </footer>
 

@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('akun', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('id_akun');             // Primary Key
+            $table->string('username');        // Kolom Username
+            $table->string('email')->unique(); // Kolom Email unik
+            $table->string('password');        // Kolom Password
+            $table->timestamps();              // created_at & updated_at
         });
     }
 
