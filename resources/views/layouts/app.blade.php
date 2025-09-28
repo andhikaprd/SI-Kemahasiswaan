@@ -19,13 +19,13 @@
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body>
+<body style="font-family: 'Poppins', sans-serif;">
 
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             {{-- Logo kiri --}}
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url('/') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo HIMA TI" height="40" class="me-2">
                 HIMA TI
             </a>
@@ -38,18 +38,38 @@
             {{-- Menu --}}
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
+                    {{-- Beranda --}}
                     <li class="nav-item">
-                        <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+                        <a href="{{ url('/') }}" 
+                           class="nav-link {{ request()->is('/') ? 'active fw-bold text-primary' : '' }}">
+                            Beranda
+                        </a>
                     </li>
-                    <li class="nav-item"><a href="#" class="nav-link">Divisi</a></li>
+
+                    {{-- Divisi --}}
+                    <li class="nav-item">
+                        <a href="{{ url('/divisi') }}" 
+                           class="nav-link {{ request()->is('divisi') ? 'active fw-bold text-primary' : '' }}">
+                            Divisi
+                        </a>
+                    </li>
+
+                    {{-- Menu lainnya --}}
                     <li class="nav-item"><a href="#" class="nav-link">Pendaftaran</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Berita</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Profil</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Prestasi Mahasiswa</a></li>
 
+                    {{-- Account (CRUD) --}}
+                    <li class="nav-item">
+                        <a href="{{ route('account.index') }}" class="nav-link {{ request()->is('account*') ? 'active fw-bold text-primary' : '' }}">
+                            Account
+                        </a>
+                    </li>
+
                     {{-- Login (paling kanan) --}}
                     <li class="nav-item ms-lg-3">
-                        <a href="#" class="nav-link {{ request()->is('login') ? 'active' : '' }}">Login</a>
+                        <a href="#" class="btn btn-outline-primary px-3">Login</a>
                     </li>
                 </ul>
             </div>
@@ -62,8 +82,8 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="footer-custom mt-5">
-        <div class="container text-center">
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
             <p class="mb-0">&copy; 2024 HIMA TI - Himpunan Mahasiswa Teknologi Informasi</p>
         </div>
     </footer>
