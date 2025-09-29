@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\PendaftaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,9 @@ Route::get('/', function () {
 Route::get('/divisi', function () {
     return view('divisi');
 });
+
+// Halaman Pendaftaran (Form + Simpan)
+Route::resource('pendaftaran', PendaftaranController::class);
 
 // CRUD Account
 Route::resource('account', AccountController::class);
