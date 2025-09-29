@@ -54,15 +54,31 @@
                         </a>
                     </li>
 
+                    {{-- Pendaftaran (dropdown) --}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->is('pendaftaran*') ? 'active fw-bold text-primary' : '' }}" 
+                           href="#" id="navbarPendaftaran" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           Pendaftaran
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarPendaftaran">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('pendaftaran.index') }}">Daftar Sekarang</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('pendaftaran.create') }}">Lihat Data Pendaftar</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     {{-- Menu lainnya --}}
-                    <li class="nav-item"><a href="#" class="nav-link">Pendaftaran</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Berita</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Profil</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Prestasi Mahasiswa</a></li>
 
                     {{-- Account (CRUD) --}}
                     <li class="nav-item">
-                        <a href="{{ route('account.index') }}" class="nav-link {{ request()->is('account*') ? 'active fw-bold text-primary' : '' }}">
+                        <a href="{{ route('account.index') }}" 
+                           class="nav-link {{ request()->is('account*') ? 'active fw-bold text-primary' : '' }}">
                             Account
                         </a>
                     </li>

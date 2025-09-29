@@ -10,7 +10,7 @@ class PendaftaranController extends Controller
     // 📌 Menampilkan form pendaftaran (default /pendaftaran)
     public function index()
     {
-        return view('pendaftaran.form');
+        return view('pendaftaran.form'); // resources/views/pendaftaran/form.blade.php
     }
 
     // 📌 Menampilkan daftar pendaftar (/pendaftaran/create)
