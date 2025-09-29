@@ -7,17 +7,17 @@ use App\Models\Pendaftaran;
 
 class PendaftaranController extends Controller
 {
-    // 📌 Menampilkan daftar pendaftar
+    // 📌 Menampilkan form pendaftaran (default /pendaftaran)
     public function index()
+    {
+        return view('pendaftaran.form');
+    }
+
+    // 📌 Menampilkan daftar pendaftar (/pendaftaran/create)
+    public function create()
     {
         $pendaftaran = Pendaftaran::all();
         return view('pendaftaran.index', compact('pendaftaran'));
-    }
-
-    // 📌 Menampilkan form pendaftaran
-    public function create()
-    {
-        return view('pendaftaran.create');
     }
 
     // 📌 Menyimpan data pendaftaran
@@ -45,6 +45,6 @@ class PendaftaranController extends Controller
             'motivasi'       => $request->motivasi,
         ]);
 
-        return redirect()->route('pendaftaran.index')->with('success', 'Pendaftaran berhasil dikirim!');
+        return redirect()->route('pendaftaran.create')->with('success', 'Pendaftaran berhasil dikirim!');
     }
 }
