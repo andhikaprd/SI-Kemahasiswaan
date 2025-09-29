@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label">Motivasi Bergabung *</label>
+                    <label class="form-label">Motivasi Bergabung </label>
                     <textarea name="motivasi" class="form-control" rows="4" maxlength="500" required>{{ old('motivasi') }}</textarea>
                     @error('motivasi') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
