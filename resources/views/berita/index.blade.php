@@ -23,7 +23,7 @@
             @forelse($beritas as $berita)
                 <tr>
                     <td>{{ $berita->judul }}</td>
-                    <td>{{ Str::limit($berita->isi, 50) }}</td>
+                    <td>{{ \Illuminate\Support\Str::limit($berita->isi, 50) }}</td>
                     <td>
                         @if($berita->gambar)
                             <img src="{{ asset('storage/'.$berita->gambar) }}" width="100">
@@ -33,7 +33,7 @@
                     </td>
                     <td>
                         <a href="{{ route('berita.edit', $berita->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('berita.destroy', $berita->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('berita.destroy', $berita->id) }}" method="POST" class="d-inline">
                             @csrf 
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('Hapus berita ini?')" class="btn btn-danger btn-sm">
@@ -44,7 +44,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">Belum ada berita.</td>
+                    <td colspan="4" class="text-center">Belum ada berita.</td>
                 </tr>
             @endforelse
         </tbody>
