@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\BeritaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,6 @@ Route::resource('pendaftaran', PendaftaranController::class);
 
 // CRUD Account
 Route::resource('account', AccountController::class);
+
+// ✅ CRUD Berita
+Route::resource('berita', BeritaController::class);
