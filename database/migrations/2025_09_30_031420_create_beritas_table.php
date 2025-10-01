@@ -13,10 +13,18 @@ return new class extends Migration
     {
         Schema::create('beritas', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');         // Judul berita
-            $table->text('isi');             // Isi berita
-            $table->string('gambar')->nullable(); // Gambar (opsional)
-            $table->timestamps();
+            $table->string('judul');
+            $table->string('slug')->unique();
+            $table->string('ringkasan', 500);
+            $table->text('isi');
+            $table->string('kategori');
+            $table->enum('status', ['published', 'draft'])->default('draft');
+            $table->string('penulis');
+            $table->date('tanggal_publikasi');
+            $table->string('gambar')->nullable();
+            $table->string('tags')->nullable();
+            $table->integer('views')->default(0);
+            $table->timestamps(); // Kolom created_at dan updated_at
         });
     }
 

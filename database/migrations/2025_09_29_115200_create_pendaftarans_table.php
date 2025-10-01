@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendaftaran', function (Blueprint $table) {
-            $table->id('id_pendaftaran');
+        Schema::create('pendaftarans', function (Blueprint $table) {
+            $table->id();
             $table->string('nama_lengkap');
             $table->string('nim')->unique();
-            $table->string('jurusan');
             $table->string('angkatan');
+            $table->string('jurusan');
             $table->string('email')->unique();
             $table->string('no_telp');
             $table->string('divisi_pilihan');
             $table->text('motivasi');
+            $table->enum('status', ['Pending', 'Diterima', 'Ditolak'])->default('Pending');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendaftaran');
+        Schema::dropIfExists('pendaftarans');
     }
 };
