@@ -2,64 +2,49 @@
 
 namespace App\Http\Controllers\Admin;
 
-// 1. TAMBAHKAN USE STATEMENT YANG DIPERLUKAN
-use App\Http\Controllers\Controller;
-use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
+use App\Models\Pendaftaran;
 
 class PendaftaranController extends Controller
 {
-    /**
-     * 📌 Menampilkan daftar semua pendaftar.
-     * Fungsi index() adalah standar untuk menampilkan daftar data (resource).
-     */
+    // 📌 Menampilkan form pendaftaran (default /pendaftaran)
     public function index()
     {
-        $pendaftaran = Pendaftaran::latest()->get();
-        // 2. UBAH PATH VIEW KE FOLDER ADMIN
-        return view('admin.pendaftaran.index', compact('pendaftaran'));
+        return view('pendaftaran.form'); // resources/views/pendaftaran/form.blade.php
     }
 
-    /**
-     * 📌 Menampilkan detail satu pendaftar.
-     * Fungsi ini berguna untuk melihat detail lengkap dari satu pendaftar.
-     */
-    public function show(Pendaftaran $pendaftaran)
+    // 📌 Menampilkan daftar pendaftar (/pendaftaran/create)
+    public function create()
     {
-        // 2. UBAH PATH VIEW KE FOLDER ADMIN
-        return view('admin.pendaftaran.show', compact('pendaftaran'));
+        $pendaftaran = Pendaftaran::all();
+        return view('pendaftaran.index', compact('pendaftaran'));
     }
 
-    /**
-     * 📌 Menampilkan form untuk mengedit data pendaftar.
-     * (Contoh: untuk mengubah status pendaftaran 'Diterima' atau 'Ditolak')
-     */
-    public function edit(Pendaftaran $pendaftaran)
+    // 📌 Menyimpan data pendaftaran
+    public function store(Request $request)
     {
-        return view('admin.pendaftaran.edit', compact('pendaftaran'));
-    }
+        $request->validate([
+            'nama'      => 'required|string|max:100',
+            'nim'       => 'required|string|max:15|unique:pendaftaran,nim',
+            'jurusan'   => 'required|string',
+            'angkatan'  => 'required|string|max:4',
+            'email'     => 'required|email|unique:pendaftaran,email',
+            'telepon'   => 'required|string|max:15',
+            'divisi'    => 'required|string',
+            'motivasi'  => 'required|string|max:500',
+        ]);
 
-    /**
-     * 📌 Mengupdate data pendaftar di database.
-     */
-    public function update(Request $request, Pendaftaran $pendaftaran)
-    {
-        // Logika untuk validasi dan update data, contoh:
-        // $request->validate(['status' => 'required|string']);
-        // $pendaftaran->update($request->only('status'));
+        Pendaftaran::create([
+            'nama_lengkap'   => $request->nama,
+            'nim'            => $request->nim,
+            'jurusan'        => $request->jurusan,
+            'angkatan'       => $request->angkatan,
+            'email'          => $request->email,
+            'no_telp'        => $request->telepon,
+            'divisi_pilihan' => $request->divisi,
+            'motivasi'       => $request->motivasi,
+        ]);
 
-        // 3. UBAH NAMA ROUTE PADA REDIRECT
-        return redirect()->route('admin.pendaftaran.index')->with('success', 'Data pendaftar berhasil diupdate!');
-    }
-
-    /**
-     * 📌 Menghapus data pendaftaran.
-     */
-    public function destroy(Pendaftaran $pendaftaran)
-    {
-        $pendaftaran->delete();
-        
-        // 3. UBAH NAMA ROUTE PADA REDIRECT
-        return redirect()->route('admin.pendaftaran.index')->with('success', 'Data pendaftar berhasil dihapus!');
+        return redirect()->route('pendaftaran.create')->with('success', 'Pendaftaran berhasil dikirim!');
     }
 }

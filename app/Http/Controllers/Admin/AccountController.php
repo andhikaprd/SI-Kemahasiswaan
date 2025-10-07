@@ -3,24 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Akun; // Pastikan nama Model ini sesuai dengan model Anda (bisa Akun atau User)
+use App\Models\Akun;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
     /**
-     * Menampilkan halaman daftar akun.
+     * Menampilkan semua akun.
      */
     public function index()
     {
-        $accounts = Akun::latest()->paginate(10);
-        return view('admin.account.index', compact('accounts'));
+        $account = Akun::all();
+        return view('admin.account.index', compact('account'));
     }
 
     /**
-     * Menampilkan form untuk membuat akun baru.
+     * Menampilkan form tambah akun.
      */
     public function create()
     {
@@ -28,84 +26,64 @@ class AccountController extends Controller
     }
 
     /**
-     * Menyimpan akun baru ke database.
+     * Menyimpan akun baru.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:akuns', // 'akuns' adalah nama tabel
-            'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin,mahasiswa,kaprodi',
-            'status' => 'required|string',
-            'nim' => 'nullable|string',
-            'jurusan' => 'nullable|string',
-            'angkatan' => 'nullable|integer',
+            'username' => 'required',
+            'email'    => 'required|email|unique:akun,email',
+            'password' => 'required|min:6',
         ]);
 
         Akun::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'status' => $request->status,
-            'nim' => $request->nim,
-            'jurusan' => $request->jurusan,
-            'angkatan' => $request->angkatan,
+            'username' => $request->username,
+            'email'    => $request->email,
+            'password' => bcrypt($request->password),
         ]);
 
-        return redirect()->route('admin.account.index')->with('success', 'Akun pengguna berhasil ditambahkan!');
+        return redirect()->route('admin.account.index')->with('success', 'Account berhasil ditambahkan!');
     }
 
     /**
-     * Menampilkan form untuk mengedit akun.
+     * Menampilkan form edit akun.
      */
-    public function edit(Akun $account)
+    public function edit($id)
     {
+        $account = Akun::findOrFail($id);
         return view('admin.account.edit', compact('account'));
     }
 
     /**
-     * Mengupdate akun di database.
+     * Memperbarui data akun.
      */
-    public function update(Request $request, Akun $account)
+    public function update(Request $request, $id)
     {
+        $account = Akun::findOrFail($id);
+
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('akuns')->ignore($account->id)],
-            'role' => 'required|string|in:admin,mahasiswa,kaprodi',
-            'status' => 'required|string',
-            'nim' => 'nullable|string',
-            'jurusan' => 'nullable|string',
-            'angkatan' => 'nullable|integer',
-            'password' => 'nullable|string|min:8',
+            'username' => 'required',
+            'email'    => 'required|email|unique:akun,email,' . $account->id_akun . ',id_akun',
         ]);
 
-        $dataToUpdate = $request->except('password');
+        $account->update([
+            'username' => $request->username,
+            'email'    => $request->email,
+            'password' => $request->password ? bcrypt($request->password) : $account->password,
+        ]);
 
-        // Jika ada password baru yang diinput, hash dan tambahkan ke data update
-        if ($request->filled('password')) {
-            $dataToUpdate['password'] = Hash::make($request->password);
-        }
-
-        $account->update($dataToUpdate);
-
-        return redirect()->route('admin.account.index')->with('success', 'Akun pengguna berhasil diperbarui!');
+        return redirect()->route('admin.account.index')->with('success', 'Account berhasil diupdate!');
     }
 
     /**
-     * Menghapus akun dari database.
+     * Menghapus akun.
      */
-    public function destroy(Akun $account)
+    public function destroy($id)
     {
-        // Tambahkan logika untuk mencegah user menghapus akunnya sendiri jika perlu
-        // if (auth()->id() == $account->id) {
-        //     return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
-        // }
-
+        $account = Akun::findOrFail($id);
         $account->delete();
 
-        return redirect()->route('admin.account.index')->with('success', 'Akun pengguna berhasil dihapus!');
+        return redirect()->route('admin.account.index')->with('success', 'Account berhasil dihapus!');
     }
 }
 

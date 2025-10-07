@@ -48,4 +48,3 @@ class PendaftaranController extends Controller
         return redirect()->route('pendaftaran.create')->with('success', 'Pendaftaran Anda telah berhasil dikirim! Terima kasih telah mendaftar.');
     }
 }
-

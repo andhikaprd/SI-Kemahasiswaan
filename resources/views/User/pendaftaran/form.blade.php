@@ -1,61 +1,112 @@
-@extends('admin.layouts.app') {{-- <-- PENTING: Menggunakan layout ADMIN --}}
+@extends('user.layouts.app')
 
-@section('title', 'Daftar Pendaftar - Admin Panel')
+@section('title', 'Formulir Pendaftaran HIMA TI')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0">Manajemen Pendaftar HIMA TI</h2>
-    </div>
+    <section class="hero-section text-white text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Daftar Anggota HIMA TI</h1>
+            <p class="lead mt-3">
+                Isi formulir berikut untuk bergabung bersama Himpunan Mahasiswa Teknologi Informasi Politala.
+            </p>
+        </div>
+    </section>
 
-    {{-- Notifikasi --}}
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <section class="py-5">
+        <div class="container">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Lengkap</th>
-                            <th>NIM</th>
-                            <th>Angkatan</th>
-                            <th>Divisi Pilihan</th>
-                            <th>Status</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($pendaftaran as $key => $p)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $p->nama_lengkap }}</td>
-                                <td>{{ $p->nim }}</td>
-                                <td>{{ $p->angkatan }}</td>
-                                <td>{{ $p->divisi_pilihan }}</td>
-                                <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye me-1"></i> Detail
-                                    </a>
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash me-1"></i> Hapus
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">Belum ada data pendaftar.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <h2 class="h4 fw-bold mb-4 text-center">Formulir Pendaftaran</h2>
+
+                            <form action="{{ route('pendaftaran.store') }}" method="POST">
+                                @csrf
+
+                                <div class="mb-3">
+                                    <label for="nama" class="form-label">Nama Lengkap</label>
+                                    <input type="text" name="nama" id="nama" value="{{ old('nama') }}" class="form-control @error('nama') is-invalid @enderror" required>
+                                    @error('nama')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nim" class="form-label">NIM</label>
+                                        <input type="text" name="nim" id="nim" value="{{ old('nim') }}" class="form-control @error('nim') is-invalid @enderror" required>
+                                        @error('nim')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="angkatan" class="form-label">Angkatan</label>
+                                        <input type="number" name="angkatan" id="angkatan" value="{{ old('angkatan') }}" class="form-control @error('angkatan') is-invalid @enderror" placeholder="2023" required>
+                                        @error('angkatan')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="jurusan" class="form-label">Program Studi</label>
+                                        <input type="text" name="jurusan" id="jurusan" value="{{ old('jurusan') }}" class="form-control @error('jurusan') is-invalid @enderror" required>
+                                        @error('jurusan')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="divisi" class="form-label">Divisi Pilihan</label>
+                                        <select name="divisi" id="divisi" class="form-select @error('divisi') is-invalid @enderror" required>
+                                            <option value="" disabled {{ old('divisi') ? '' : 'selected' }}>Pilih salah satu</option>
+                                            @foreach(['Kaderisasi','Media Informasi','Technopreneurship','Public Relations'] as $divisi)
+                                                <option value="{{ $divisi }}" {{ old('divisi') === $divisi ? 'selected' : '' }}>{{ $divisi }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('divisi')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" required>
+                                        @error('email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="telepon" class="form-label">No. Telepon</label>
+                                        <input type="text" name="telepon" id="telepon" value="{{ old('telepon') }}" class="form-control @error('telepon') is-invalid @enderror" required>
+                                        @error('telepon')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="motivasi" class="form-label">Motivasi Bergabung</label>
+                                    <textarea name="motivasi" id="motivasi" rows="4" class="form-control @error('motivasi') is-invalid @enderror" required>{{ old('motivasi') }}</textarea>
+                                    @error('motivasi')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">Kirim Pendaftaran</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 @endsection
-
