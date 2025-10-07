@@ -8,82 +8,82 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    /**
-     * Menampilkan semua akun.
-     */
     public function index()
     {
-        $account = Akun::all();
-        return view('admin.account.index', compact('account'));
+        $accounts = Akun::all();
+        return view('admin.account.index', compact('accounts'));
     }
 
-    /**
-     * Menampilkan form tambah akun.
-     */
     public function create()
     {
         return view('admin.account.create');
     }
 
-    /**
-     * Menyimpan akun baru.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required',
-            'email'    => 'required|email|unique:akun,email',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
+            'role' => 'nullable|in:admin,kaprodi,mahasiswa',
+            'status' => 'nullable|in:aktif,tidak aktif',
         ]);
 
         Akun::create([
-            'username' => $request->username,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => bcrypt($request->password),
+            'role' => $request->role ?? 'mahasiswa',
+            'status' => $request->status ?? 'aktif',
+            'nim' => $request->nim,
+            'jurusan' => $request->jurusan,
+            'angkatan' => $request->angkatan,
         ]);
 
-        return redirect()->route('admin.account.index')->with('success', 'Account berhasil ditambahkan!');
+        return redirect()->route('admin.account.index')->with('success', 'Akun berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form edit akun.
-     */
     public function edit($id)
     {
         $account = Akun::findOrFail($id);
         return view('admin.account.edit', compact('account'));
     }
 
-    /**
-     * Memperbarui data akun.
-     */
     public function update(Request $request, $id)
     {
         $account = Akun::findOrFail($id);
 
         $request->validate([
-            'username' => 'required',
-            'email'    => 'required|email|unique:akun,email,' . $account->id_akun . ',id_akun',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $account->id,
+            'role' => 'nullable|in:admin,kaprodi,mahasiswa',
+            'status' => 'nullable|in:aktif,tidak aktif',
         ]);
 
-        $account->update([
-            'username' => $request->username,
-            'email'    => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $account->password,
-        ]);
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role ?? $account->role,
+            'status' => $request->status ?? $account->status,
+            'nim' => $request->nim,
+            'jurusan' => $request->jurusan,
+            'angkatan' => $request->angkatan,
+        ];
 
-        return redirect()->route('admin.account.index')->with('success', 'Account berhasil diupdate!');
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $account->update($data);
+
+        return redirect()->route('admin.account.index')->with('success', 'Akun berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus akun.
-     */
     public function destroy($id)
     {
         $account = Akun::findOrFail($id);
         $account->delete();
 
-        return redirect()->route('admin.account.index')->with('success', 'Account berhasil dihapus!');
+        return redirect()->route('admin.account.index')->with('success', 'Akun berhasil dihapus!');
     }
 }
-

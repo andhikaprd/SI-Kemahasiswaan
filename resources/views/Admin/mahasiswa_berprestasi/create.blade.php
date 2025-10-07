@@ -8,97 +8,99 @@
         <div class="card-header bg-white py-3">
             <h4 class="mb-0 fw-bold">Formulir Tambah Prestasi</h4>
         </div>
+
         <div class="card-body p-4">
-            <form action="{{ route('admin.mahasiswa_berprestasi.store') }}" method="POST">
+            <form action="{{ route('admin.mahasiswa_berprestasi.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="nama_mahasiswa" class="form-label">Nama Mahasiswa *</label>
-                        <input type="text" class="form-control" id="nama_mahasiswa" name="nama_mahasiswa" value="{{ old('nama_mahasiswa') }}" required>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nama Mahasiswa </label>
+                        <input type="text" name="nama" value="{{ old('nama') }}" class="form-control" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="nim" class="form-label">NIM *</label>
-                        <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim') }}" required>
+                    <div class="col-md-6">
+                        <label class="form-label">NIM </label>
+                        <input type="text" name="nim" value="{{ old('nim') }}" class="form-control" required>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="jurusan" class="form-label">Jurusan *</label>
-                        <select class="form-select" id="jurusan" name="jurusan" required>
-                            <option value="Teknologi Informasi" {{ old('jurusan') == 'Teknologi Informasi' ? 'selected' : '' }}>Teknologi Informasi</option>
-                            {{-- Tambahkan jurusan lain jika ada --}}
+                    <div class="col-md-4">
+                        <label class="form-label">Jurusan </label>
+                        <input type="text" name="jurusan" value="{{ old('jurusan', 'Teknologi Informasi') }}" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Angkatan </label>
+                        <input type="number" name="angkatan" value="{{ old('angkatan') }}" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nama Kompetisi </label>
+                        <input type="text" name="kompetisi" value="{{ old('kompetisi') }}" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Jenis Kompetisi </label>
+                        <input type="text" name="jenis" value="{{ old('jenis') }}" class="form-control" placeholder="Misal: Kompetisi Programming" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tingkat </label>
+                        <select name="tingkat" class="form-select" required>
+                            <option value="">-- Pilih Tingkat --</option>
+                            <option value="Internasional" {{ old('tingkat')=='Internasional'?'selected':'' }}>Internasional</option>
+                            <option value="Nasional" {{ old('tingkat')=='Nasional'?'selected':'' }}>Nasional</option>
+                            <option value="Provinsi" {{ old('tingkat')=='Provinsi'?'selected':'' }}>Provinsi</option>
+                            <option value="Kampus" {{ old('tingkat')=='Kampus'?'selected':'' }}>Kampus</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="angkatan" class="form-label">Angkatan *</label>
-                        <input type="number" class="form-control" id="angkatan" name="angkatan" value="{{ old('angkatan') }}" required>
+                    <div class="col-md-3">
+                        <label class="form-label">Peringkat </label>
+                        <input type="text" name="peringkat" value="{{ old('peringkat') }}" class="form-control" placeholder="Juara 1, 2, 3..." required>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="jenis_prestasi" class="form-label">Jenis Prestasi *</label>
-                        <input type="text" class="form-control" id="jenis_prestasi" name="jenis_prestasi" value="{{ old('jenis_prestasi') }}" required>
+                    <div class="col-md-3">
+                        <label class="form-label">Poin</label>
+                        <input type="number" name="poin" value="{{ old('poin') }}" class="form-control" placeholder="misal: 100">
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="tingkat" class="form-label">Tingkat *</label>
-                        <select class="form-select" id="tingkat" name="tingkat" required>
-                            <option value="internasional" {{ old('tingkat') == 'internasional' ? 'selected' : '' }}>Internasional</option>
-                            <option value="nasional" {{ old('tingkat') == 'nasional' ? 'selected' : '' }}>Nasional</option>
-                            <option value="regional" {{ old('tingkat') == 'regional' ? 'selected' : '' }}>Regional</option>
-                            <option value="lokal" {{ old('tingkat') == 'lokal' ? 'selected' : '' }}>Lokal</option>
+                    <div class="col-md-3">
+                        <label class="form-label">Tahun </label>
+                        <input type="number" name="tahun" value="{{ old('tahun') }}" class="form-control" placeholder="2025" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" name="tanggal" value="{{ old('tanggal') }}" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Penyelenggara </label>
+                        <input type="text" name="penyelenggara" value="{{ old('penyelenggara') }}" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Upload Sertifikat (PDF/JPG/PNG)</label>
+                        <input type="file" name="sertifikat" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Upload Foto Prestasi</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Status Publikasi </label>
+                        <select name="status" class="form-select" required>
+                            <option value="published" {{ old('status')=='published'?'selected':'' }}>Published</option>
+                            <option value="draft" {{ old('status')=='draft'?'selected':'' }}>Draft</option>
                         </select>
                     </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="nama_kompetisi" class="form-label">Nama Kompetisi *</label>
-                    <input type="text" class="form-control" id="nama_kompetisi" name="nama_kompetisi" value="{{ old('nama_kompetisi') }}" required>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="peringkat" class="form-label">Peringkat *</label>
-                        <input type="text" class="form-control" id="peringkat" name="peringkat" value="{{ old('peringkat') }}" required>
+                    <div class="col-12">
+                        <label class="form-label">Keterangan / Deskripsi</label>
+                        <textarea name="deskripsi" rows="4" class="form-control">{{ old('deskripsi') }}</textarea>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="tahun" class="form-label">Tahun *</label>
-                        <input type="number" class="form-control" id="tahun" name="tahun" value="{{ old('tahun') }}" required>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="penyelenggara" class="form-label">Penyelenggara *</label>
-                    <input type="text" class="form-control" id="penyelenggara" name="penyelenggara" value="{{ old('penyelenggara') }}" required>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="tanggal_perolehan" class="form-label">Tanggal Perolehan *</label>
-                        <input type="date" class="form-control" id="tanggal_perolehan" name="tanggal_perolehan" value="{{ old('tanggal_perolehan') }}" required>
-                    </div>
-                     <div class="col-md-4 mb-3">
-                        <label for="poin_prestasi" class="form-label">Poin Prestasi *</label>
-                        <input type="number" class="form-control" id="poin_prestasi" name="poin_prestasi" value="{{ old('poin_prestasi') }}" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="status_sertifikat" class="form-label">Status Sertifikat *</label>
-                        <input type="text" class="form-control" id="status_sertifikat" name="status_sertifikat" value="{{ old('status_sertifikat') }}" required>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="deskripsi" class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4">{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <div class="d-flex justify-content-end mt-4">
                     <a href="{{ route('admin.mahasiswa_berprestasi.index') }}" class="btn btn-secondary me-2">Batal</a>
                     <button type="submit" class="btn btn-primary">Simpan Prestasi</button>
                 </div>
-
             </form>
         </div>
     </div>

@@ -4,22 +4,32 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laporan;
+use App\Models\MahasiswaBerprestasi;
+use App\Models\Berita;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
     /**
-     * Menampilkan halaman daftar laporan.
+     * Tampilkan daftar laporan dan statistik ringkasan.
      */
     public function index()
     {
         $laporans = Laporan::latest()->paginate(10);
-        return view('admin.laporan.index', compact('laporans'));
+
+        return view('admin.laporan.index', [
+            'laporans' => $laporans,
+            'totalPrestasi' => MahasiswaBerprestasi::count() ?? 0,
+            'totalPengguna' => User::count() ?? 0,
+            'totalBerita' => Berita::count() ?? 0,
+            'totalLaporan' => Laporan::count(),
+        ]);
     }
 
     /**
-     * Menampilkan form untuk membuat laporan baru.
+     * Tampilkan form tambah laporan.
      */
     public function create()
     {
@@ -27,17 +37,17 @@ class LaporanController extends Controller
     }
 
     /**
-     * Menyimpan laporan baru ke database.
+     * Simpan laporan baru.
      */
     public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
-            'periode' => 'required|string',
-            'kategori' => 'required|string',
-            'status' => 'required|string',
+            'periode' => 'required|string|max:100',
+            'kategori' => 'required|string|max:100',
+            'status' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
-            'file_laporan' => 'nullable|file|mimes:pdf|max:5120', // Max 5MB
+            'file_laporan' => 'nullable|file|mimes:pdf|max:5120', // 5MB
         ]);
 
         $pathFile = null;
@@ -52,15 +62,13 @@ class LaporanController extends Controller
             'status' => $request->status,
             'deskripsi' => $request->deskripsi,
             'file_path' => $pathFile,
-            // 'pembuat' => auth()->user()->name, // Contoh jika ingin menyimpan nama pembuat
         ]);
 
-        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan!');
+        return redirect()->route('admin.laporan.index')->with('success', '✅ Laporan berhasil ditambahkan!');
     }
 
     /**
-     * Menampilkan form untuk mengedit laporan.
-     * (Catatan: Laporan biasanya tidak diedit, tapi ini disediakan jika perlu)
+     * Tampilkan form edit laporan.
      */
     public function edit(Laporan $laporan)
     {
@@ -68,50 +76,45 @@ class LaporanController extends Controller
     }
 
     /**
-     * Mengupdate laporan di database.
+     * Update data laporan.
      */
     public function update(Request $request, Laporan $laporan)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
-            'periode' => 'required|string',
-            'kategori' => 'required|string',
-            'status' => 'required|string',
+            'periode' => 'required|string|max:100',
+            'kategori' => 'required|string|max:100',
+            'status' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
             'file_laporan' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        $pathFile = $laporan->file_path;
+        $data = $request->only(['judul', 'periode', 'kategori', 'status', 'deskripsi']);
+
+        // Ganti file jika ada upload baru
         if ($request->hasFile('file_laporan')) {
             if ($laporan->file_path) {
                 Storage::disk('public')->delete($laporan->file_path);
             }
-            $pathFile = $request->file('file_laporan')->store('laporan', 'public');
+            $data['file_path'] = $request->file('file_laporan')->store('laporan', 'public');
         }
 
-        $laporan->update([
-            'judul' => $request->judul,
-            'periode' => $request->periode,
-            'kategori' => $request->kategori,
-            'status' => $request->status,
-            'deskripsi' => $request->deskripsi,
-            'file_path' => $pathFile,
-        ]);
+        $laporan->update($data);
 
-        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui!');
+        return redirect()->route('admin.laporan.index')->with('success', '✅ Laporan berhasil diperbarui!');
     }
 
     /**
-     * Menghapus laporan dari database.
+     * Hapus laporan.
      */
     public function destroy(Laporan $laporan)
     {
         if ($laporan->file_path) {
             Storage::disk('public')->delete($laporan->file_path);
         }
-        
+
         $laporan->delete();
 
-        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil dihapus!');
+        return redirect()->route('admin.laporan.index')->with('success', '🗑️ Laporan berhasil dihapus!');
     }
 }

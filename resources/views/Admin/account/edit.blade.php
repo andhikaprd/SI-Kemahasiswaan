@@ -16,19 +16,19 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">Nama Lengkap *</label>
+                        <label for="name" class="form-label">Nama Lengkap</label>
                         {{-- Menggunakan old() atau data dari $account --}}
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $account->name) }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">Email *</label>
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $account->email) }}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="role" class="form-label">Role *</label>
+                        <label for="role" class="form-label">Role</label>
                         <select class="form-select" id="role" name="role" required>
                             <option value="mahasiswa" {{ old('role', $account->role) == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                             <option value="admin" {{ old('role', $account->role) == 'admin' ? 'selected' : '' }}>Admin</option>
@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">Status *</label>
+                        <label for="status" class="form-label">Status</label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="aktif" {{ old('status', $account->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="tidak aktif" {{ old('status', $account->status) == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>

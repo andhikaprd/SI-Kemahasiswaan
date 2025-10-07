@@ -9,12 +9,20 @@ class Akun extends Model
 {
     use HasFactory;
 
-    protected $table = 'akun';
-    protected $primaryKey = 'id_akun';
+    // Gunakan tabel 'users' karena tabel 'akun' tidak ada
+    protected $table = 'users';
+
+    // Primary key default-nya 'id', jadi tidak perlu override
+    // protected $primaryKey = 'id';
 
     protected $fillable = [
-        'username',
+        'name',        // sebelumnya 'username'
         'email',
         'password',
+        'role',
+        'status',
+        'nim',
+        'jurusan',
+        'angkatan',
     ];
 }

@@ -1,0 +1,39 @@
+<?php
+ App\\Models;
+ Illuminate\\Database\\Eloquent\\Factories\\HasFactory; Illuminate\\Database\\Eloquent\\Model; Illuminate\\Support\\Facades\\Storage;
+ Berita extends Model
+{ 
+    use HasFactory;
+
+    protected  = 'beritas';
+
+    protected  = [
+        'judul',
+        'slug',
+        'ringkasan',
+        'isi',
+        'kategori',
+        'status',
+        'penulis',
+        'tanggal_publikasi',
+        'gambar',
+        'tags',
+    ];
+
+    protected  = [
+        'tanggal_publikasi' => 'date',
+    ];
+
+    public function scopePublished()
+    {
+        return ->where('status', 'published');
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!->gambar) return null;
+        return Storage::disk('public')->url(->gambar);
+    }
+}
+
+

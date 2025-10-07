@@ -13,17 +13,17 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="judul" class="form-label">Judul Laporan *</label>
+                    <label for="judul" class="form-label">Judul Laporan </label>
                     <input type="text" class="form-control" id="judul" name="judul" value="{{ old('judul') }}" required>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="periode" class="form-label">Periode *</label>
+                        <label for="periode" class="form-label">Periode </label>
                         <input type="text" class="form-control" id="periode" name="periode" value="{{ old('periode') }}" placeholder="Contoh: Januari - Juli 2024" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="kategori" class="form-label">Kategori *</label>
+                        <label for="kategori" class="form-label">Kategori </label>
                         <select class="form-select" id="kategori" name="kategori" required>
                             <option value="Prestasi" {{ old('kategori') == 'Prestasi' ? 'selected' : '' }}>Prestasi</option>
                             <option value="Akademik" {{ old('kategori') == 'Akademik' ? 'selected' : '' }}>Akademik</option>
@@ -34,7 +34,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">Status *</label>
+                        <label for="status" class="form-label">Status </label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="Draft" {{ old('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
                             <option value="Final" {{ old('status') == 'Final' ? 'selected' : '' }}>Final</option>
