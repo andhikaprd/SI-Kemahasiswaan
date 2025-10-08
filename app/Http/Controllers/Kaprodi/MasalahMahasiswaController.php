@@ -3,18 +3,30 @@
 namespace App\Http\Controllers\Kaprodi;
 
 use App\Http\Controllers\Controller;
-use App\Models\MasalahMahasiswa; // Pastikan Anda sudah membuat Model ini
+use App\Models\MasalahMahasiswa;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class MasalahMahasiswaController extends Controller
 {
     /**
-     * Menampilkan halaman daftar mahasiswa bermasalah.
+     * Menampilkan daftar mahasiswa bermasalah.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kasus = MasalahMahasiswa::latest()->paginate(10);
-        return view('kaprodi.masalah_mahasiswa.index', compact('kasus'));
+        $search = $request->input('search');
+
+        $kasus = MasalahMahasiswa::with('mahasiswa')
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('mahasiswa', function ($q) use ($search) {
+                    $q->where('nama', 'like', "%$search%")
+                      ->orWhere('nim', 'like', "%$search%");
+                });
+            })
+            ->latest('id') // ✅ ganti dari orderByDesc('created_at')
+            ->paginate(10);
+
+        return view('kaprodi.masalah_mahasiswa.index', compact('kasus', 'search'));
     }
 
     /**
@@ -22,7 +34,8 @@ class MasalahMahasiswaController extends Controller
      */
     public function create()
     {
-        return view('kaprodi.masalah_mahasiswa.create');
+        $mahasiswas = Mahasiswa::all(); // daftar mahasiswa untuk dropdown
+        return view('kaprodi.masalah_mahasiswa.create', compact('mahasiswas'));
     }
 
     /**
@@ -31,35 +44,40 @@ class MasalahMahasiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_mahasiswa' => 'required|string|max:255',
-            'nim' => 'required|string|max:20',
-            'angkatan' => 'required|integer',
-            'jenis_masalah' => 'required|string',
-            'deskripsi' => 'required|string',
-            'status' => 'required|string|in:Baru,Diproses,Selesai',
-            'tanggal_laporan' => 'required|date',
+            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'semester' => 'nullable|integer|min:1',
+            'ipk' => 'nullable|numeric|between:0,4',
+            'jenis_masalah' => 'required|string|max:255',
+            'status_peringatan' => 'required|string|in:Peringatan 1,Peringatan 2,Peringatan 3,Skorsing',
+            'laporan_terakhir' => 'nullable|date',
+            'keterangan' => 'nullable|string',
         ]);
 
         MasalahMahasiswa::create($request->all());
 
-        return redirect()->route('kaprodi.masalah_mahasiswa.index')->with('success', 'Data mahasiswa bermasalah berhasil ditambahkan.');
+        return redirect()
+            ->route('kaprodi.masalah_mahasiswa.index')
+            ->with('success', 'Data mahasiswa bermasalah berhasil ditambahkan.');
     }
 
     /**
-     * Menampilkan detail spesifik dari satu kasus.
+     * Menampilkan detail satu kasus mahasiswa bermasalah.
      */
     public function show(MasalahMahasiswa $masalahMahasiswa)
     {
         return view('kaprodi.masalah_mahasiswa.show', ['kasus' => $masalahMahasiswa]);
     }
 
-
     /**
      * Menampilkan form untuk mengedit data.
      */
     public function edit(MasalahMahasiswa $masalahMahasiswa)
     {
-        return view('kaprodi.masalah_mahasiswa.edit', ['kasus' => $masalahMahasiswa]);
+        $mahasiswas = Mahasiswa::all();
+        return view('kaprodi.masalah_mahasiswa.edit', [
+            'kasus' => $masalahMahasiswa,
+            'mahasiswas' => $mahasiswas,
+        ]);
     }
 
     /**
@@ -68,28 +86,31 @@ class MasalahMahasiswaController extends Controller
     public function update(Request $request, MasalahMahasiswa $masalahMahasiswa)
     {
         $request->validate([
-            'nama_mahasiswa' => 'required|string|max:255',
-            'nim' => 'required|string|max:20',
-            'angkatan' => 'required|integer',
-            'jenis_masalah' => 'required|string',
-            'deskripsi' => 'required|string',
-            'status' => 'required|string|in:Baru,Diproses,Selesai',
-            'tanggal_laporan' => 'required|date',
+            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'semester' => 'nullable|integer|min:1',
+            'ipk' => 'nullable|numeric|between:0,4',
+            'jenis_masalah' => 'required|string|max:255',
+            'status_peringatan' => 'required|string|in:Peringatan 1,Peringatan 2,Peringatan 3,Skorsing',
+            'laporan_terakhir' => 'nullable|date',
+            'keterangan' => 'nullable|string',
         ]);
 
         $masalahMahasiswa->update($request->all());
 
-        return redirect()->route('kaprodi.masalah_mahasiswa.index')->with('success', 'Data mahasiswa bermasalah berhasil diperbarui.');
+        return redirect()
+            ->route('kaprodi.masalah_mahasiswa.index')
+            ->with('success', 'Data mahasiswa bermasalah berhasil diperbarui.');
     }
 
     /**
-     * Menghapus data dari database.
+     * Menghapus data mahasiswa bermasalah.
      */
     public function destroy(MasalahMahasiswa $masalahMahasiswa)
     {
         $masalahMahasiswa->delete();
 
-        return redirect()->route('kaprodi.masalah_mahasiswa.index')->with('success', 'Data mahasiswa bermasalah berhasil dihapus.');
+        return redirect()
+            ->route('kaprodi.masalah_mahasiswa.index')
+            ->with('success', 'Data mahasiswa bermasalah berhasil dihapus.');
     }
 }
-
