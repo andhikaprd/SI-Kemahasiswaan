@@ -65,4 +65,5 @@
         </div>
     </form>
 </div>
-@endsection
+@extends('Kaprodi.layouts.app')
+

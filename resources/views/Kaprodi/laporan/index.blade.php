@@ -54,31 +54,22 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-
                 @forelse ($laporans as $laporan)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="py-3 px-4">
                             <div class="font-medium text-gray-800">{{ $laporan->judul }}</div>
                             <div class="text-sm text-gray-500">{{ $laporan->kategori ?? '-' }}</div>
                         </td>
-
                         <td class="py-3 px-4">
-                            <div class="font-medium text-gray-800">
-                                {{ $laporan->mahasiswa->nama ?? '-' }}
-                            </div>
-                            <div class="text-sm text-gray-500">
-                                {{ $laporan->mahasiswa->nim ?? '-' }}
-                            </div>
+                            <div class="font-medium text-gray-800">{{ $laporan->mahasiswa->nama ?? '-' }}</div>
+                            <div class="text-sm text-gray-500">{{ $laporan->mahasiswa->nim ?? '-' }}</div>
                         </td>
-
                         <td class="py-3 px-4 text-gray-700">
                             {{ $laporan->mataKuliah->nama ?? '-' }}
                         </td>
-
                         <td class="py-3 px-4 text-gray-700">
                             {{ $laporan->tanggal_submit ? $laporan->tanggal_submit->format('Y-m-d H:i') : '-' }}
                         </td>
-
                         <td class="py-3 px-4">
                             @php
                                 $status = $laporan->status;
@@ -99,23 +90,20 @@
                                 {{ $label }}
                             </span>
                         </td>
-
                         <td class="py-3 px-4 text-center">
                             <div class="flex justify-center gap-2">
                                 <a href="{{ route('kaprodi.laporan.edit', $laporan->id) }}"
                                    class="text-blue-600 hover:text-blue-800" title="Edit">
                                    <i class="fas fa-edit"></i>
                                 </a>
-
                                 @if ($laporan->file_path)
                                     <a href="{{ asset('storage/' . $laporan->file_path) }}"
                                        class="text-gray-600 hover:text-gray-800" title="Unduh">
                                        <i class="fas fa-download"></i>
                                     </a>
                                 @endif
-
                                 <form action="{{ route('kaprodi.laporan.destroy', $laporan->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
+                                      onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800" title="Hapus">
@@ -132,7 +120,6 @@
                         </td>
                     </tr>
                 @endforelse
-
             </tbody>
         </table>
     </div>
