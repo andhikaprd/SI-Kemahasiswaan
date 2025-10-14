@@ -45,8 +45,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #4A90E2;">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('beranda') }}">
-                <img src="https://placehold.co/40x40/FFFFFF/4A90E2?text=TI" alt="Logo HIMA TI" class="d-inline-block align-text-top me-2">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('beranda') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo HIMA TI" class="d-inline-block align-text-top me-2" style="width:40px;height:40px;object-fit:contain;border-radius:50%;">
                 HIMA TI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
