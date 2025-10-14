@@ -1,6 +1,6 @@
 @extends('Kaprodi.layouts.app')
 
-@section('title', 'Mahasiswa Bermasalah')
+@section('title', 'Pelanggaran Mahasiswa')
 
 @section('content')
 {{-- Hapus baris berikut karena sudah ada di layout --}}
@@ -9,8 +9,8 @@
 
 <div class="bg-white shadow rounded-xl p-6">
     <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold">Daftar Mahasiswa Bermasalah</h2>
-        <a href="{{ route('kaprodi.masalah_mahasiswa.create') }}" 
+        <h2 class="text-xl font-bold">Daftar Pelanggaran Mahasiswa</h2>
+        <a href="{{ route('kaprodi.pelanggaran_mahasiswa.create') }}" 
            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             <i class="fas fa-plus mr-2"></i> Tambah Data
         </a>
@@ -56,15 +56,15 @@
                         </td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex justify-center gap-2">
-                                <a href="{{ route('kaprodi.masalah_mahasiswa.show', $row->id) }}" 
+                                <a href="{{ route('kaprodi.pelanggaran_mahasiswa.show', $row->id) }}" 
                                    class="text-blue-600 hover:text-blue-800">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('kaprodi.masalah_mahasiswa.edit', $row->id) }}" 
+                                <a href="{{ route('kaprodi.pelanggaran_mahasiswa.edit', $row->id) }}" 
                                    class="text-yellow-600 hover:text-yellow-800">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('kaprodi.masalah_mahasiswa.destroy', $row->id) }}" 
+                                <form action="{{ route('kaprodi.pelanggaran_mahasiswa.destroy', $row->id) }}" 
                                       method="POST" 
                                       onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
@@ -78,7 +78,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="text-center py-3 text-gray-500">
-                            Tidak ada data mahasiswa bermasalah.
+                            Tidak ada data pelanggaran.
                         </td>
                     </tr>
                 @endforelse

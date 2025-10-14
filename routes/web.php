@@ -86,6 +86,12 @@ Route::prefix('kaprodi')->name('kaprodi.')->group(function () {
         ->names('laporan');
 
     // 🔹 Mahasiswa Bermasalah
+    // Pelanggaran Mahasiswa (alias dari MasalahMahasiswaController)
+    Route::resource('pelanggaran-mahasiswa', KaprodiMasalahMahasiswaController::class)
+        ->parameters(['pelanggaran-mahasiswa' => 'masalahMahasiswa'])
+        ->names('pelanggaran_mahasiswa');
+
+    // Alias lama (kompatibilitas), tetap mengarah ke controller yang sama
     Route::resource('masalah-mahasiswa', KaprodiMasalahMahasiswaController::class)
         ->parameters(['masalah-mahasiswa' => 'masalahMahasiswa'])
         ->names('masalah_mahasiswa');

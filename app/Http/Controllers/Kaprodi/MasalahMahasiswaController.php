@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class MasalahMahasiswaController extends Controller
 {
     /**
-     * Menampilkan daftar mahasiswa bermasalah.
+     * Menampilkan daftar pelanggaran mahasiswa.
      */
     public function index(Request $request)
     {
@@ -30,7 +30,7 @@ class MasalahMahasiswaController extends Controller
     }
 
     /**
-     * Menampilkan form untuk menambah data baru.
+     * Menampilkan form untuk menambah pelanggaran baru.
      */
     public function create()
     {
@@ -39,7 +39,7 @@ class MasalahMahasiswaController extends Controller
     }
 
     /**
-     * Menyimpan data baru ke database.
+     * Menyimpan pelanggaran baru ke database.
      */
     public function store(Request $request)
     {
@@ -62,12 +62,12 @@ class MasalahMahasiswaController extends Controller
         MasalahMahasiswa::create($request->all());
 
         return redirect()
-            ->route('kaprodi.masalah_mahasiswa.index')
-            ->with('success', 'Data mahasiswa bermasalah berhasil ditambahkan.');
+            ->route('kaprodi.pelanggaran_mahasiswa.index')
+            ->with('success', 'Data pelanggaran mahasiswa berhasil ditambahkan.');
     }
 
     /**
-     * Menampilkan detail satu kasus mahasiswa bermasalah.
+     * Menampilkan detail satu pelanggaran.
      */
     public function show(MasalahMahasiswa $masalahMahasiswa)
     {
@@ -75,7 +75,7 @@ class MasalahMahasiswaController extends Controller
     }
 
     /**
-     * Menampilkan form untuk mengedit data.
+     * Menampilkan form untuk mengedit pelanggaran.
      */
     public function edit(MasalahMahasiswa $masalahMahasiswa)
     {
@@ -87,7 +87,7 @@ class MasalahMahasiswaController extends Controller
     }
 
     /**
-     * Mengupdate data di database.
+     * Mengupdate pelanggaran di database.
      */
     public function update(Request $request, MasalahMahasiswa $masalahMahasiswa)
     {
@@ -110,19 +110,19 @@ class MasalahMahasiswaController extends Controller
         $masalahMahasiswa->update($request->all());
 
         return redirect()
-            ->route('kaprodi.masalah_mahasiswa.index')
-            ->with('success', 'Data mahasiswa bermasalah berhasil diperbarui.');
+            ->route('kaprodi.pelanggaran_mahasiswa.index')
+            ->with('success', 'Data pelanggaran mahasiswa berhasil diperbarui.');
     }
 
     /**
-     * Menghapus data mahasiswa bermasalah.
+     * Menghapus pelanggaran mahasiswa.
      */
     public function destroy(MasalahMahasiswa $masalahMahasiswa)
     {
         $masalahMahasiswa->delete();
 
         return redirect()
-            ->route('kaprodi.masalah_mahasiswa.index')
-            ->with('success', 'Data mahasiswa bermasalah berhasil dihapus.');
+            ->route('kaprodi.pelanggaran_mahasiswa.index')
+            ->with('success', 'Data pelanggaran mahasiswa berhasil dihapus.');
     }
 }

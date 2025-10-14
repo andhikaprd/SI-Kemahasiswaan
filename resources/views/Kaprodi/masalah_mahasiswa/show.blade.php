@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Mahasiswa Bermasalah')
+@section('title', 'Detail Pelanggaran Mahasiswa')
 
 @section('content')
 @include('Kaprodi.partials.header')
 @include('Kaprodi.partials.tabs')
 
 <div class="bg-white shadow rounded-xl p-6 max-w-2xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">Detail Mahasiswa Bermasalah</h2>
+    <h2 class="text-xl font-bold mb-4">Detail Pelanggaran Mahasiswa</h2>
 
     <div class="grid gap-3">
         <p><strong>Nama:</strong> {{ $kasus->mahasiswa->nama ?? '-' }}</p>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mt-5 text-right">
-        <a href="{{ route('kaprodi.masalah_mahasiswa.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Kembali</a>
+        <a href="{{ route('kaprodi.pelanggaran_mahasiswa.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Kembali</a>
     </div>
 </div>
 @endsection

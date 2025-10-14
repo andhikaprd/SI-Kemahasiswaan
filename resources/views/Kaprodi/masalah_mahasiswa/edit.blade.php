@@ -1,23 +1,20 @@
-@extends('layouts.app')
+@extends('Kaprodi.layouts.app')
 
-@section('title', 'Edit Mahasiswa Bermasalah')
+@section('title', 'Edit Pelanggaran Mahasiswa')
 
 @section('content')
-@include('Kaprodi.partials.header')
-@include('Kaprodi.partials.tabs')
-
 <div class="bg-white shadow rounded-xl p-6 max-w-3xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">Edit Data Mahasiswa Bermasalah</h2>
+    <h2 class="text-xl font-bold mb-4">Edit Data Pelanggaran Mahasiswa</h2>
 
-    <form method="POST" action="{{ route('kaprodi.masalah_mahasiswa.update', $kasus->id) }}">
+    <form method="POST" action="{{ route('kaprodi.pelanggaran_mahasiswa.update', $kasus->id) }}">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
-            <label class="block font-medium mb-1">Mahasiswa</label>
-            <select name="mahasiswa_id" class="border rounded-lg w-full px-3 py-2">
+            <label for="mahasiswa_id" class="block font-medium mb-1">Mahasiswa</label>
+            <select id="mahasiswa_id" name="mahasiswa_id" class="border rounded-lg w-full px-3 py-2">
                 @foreach ($mahasiswas as $m)
-                    <option value="{{ $m->id }}" {{ $kasus->mahasiswa_id == $m->id ? 'selected' : '' }}>
+                    <option value="{{ $m->id }}" {{ (string)$kasus->mahasiswa_id === (string)$m->id ? 'selected' : '' }}>
                         {{ $m->nama }} ({{ $m->nim }})
                     </option>
                 @endforeach
@@ -60,10 +57,26 @@
         </div>
 
         <div class="mt-5 flex justify-between">
-            <a href="{{ route('kaprodi.masalah_mahasiswa.index') }}" class="text-gray-600 hover:underline">← Kembali</a>
+            <a href="{{ route('kaprodi.masalah_mahasiswa.index') }}" class="text-gray-600 hover:underline">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
             <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">Update</button>
         </div>
     </form>
+
+    {{-- Select2 assets dan init (CDN, cukup di halaman ini) --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(function () {
+            $('#mahasiswa_id').select2({
+                width: '100%',
+                placeholder: 'Ketik atau pilih mahasiswa...',
+                allowClear: true
+            });
+        });
+    </script>
 </div>
-@extends('Kaprodi.layouts.app')
+@endsection
 

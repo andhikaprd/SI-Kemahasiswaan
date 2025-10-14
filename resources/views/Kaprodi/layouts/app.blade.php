@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -78,7 +78,7 @@
 
     {{-- ====== FOOTER ====== --}}
     <footer>
-        © {{ date('Y') }} Himpunan Mahasiswa Teknologi Informasi Politala
+        &copy; {{ date('Y') }} Himpunan Mahasiswa Teknologi Informasi Politala
     </footer>
 
     {{-- Bootstrap JS --}}
