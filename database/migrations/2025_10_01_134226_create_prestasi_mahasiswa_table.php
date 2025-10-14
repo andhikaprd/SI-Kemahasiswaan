@@ -10,36 +10,13 @@ return new class extends Migration
     {
         Schema::create('prestasi_mahasiswa', function (Blueprint $table) {
             $table->id();
-
-            // Kolom utama
-            $table->string('nama');             // nama mahasiswa
-            $table->string('nim')->nullable();
-            $table->string('jurusan');
-            $table->string('angkatan')->nullable();
-
-            // Detail kompetisi
-            $table->string('kompetisi');
-            $table->string('jenis')->nullable();
-            $table->string('tingkat')->nullable();
-            $table->string('peringkat')->nullable();
-
-            // Informasi nilai / hasil
-            $table->integer('poin')->nullable();
-            $table->string('penyelenggara')->nullable();
-
-            // Waktu kegiatan
-            $table->date('tanggal')->nullable();
-            $table->integer('tahun')->nullable();
-
-            // Status publikasi & file
-            $table->string('status')->default('draft');
-            $table->string('sertifikat_path')->nullable();
-            $table->string('foto_path')->nullable();
-
-            // Tambahan
-            $table->string('slug')->nullable();
+            $table->string('nama');
+            $table->string('nim')->unique();
+            $table->string('program_studi');
+            $table->string('tingkat_prestasi'); // misal: lokal, nasional, internasional
+            $table->string('jenis_prestasi');   // misal: akademik, non-akademik
+            $table->year('tahun');
             $table->text('deskripsi')->nullable();
-
             $table->timestamps();
         });
     }
