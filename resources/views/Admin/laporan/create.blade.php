@@ -36,8 +36,9 @@
                     <div class="col-md-6 mb-3">
                         <label for="status" class="form-label">Status </label>
                         <select class="form-select" id="status" name="status" required>
-                            <option value="Draft" {{ old('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="Final" {{ old('status') == 'Final' ? 'selected' : '' }}>Final</option>
+                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                            <option value="revisi" {{ old('status') == 'revisi' ? 'selected' : '' }}>Revisi</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">

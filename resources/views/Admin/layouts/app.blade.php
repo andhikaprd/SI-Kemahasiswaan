@@ -59,7 +59,7 @@
                     <div class="dropdown">
                         <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-user-circle fa-lg me-2 text-primary"></i>
-                            <span>{{ Auth::user()->name ?? 'Admin' }}</span>
+                            <span>{{ optional(Auth::user())->name ?? 'Admin' }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             <li>

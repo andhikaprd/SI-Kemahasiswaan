@@ -54,6 +54,7 @@ Route::prefix('prestasi')->name('prestasi.')->group(function () {
 | ADMIN PANEL
 |--------------------------------------------------------------------------
 */
+// sementara buka akses admin tanpa login agar tidak error route login
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -76,6 +77,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | KAPRODI PANEL
 |--------------------------------------------------------------------------
 */
+// sementara buka akses kaprodi tanpa login agar mudah uji CRUD
 Route::prefix('kaprodi')->name('kaprodi.')->group(function () {
 
     // 🔹 Daftar Laporan (CRUD Kaprodi)

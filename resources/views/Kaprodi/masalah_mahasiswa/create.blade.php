@@ -17,7 +17,7 @@
                    placeholder="Ketik atau pilih mahasiswa...">
             <datalist id="mahasiswaList">
                 @foreach ($mahasiswas as $m)
-                    <option value="{{ $m->id }} - {{ $m->nama }} ({{ $m->nim }})">
+                    <option value="{{ $m->id }}" label="{{ $m->nama }} ({{ $m->nim }})"></option>
                 @endforeach
             </datalist>
             @error('mahasiswa_id') 

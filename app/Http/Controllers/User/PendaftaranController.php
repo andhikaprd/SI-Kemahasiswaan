@@ -26,7 +26,6 @@ class PendaftaranController extends Controller
             'nama' => 'required|string|max:255',
             'nim' => 'required|string|max:20|unique:pendaftarans,nim', // 'pendaftarans' adalah nama tabel
             'angkatan' => 'required|integer',
-            'jurusan' => 'required|string',
             'email' => 'required|email|max:255|unique:pendaftarans,email',
             'telepon' => 'required|string|max:15',
             'divisi' => 'required|string',
@@ -37,7 +36,8 @@ class PendaftaranController extends Controller
             'nama_lengkap' => $request->nama,
             'nim' => $request->nim,
             'angkatan' => $request->angkatan,
-            'jurusan' => $request->jurusan,
+            // Kolom jurusan wajib di DB, set default TI
+            'jurusan' => 'Teknologi Informasi',
             'email' => $request->email,
             'no_telp' => $request->telepon,
             'divisi_pilihan' => $request->divisi,

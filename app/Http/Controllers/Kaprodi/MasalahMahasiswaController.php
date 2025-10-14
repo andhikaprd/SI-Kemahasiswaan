@@ -43,6 +43,12 @@ class MasalahMahasiswaController extends Controller
      */
     public function store(Request $request)
     {
+        // Normalisasi input mahasiswa_id jika user mengetik 'id - nama (nim)'
+        $raw = (string) $request->input('mahasiswa_id');
+        if (preg_match('/^\s*(\d+)/', $raw, $m)) {
+            $request->merge(['mahasiswa_id' => (int) $m[1]]);
+        }
+
         $request->validate([
             'mahasiswa_id' => 'required|exists:mahasiswas,id',
             'semester' => 'nullable|integer|min:1',
@@ -85,6 +91,12 @@ class MasalahMahasiswaController extends Controller
      */
     public function update(Request $request, MasalahMahasiswa $masalahMahasiswa)
     {
+        // Normalisasi input mahasiswa_id jika diubah manual
+        $raw = (string) $request->input('mahasiswa_id');
+        if (preg_match('/^\s*(\d+)/', $raw, $m)) {
+            $request->merge(['mahasiswa_id' => (int) $m[1]]);
+        }
+
         $request->validate([
             'mahasiswa_id' => 'required|exists:mahasiswas,id',
             'semester' => 'nullable|integer|min:1',

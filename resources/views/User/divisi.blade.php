@@ -6,8 +6,8 @@
     <!-- Hero -->
     <section class="hero-section text-white text-center">
         <div class="container">
-            <h1 class="display-5 fw-bold">Divisi HIMA TI</h1>
-            <p class="lead mt-3">
+            <h1 class="display-5 fw-bold fade-in-up" data-animate>Divisi HIMA TI</h1>
+            <p class="lead mt-3 fade-in-up" data-animate>
                 Kenali 4 divisi utama yang menjalankan program kerja untuk kemajuan mahasiswa Teknologi Informasi.
             </p>
         </div>
@@ -30,12 +30,23 @@
                 .check-list { list-style:none; padding-left:0; }
                 .check-list li::before { content: "\2713\0020"; color:#0d6efd; font-weight:700; }
                 @media (min-width: 992px){ .col-division { width: 50%; } }
+                /* Animations */
+                .fade-in-up { opacity:0; transform: translateY(16px); transition: all .6s ease; }
+                .fade-in-up.is-visible { opacity:1; transform: none; }
+                .stagger > * { opacity:0; transform: translateY(12px); }
+                .stagger.is-visible > * { opacity:1; transform: none; transition: all .5s ease; }
+                .stagger.is-visible > *:nth-child(1){ transition-delay: .05s }
+                .stagger.is-visible > *:nth-child(2){ transition-delay: .1s }
+                .stagger.is-visible > *:nth-child(3){ transition-delay: .15s }
+                .stagger.is-visible > *:nth-child(4){ transition-delay: .2s }
+                .hover-lift { transition: transform .25s ease, box-shadow .25s ease; }
+                .hover-lift:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.12); }
             </style>
 
-            <div class="row g-4">
+            <div class="row g-4 stagger" data-animate>
                 <!-- Kaderisasi -->
                 <div class="col-12 col-lg-6 col-division">
-                    <div class="division-card shadow-sm h-100">
+                    <div class="division-card shadow-sm h-100 hover-lift">
                         <div class="photo-placeholder empty"><img src="{{ asset('images/divisi/kaderisasi.jpg') }}" alt="Foto Kaderisasi" class="division-photo" onload="this.parentElement.classList.remove('empty')" onerror="this.remove();"><span class="photo-label">Foto</span></div>
                         <div class="p-4">
                             <div class="d-flex align-items-start mb-2">
@@ -79,7 +90,7 @@
 
                 <!-- Media Informasi -->
                 <div class="col-12 col-lg-6 col-division">
-                    <div class="division-card shadow-sm h-100">
+                    <div class="division-card shadow-sm h-100 hover-lift">
                         <div class="photo-placeholder empty"><img src="{{ asset('images/divisi/media-informasi.jpg') }}" alt="Foto Media Informasi" class="division-photo" onload="this.parentElement.classList.remove('empty')" onerror="this.remove();"><span class="photo-label">Foto</span></div>
                         <div class="p-4">
                             <div class="d-flex align-items-start mb-2">
@@ -123,7 +134,7 @@
 
                 <!-- Technopreneurship -->
                 <div class="col-12 col-lg-6 col-division">
-                    <div class="division-card shadow-sm h-100">
+                    <div class="division-card shadow-sm h-100 hover-lift">
                         <div class="photo-placeholder empty"><img src="{{ asset('images/divisi/technopreneurship.jpg') }}" alt="Foto Technopreneurship" class="division-photo" onload="this.parentElement.classList.remove('empty')" onerror="this.remove();"><span class="photo-label">Foto</span></div>
                         <div class="p-4">
                             <div class="d-flex align-items-start mb-2">
@@ -167,7 +178,7 @@
 
                 <!-- Public Relations (default detail terbuka) -->
                 <div class="col-12 col-lg-6 col-division">
-                    <div class="division-card shadow-sm h-100">
+                    <div class="division-card shadow-sm h-100 hover-lift">
                         <div class="photo-placeholder empty"><img src="{{ asset('images/divisi/public-relations.jpg') }}" alt="Foto Public Relations" class="division-photo" onload="this.parentElement.classList.remove('empty')" onerror="this.remove();"><span class="photo-label">Foto</span></div>
                         <div class="p-4">
                             <div class="d-flex align-items-start mb-2">
@@ -212,6 +223,14 @@
             </div>
 
             <script>
+                // Reveal on scroll for hero + grid
+                (function(){
+                    const els = document.querySelectorAll('[data-animate]');
+                    const io = new IntersectionObserver((entries)=>{
+                        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } })
+                    }, {threshold:.15});
+                    els.forEach(el=> io.observe(el));
+                })();
                 // Toggle label tombol Lihat/Tutup Detail per card
                 document.querySelectorAll('.btn-detail').forEach(function(btn){
                     var target = document.querySelector(btn.getAttribute('data-bs-target'));

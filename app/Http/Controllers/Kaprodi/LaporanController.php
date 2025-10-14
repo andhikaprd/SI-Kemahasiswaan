@@ -59,6 +59,29 @@ class LaporanController extends Controller
             $size = $file->getSize();
         }
 
+        // Pastikan FK tersedia (hindari gagal di MySQL pada DB kosong)
+        $mahasiswaId = \App\Models\Mahasiswa::value('id');
+        $mataKuliahId = \App\Models\MataKuliah::value('id');
+
+        if (!$mataKuliahId) {
+            $mataKuliah = \App\Models\MataKuliah::create([
+                'nama' => 'Umum',
+                'kode' => 'UMUM',
+            ]);
+            $mataKuliahId = $mataKuliah->id;
+        }
+
+        if (!$mahasiswaId) {
+            $m = \App\Models\Mahasiswa::create([
+                'nama' => 'Tanpa Nama',
+                'nim' => '0000000000',
+                'prodi_id' => null,
+                'angkatan' => null,
+                'email' => null,
+            ]);
+            $mahasiswaId = $m->id;
+        }
+
         Laporan::create([
             'judul' => $request->judul,
             'periode' => $request->periode,
@@ -68,8 +91,8 @@ class LaporanController extends Controller
             'file_mime' => $mime,
             'file_size' => $size,
             'status' => 'pending',
-            'mahasiswa_id' => 1, // sementara (nanti bisa pakai auth()->user()->id)
-            'mata_kuliah_id' => 1,
+            'mahasiswa_id' => $mahasiswaId,
+            'mata_kuliah_id' => $mataKuliahId,
         ]);
 
         return redirect()->route('kaprodi.laporan.index')->with('success', '✅ Laporan berhasil ditambahkan!');

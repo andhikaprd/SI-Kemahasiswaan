@@ -33,6 +33,13 @@ class Laporan extends Model
         'file_size',
     ];
 
+    protected $casts = [
+        'tanggal_submit' => 'datetime',
+        'verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     /**
      * Accessor untuk mendapatkan URL file laporan dari storage
      */
