@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Berita;
+use App\Models\Beritas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class BeritaController extends Controller
+class BeritasController extends Controller
 {
     /**
      * 📰 Tampilkan daftar berita dengan filter dan pencarian.
      */
     public function index(Request $request)
     {
-        $beritas = Berita::query()
+        $beritas = Beritas::query()
             ->when($request->q, function ($q) use ($request) {
                 $q->where('judul', 'like', "%{$request->q}%")
                   ->orWhere('isi', 'like', "%{$request->q}%")
@@ -28,7 +28,7 @@ class BeritaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.berita.index', compact('beritas'));
+        return view('admin.beritas.index', compact('beritas'));
     }
 
     /**
@@ -36,7 +36,7 @@ class BeritaController extends Controller
      */
     public function create()
     {
-        return view('admin.berita.create');
+        return view('admin.beritas.create');
     }
 
     /**
@@ -64,30 +64,31 @@ class BeritaController extends Controller
 
         // Upload gambar jika ada
         if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('berita', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('beritas', 'public');
         }
 
         // Buat slug unik
         $validated['slug'] = Str::slug($request->judul . '-' . now()->format('YmdHis'));
 
-        Berita::create($validated);
+        Beritas::create($validated);
 
-        return redirect()->route('admin.berita.index')
+        return redirect()->route('admin.beritas.index')
             ->with('success', '✅ Berita berhasil ditambahkan!');
     }
 
     /**
      * ✏️ Tampilkan form edit berita.
      */
-    public function edit(Berita $berita)
+    public function edit(Beritas $beritas)
     {
-        return view('admin.berita.edit', compact('berita'));
+        return view('admin.beritas.edit', compact('beritas'));
     }
+}
 
     /**
      * 🔁 Update berita.
      */
-    public function update(Request $request, Berita $berita)
+    public function update(Request $request, Beritas $berita)
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
@@ -101,37 +102,37 @@ class BeritaController extends Controller
             'tags' => 'nullable|string|max:255',
         ]);
 
-        $validated['slug'] = Str::slug($request->judul . '-' . $berita->id);
+        $validated['slug'] = Str::slug($request->judul . '-' . $beritas->id);
 
         // Jika ada gambar baru, hapus lama & simpan baru
         if ($request->hasFile('gambar')) {
-            if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
-                Storage::disk('public')->delete($berita->gambar);
+            if ($beritas->gambar && Storage::disk('public')->exists($beritas->gambar)) {
+                Storage::disk('public')->delete($beritas->gambar);
             }
-            $validated['gambar'] = $request->file('gambar')->store('berita', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('beritas', 'public');
         } else {
             // Jika tidak upload gambar baru, pertahankan gambar lama
-            $validated['gambar'] = $berita->gambar;
+            $validated['gambar'] = $beritas->gambar;
         }
 
         $berita->update($validated);
 
-        return redirect()->route('admin.berita.index')
+        return redirect()->route('admin.beritas.index')
             ->with('success', '✅ Berita berhasil diperbarui!');
     }
 
     /**
      * 🗑️ Hapus berita dari database & hapus gambar di storage.
      */
-    public function destroy(Berita $berita)
+    public function destroy(Beritas $beritas)
     {
-        if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
-            Storage::disk('public')->delete($berita->gambar);
+        if ($beritas->gambar && Storage::disk('public')->exists($beritas->gambar)) {
+            Storage::disk('public')->delete($beritas->gambar);
         }
 
-        $berita->delete();
+        $beritas->delete();
 
-        return redirect()->route('admin.berita.index')
+        return redirect()->route('admin.beritas.index')
             ->with('success', '🗑️ Berita berhasil dihapus!');
     }
 }
