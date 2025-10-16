@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\MahasiswaBerprestasiController as AdminMahasiswaB
 // === Kaprodi ===
 use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
 use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;
+use App\Http\Controllers\Kaprodi\VerifikasiLaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,6 @@ Route::prefix('berita')->name('berita.')->group(function () {
 
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 
-// Halaman Prestasi Publik
 Route::prefix('prestasi')->name('prestasi.')->group(function () {
     Route::get('/', [MahasiswaBerprestasiController::class, 'index'])->name('index');
     Route::get('/{prestasi:slug}', [MahasiswaBerprestasiController::class, 'show'])->name('show');
@@ -54,25 +54,18 @@ Route::prefix('prestasi')->name('prestasi.')->group(function () {
 | ADMIN PANEL
 |--------------------------------------------------------------------------
 */
+// sementara buka akses admin tanpa login agar tidak error route login
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // CRUD Berita
+    // CRUD Data Admin
     Route::resource('berita', AdminBeritaController::class)->except(['show'])->names('berita');
-
-    // CRUD Akun
     Route::resource('account', AdminAccountController::class)->except(['show'])->names('account');
-
-    // CRUD Divisi
     Route::resource('divisi', AdminDivisiController::class)
         ->only(['index', 'create', 'store'])
         ->names('divisi');
-
-    // CRUD Laporan
     Route::resource('laporan', AdminLaporanController::class)->except(['show'])->names('laporan');
-
-    // CRUD Prestasi Mahasiswa
     Route::resource('mahasiswa-berprestasi', AdminMahasiswaBerprestasiController::class)
         ->parameters(['mahasiswa-berprestasi' => 'prestasi'])
         ->names('mahasiswa_berprestasi')
@@ -84,20 +77,29 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | KAPRODI PANEL
 |--------------------------------------------------------------------------
 */
+// sementara buka akses kaprodi tanpa login agar mudah uji CRUD
 Route::prefix('kaprodi')->name('kaprodi.')->group(function () {
-    Route::resource('laporan', KaprodiLaporanController::class)->except(['show'])->names('laporan');
 
+    // 🔹 Daftar Laporan (CRUD Kaprodi)
+    Route::resource('laporan', KaprodiLaporanController::class)
+        ->except(['show'])
+        ->names('laporan');
+
+    // 🔹 Mahasiswa Bermasalah
     Route::resource('masalah-mahasiswa', KaprodiMasalahMahasiswaController::class)
         ->parameters(['masalah-mahasiswa' => 'masalahMahasiswa'])
         ->names('masalah_mahasiswa');
+
+    // 🔹 Verifikasi Laporan
+    Route::get('/verifikasi', [VerifikasiLaporanController::class, 'index'])->name('verifikasi.index');
+    Route::post('/verifikasi/{id}/setujui', [VerifikasiLaporanController::class, 'setujui'])->name('verifikasi.setujui');
+    Route::post('/verifikasi/{id}/tolak', [VerifikasiLaporanController::class, 'tolak'])->name('verifikasi.tolak');
 });
 
 /*
 |--------------------------------------------------------------------------
 | LOGOUT (Manual)
 |--------------------------------------------------------------------------
-| Menambahkan route logout agar form logout di layout admin berfungsi
-| tanpa Auth::routes() (karena kamu belum pakai sistem login Laravel UI).
 */
 Route::post('/logout', function () {
     Auth::logout();

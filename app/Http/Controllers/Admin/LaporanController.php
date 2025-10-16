@@ -45,7 +45,7 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'status' => 'required|string|max:50',
+            'status' => 'required|in:pending,approved,revisi',
             'deskripsi' => 'nullable|string',
             'file_laporan' => 'nullable|file|mimes:pdf|max:5120', // 5MB
         ]);
@@ -55,7 +55,33 @@ class LaporanController extends Controller
             $pathFile = $request->file('file_laporan')->store('laporan', 'public');
         }
 
+        // Pastikan FK terisi agar tidak gagal di MySQL
+        $mahasiswaId = \App\Models\Mahasiswa::value('id');
+        $mataKuliahId = \App\Models\MataKuliah::value('id');
+
+        if (!$mataKuliahId) {
+            $mataKuliah = \App\Models\MataKuliah::create([
+                'nama' => 'Umum',
+                'kode' => 'UMUM',
+            ]);
+            $mataKuliahId = $mataKuliah->id;
+        }
+
+        if (!$mahasiswaId) {
+            // Buat placeholder minimal jika belum ada data mahasiswa
+            $m = \App\Models\Mahasiswa::create([
+                'nama' => 'Tanpa Nama',
+                'nim' => '0000000000',
+                'prodi_id' => null,
+                'angkatan' => null,
+                'email' => null,
+            ]);
+            $mahasiswaId = $m->id;
+        }
+
         Laporan::create([
+            'mahasiswa_id' => $mahasiswaId,
+            'mata_kuliah_id' => $mataKuliahId,
             'judul' => $request->judul,
             'periode' => $request->periode,
             'kategori' => $request->kategori,
@@ -84,7 +110,7 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'status' => 'required|string|max:50',
+            'status' => 'required|in:pending,approved,revisi',
             'deskripsi' => 'nullable|string',
             'file_laporan' => 'nullable|file|mimes:pdf|max:5120',
         ]);

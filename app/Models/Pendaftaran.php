@@ -9,8 +9,8 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
-    protected $table = 'pendaftaran'; // nama tabel
-    protected $primaryKey = 'id_pendaftaran'; // primary key
+    // Sesuaikan dengan migrasi: 2025_09_29_115200_create_pendaftarans_table.php
+    protected $table = 'pendaftarans';
 
     protected $fillable = [
         'nama_lengkap',
@@ -21,5 +21,6 @@ class Pendaftaran extends Model
         'no_telp',
         'divisi_pilihan',
         'motivasi',
+        'status',
     ];
 }

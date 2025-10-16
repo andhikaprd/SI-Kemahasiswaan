@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // extended profile/role fields present in users table
+        'role',
+        'status',
+        'nim',
+        'jurusan',
+        'angkatan',
     ];
 
     /**

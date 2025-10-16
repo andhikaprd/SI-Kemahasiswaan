@@ -78,8 +78,7 @@
                         @forelse ($laporans as $laporan)
                             <tr>
                                 <td>
-                                    <strong>{{ $laporan->judul }}</strong><br>
-                                    <small class="text-muted">Pembuat: {{ $laporan->pembuat ?? 'Admin' }}</small>
+                                    <strong>{{ $laporan->judul }}</strong>
                                 </td>
                                 <td>{{ $laporan->periode ?? '-' }}</td>
                                 <td><span class="badge bg-primary">{{ $laporan->kategori ?? '-' }}</span></td>

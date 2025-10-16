@@ -13,6 +13,22 @@ return new class extends Migration
     {
         Schema::create('masalah_mahasiswa', function (Blueprint $table) {
             $table->id();
+            // relasi ke tabel mahasiswa
+            $table->foreignId('mahasiswa_id')->constrained('mahasiswas')->cascadeOnDelete();
+
+            // detail masalah
+            $table->unsignedTinyInteger('semester')->nullable();
+            $table->decimal('ipk', 3, 2)->nullable();
+            $table->string('jenis_masalah'); // contoh: "IPK Rendah", "Absensi Rendah", "Pelanggaran Akademik"
+            $table->enum('status_peringatan', [
+                'Peringatan 1',
+                'Peringatan 2',
+                'Peringatan 3',
+                'Skorsing'
+            ])->default('Peringatan 1');
+            $table->date('laporan_terakhir')->nullable();
+            $table->text('keterangan')->nullable();
+
             $table->timestamps();
         });
     }
