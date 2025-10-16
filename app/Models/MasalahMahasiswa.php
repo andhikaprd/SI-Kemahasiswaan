@@ -8,6 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class MasalahMahasiswa extends Model
 {
     use HasFactory;
+<<<<<<< HEAD
+
+    // Nama tabel yang dipakai
+    protected $table = 'masalah_mahasiswa';
+
+    // Kolom yang boleh diisi (fillable)
+    protected $fillable = [
+        'nama',
+        'nim',
+        'prodi',
+        'angkatan',
+        'jenis_permasalahan',
+        'deskripsi',
+        'kategori',
+        'status',
+        'tanggal_laporan',
+        'pelapor',
+    ];
+=======
     protected $table = 'masalah_mahasiswa';
 
     protected $fillable = [
@@ -29,4 +48,5 @@ class MasalahMahasiswa extends Model
     {
         return $this->belongsTo(Mahasiswa::class);
     }
+>>>>>>> 5ba264de75815c43bc5d8d59da852456fbad827b
 }

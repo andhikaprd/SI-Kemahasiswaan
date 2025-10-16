@@ -1,40 +1,137 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BeritaController extends Controller
 {
     /**
-     * Menampilkan halaman daftar semua berita.
+     * 📰 Tampilkan daftar berita dengan filter dan pencarian.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua berita yang statusnya 'published'
-        // Urutkan dari yang paling baru dan gunakan paginasi (10 berita per halaman)
-        $beritas = Berita::where('status', 'published')
-                         ->latest('tanggal_publikasi')
-                         ->paginate(10);
+        $beritas = Berita::query()
+            ->when($request->q, function ($q) use ($request) {
+                $q->where('judul', 'like', "%{$request->q}%")
+                  ->orWhere('isi', 'like', "%{$request->q}%")
+                  ->orWhere('ringkasan', 'like', "%{$request->q}%");
+            })
+            ->when($request->kategori, fn($q) => $q->where('kategori', $request->kategori))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('user.berita.index', compact('beritas'));
+        return view('admin.berita.index', compact('beritas'));
     }
 
     /**
-     * Menampilkan detail dari satu berita.
-     * Laravel akan otomatis mencari berita berdasarkan slug di URL.
+     * 🆕 Tampilkan form untuk tambah berita.
      */
-    public function show(Berita $berita)
+    public function create()
     {
-        // Pastikan hanya berita yang sudah 'published' yang bisa diakses
-        if ($berita->status !== 'published') {
-            abort(404); // Tampilkan halaman Not Found jika berita masih draft
+        return view('admin.berita.create');
+    }
+
+    /**
+     * 💾 Simpan berita baru.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'ringkasan' => 'required|string|max:500',
+            'isi' => 'required|string',
+            'kategori' => 'required|string|max:100',
+            'status' => 'required|in:published,draft',
+            'penulis' => 'nullable|string|max:150',
+            'tanggal_publikasi' => 'nullable|date',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'tags' => 'nullable|string|max:255',
+        ]);
+
+        // Tanggal otomatis jika kosong
+        $validated['tanggal_publikasi'] = $request->tanggal_publikasi ?? now();
+
+        // Penulis default jika kosong
+        $validated['penulis'] = $request->penulis ?? (Auth::user()->name ?? 'Admin');
+
+        // Upload gambar jika ada
+        if ($request->hasFile('gambar')) {
+            $validated['gambar'] = $request->file('gambar')->store('berita', 'public');
         }
 
-        // Kirim data berita yang ditemukan ke view
-        return view('user.berita.show', compact('berita'));
+        // Buat slug unik
+        $validated['slug'] = Str::slug($request->judul . '-' . now()->format('YmdHis'));
+
+        Berita::create($validated);
+
+        return redirect()->route('admin.berita.index')
+            ->with('success', '✅ Berita berhasil ditambahkan!');
+    }
+
+    /**
+     * ✏ Tampilkan form edit berita.
+     */
+    public function edit(Berita $berita)
+    {
+        return view('admin.berita.edit', compact('berita'));
+    }
+
+    /**
+     * 🔁 Update berita.
+     */
+    public function update(Request $request, Berita $berita)
+    {
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'ringkasan' => 'required|string|max:500',
+            'isi' => 'required|string',
+            'kategori' => 'required|string|max:100',
+            'status' => 'required|in:published,draft',
+            'penulis' => 'nullable|string|max:150',
+            'tanggal_publikasi' => 'nullable|date',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'tags' => 'nullable|string|max:255',
+        ]);
+
+        $validated['slug'] = Str::slug($request->judul . '-' . $berita->id);
+
+        // Jika ada gambar baru, hapus lama & simpan baru
+        if ($request->hasFile('gambar')) {
+            if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
+                Storage::disk('public')->delete($berita->gambar);
+            }
+            $validated['gambar'] = $request->file('gambar')->store('berita', 'public');
+        } else {
+            // Jika tidak upload gambar baru, pertahankan gambar lama
+            $validated['gambar'] = $berita->gambar;
+        }
+
+        $berita->update($validated);
+
+        return redirect()->route('admin.berita.index')
+            ->with('success', '✅ Berita berhasil diperbarui!');
+    }
+
+    /**
+     * 🗑 Hapus berita dari database & hapus gambar di storage.
+     */
+    public function destroy(Berita $berita)
+    {
+        if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
+            Storage::disk('public')->delete($berita->gambar);
+        }
+
+        $berita->delete();
+
+        return redirect()->route('admin.berita.index')
+            ->with('success', '🗑 Berita berhasil dihapus!');
     }
 }
-

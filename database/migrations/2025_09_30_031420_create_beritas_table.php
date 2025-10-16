@@ -7,29 +7,32 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Jalankan migrasi untuk membuat tabel 'beritas'
      */
     public function up(): void
     {
-        Schema::create('beritas', function (Blueprint $table) {
-            $table->id();
-            $table->string('judul');
-            $table->string('slug')->unique();
-            $table->string('ringkasan', 500);
-            $table->text('isi');
-            $table->string('kategori');
-            $table->enum('status', ['published', 'draft'])->default('draft');
-            $table->string('penulis');
-            $table->date('tanggal_publikasi');
-            $table->string('gambar')->nullable();
-            $table->string('tags')->nullable();
-            $table->integer('views')->default(0);
-            $table->timestamps(); // Kolom created_at dan updated_at
-        });
+        // Hindari duplikasi tabel jika migrate dijalankan dua kali
+        if (!Schema::hasTable('beritas')) {
+            Schema::create('beritas', function (Blueprint $table) {
+                $table->id();
+                $table->string('judul');
+                $table->string('slug')->unique();
+                $table->string('ringkasan', 500)->nullable(); // boleh kosong
+                $table->text('isi');
+                $table->string('kategori')->nullable();
+                $table->enum('status', ['published', 'draft'])->default('draft');
+                $table->string('penulis')->nullable();
+                $table->date('tanggal_publikasi')->nullable();
+                $table->string('gambar')->nullable();
+                $table->string('tags')->nullable();
+                $table->unsignedBigInteger('views')->default(0);
+                $table->timestamps(); // Kolom created_at & updated_at
+            });
+        }
     }
 
     /**
-     * Reverse the migrations.
+     * Hapus tabel 'beritas' jika rollback
      */
     public function down(): void
     {
