@@ -55,20 +55,16 @@
                             </span>
                         </td>
                         <td class="px-4 py-2 text-center">
-                            <div class="flex justify-center gap-2">
-                                <a href="{{ route('kaprodi.pelanggaran_mahasiswa.show', $row->id) }}" 
-                                   class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+                            <div class="flex justify-center gap-3">
                                 <a href="{{ route('kaprodi.pelanggaran_mahasiswa.edit', $row->id) }}" 
-                                   class="text-yellow-600 hover:text-yellow-800">
+                                   class="text-yellow-600 hover:text-yellow-800" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('kaprodi.pelanggaran_mahasiswa.destroy', $row->id) }}" 
                                       method="POST" 
                                       onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800">
+                                    <button type="submit" class="text-red-600 hover:text-red-800" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>

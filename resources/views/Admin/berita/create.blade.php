@@ -67,7 +67,7 @@
                 <div class="mb-3">
                     <label for="penulis" class="form-label">Penulis</label>
                     <input type="text" class="form-control" id="penulis" name="penulis"
-                        value="{{ old('penulis') ?? Auth::user()->name ?? '' }}">
+                        value="{{ old('penulis', optional(Auth::user())->name) }}">
                 </div>
 
                 {{-- Upload Gambar --}}

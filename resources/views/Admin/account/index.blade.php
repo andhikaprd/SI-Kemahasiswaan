@@ -16,22 +16,25 @@
     <!-- Opsi Filter dan Pencarian -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-8">
-                    <input type="text" class="form-control" placeholder="Cari pengguna berdasarkan nama atau email...">
+            <form action="{{ route('admin.account.index') }}" method="GET">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" name="q" class="form-control" value="{{ request('q') }}" placeholder="Cari pengguna berdasarkan nama atau email...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="role">
+                            @php $r = request('role'); @endphp
+                            <option value="Semua" {{ $r===null || $r==='Semua' ? 'selected' : '' }}>Semua Role</option>
+                            <option value="admin" {{ $r==='admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="kaprodi" {{ $r==='kaprodi' ? 'selected' : '' }}>Kaprodi</option>
+                            <option value="mahasiswa" {{ $r==='mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary w-100" type="submit">Cari</button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <select class="form-select">
-                        <option selected>Semua Role</option>
-                        <option value="admin">Admin</option>
-                        <option value="mahasiswa">Mahasiswa</option>
-                        <option value="kaprodi">Kaprodi</option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <button class="btn btn-outline-secondary w-100">Cari</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -72,10 +75,11 @@
                         @endif
                     </div>
                     <div class="col-md-2">
-                        <span class="fw-bold">Status:</span> 
-                        <span class="badge bg-success">{{ $account->status ?? 'Aktif' }}</span>
+                        <span class="fw-bold">Status:</span>
+                        @php $st = strtolower($account->status ?? 'aktif'); @endphp
+                        <span class="badge {{ $st === 'aktif' ? 'bg-success' : 'bg-secondary' }}">{{ $account->status ?? 'aktif' }}</span>
                     </div>
-                    <div class="col-md-2 d-flex justify-content-end">
+                <div class="col-md-2 d-flex justify-content-end">
                         <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
                         <form action="{{ route('admin.account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
                             @csrf

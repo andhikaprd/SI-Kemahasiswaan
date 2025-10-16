@@ -8,9 +8,25 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $accounts = Akun::all();
+        $accounts = Akun::query()
+            ->when($request->q, function ($q) use ($request) {
+                $q->where(function ($w) use ($request) {
+                    $w->where('name', 'like', "%{$request->q}%")
+                      ->orWhere('email', 'like', "%{$request->q}%");
+                });
+            })
+            ->when($request->role && $request->role !== 'Semua', function ($q) use ($request) {
+                $q->where('role', $request->role);
+            })
+            ->when($request->status && $request->status !== 'Semua', function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.account.index', compact('accounts'));
     }
 

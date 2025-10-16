@@ -55,7 +55,7 @@
                                 </span>
                                 <div>
                                     <div class="lead-title">Kaderisasi</div>
-                                    <div class="meta">Ketua : Ujang</div>
+                                    <div class="meta">Ketua : Dicky</div>
                                 </div>
                             </div>
                             <p class="desc mb-3">Divisi yang bertanggung jawab dalam mengembangkan kualitas sumber daya manusia dan pembentukan karakter mahasiswa TI melalui berbagai program.</p>
@@ -77,8 +77,8 @@
                                         <h6 class="fw-bold mb-2"><i class="far fa-users me-2"></i>Anggota Divisi</h6>
                                         <ul class="mb-0 ps-3">
                                             <li>Ujang Numani (Ketua)</li>
-                                            <li>Devia Agustina (Wakil)</li>
-                                            <li>Dhqiq Maulana (Anggota)</li>
+                                            <li>Annisa Nurhidayah (Wakil)</li>
+                                            <li>Abel Devia Agustin (Anggota)</li>
                                             <li>Anggota lainnya</li>
                                         </ul>
                                     </div>
@@ -99,7 +99,7 @@
                                 </span>
                                 <div>
                                     <div class="lead-title">Media Informasi</div>
-                                    <div class="meta">Ketua : Ujang</div>
+                                    <div class="meta">Ketua : M. Rayhan Wahyu Riduan</div>
                                 </div>
                             </div>
                             <p class="desc mb-3">Divisi yang mengelola seluruh aspek komunikasi dan informasi HIMA - TI termasuk publikasi kegiatan, pengelolaan media sosial, dan penyebaran informasi kepada mahasiswa.</p>
@@ -120,8 +120,8 @@
                                     <div class="col-md-6">
                                         <h6 class="fw-bold mb-2"><i class="far fa-users me-2"></i>Anggota Divisi</h6>
                                         <ul class="mb-0 ps-3">
-                                            <li>Ujang Numani (Ketua)</li>
-                                            <li>Devia Agustina (Wakil)</li>
+                                            <li>M. Rayhan Wahyu Riduan (Ketua)</li>
+                                            <li>Muhammad Sulaiman Hafi (Wakil)</li>
                                             <li>Tim Desain</li>
                                             <li>Tim Dokumentasi</li>
                                         </ul>
@@ -143,7 +143,7 @@
                                 </span>
                                 <div>
                                     <div class="lead-title">Technopreneurship</div>
-                                    <div class="meta">Ketua : Ujang</div>
+                                    <div class="meta">Ketua : Nadella Irsasyarifa</div>
                                 </div>
                             </div>
                             <p class="desc mb-3">Divisi yang fokus mengembangkan jiwa kewirausahaan berbasis teknologi, menyelenggarakan pelatihan digital dan memfasilitasi mahasiswa dalam mengembangkan startup teknologi.</p>
@@ -164,9 +164,9 @@
                                     <div class="col-md-6">
                                         <h6 class="fw-bold mb-2"><i class="far fa-users me-2"></i>Anggota Divisi</h6>
                                         <ul class="mb-0 ps-3">
-                                            <li>Ujang Numani (Ketua)</li>
-                                            <li>Devia Agustina (Wakil)</li>
-                                            <li>Dhqiq Maulana (Anggota)</li>
+                                            <li>Nadella Irsasyarifa (Ketua)</li>
+                                            <li>M. Zainal Akli (Wakil)</li>
+                                            <li>Rahmad Erwin Prayoga (Anggota)</li>
                                             <li>Anggota lainnya</li>
                                         </ul>
                                     </div>
@@ -187,7 +187,7 @@
                                 </span>
                                 <div>
                                     <div class="lead-title">Public Relations</div>
-                                    <div class="meta">Ketua : Ujang</div>
+                                    <div class="meta">Ketua : Muhamad Sahlil Rizki</div>
                                 </div>
                             </div>
                             <p class="desc mb-3">Divisi yang bertugas membangun dan memelihara hubungan baik dengan berbagai pihak eksternal, termasuk alumni dan organisasi mahasiswa lainnya.</p>
@@ -208,10 +208,10 @@
                                     <div class="col-md-6">
                                         <h6 class="fw-bold mb-2"><i class="far fa-users me-2"></i>Anggota Divisi</h6>
                                         <ul class="mb-0 ps-3">
-                                            <li>Ujang Numani (Ketua)</li>
-                                            <li>Devia Agustina (Wakil)</li>
-                                            <li>Dhqiq Maulana (Anggota)</li>
-                                            <li>Dhia Maulana (Anggota)</li>
+                                            <li>Muhamad Sahlil Rizki (Ketua)</li>
+                                            <li>Muhammad Arifin (Wakil)</li>
+                                            <li>Muhammad Yoga (Anggota)</li>
+                                            <li>M.Dimas Aprianto(Anggota)</li>
                                             <li>Anggota lainnya</li>
                                         </ul>
                                     </div>

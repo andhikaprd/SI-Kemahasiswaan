@@ -77,7 +77,7 @@ class BeritaController extends Controller
     }
 
     /**
-     * ✏️ Tampilkan form edit berita.
+     * ✏ Tampilkan form edit berita.
      */
     public function edit(Berita $berita)
     {
@@ -121,7 +121,7 @@ class BeritaController extends Controller
     }
 
     /**
-     * 🗑️ Hapus berita dari database & hapus gambar di storage.
+     * 🗑 Hapus berita dari database & hapus gambar di storage.
      */
     public function destroy(Berita $berita)
     {
@@ -132,6 +132,6 @@ class BeritaController extends Controller
         $berita->delete();
 
         return redirect()->route('admin.berita.index')
-            ->with('success', '🗑️ Berita berhasil dihapus!');
+            ->with('success', '🗑 Berita berhasil dihapus!');
     }
 }

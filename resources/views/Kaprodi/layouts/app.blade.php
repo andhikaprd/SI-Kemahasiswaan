@@ -68,7 +68,7 @@
 
     {{-- ====== NAV TABS ====== --}}
     <nav class="bg-white shadow-sm mb-4 border-b">
-        @include('kaprodi.partials.tabs')
+        @include('Kaprodi.partials.tabs')
     </nav>
 
     {{-- ====== MAIN CONTENT ====== --}}
