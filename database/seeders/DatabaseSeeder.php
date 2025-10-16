@@ -13,10 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Panggil seeder pengguna agar ada admin, kaprodi, dan mahasiswa default
         // Jalankan seeder yang idempotent terlebih dahulu
         $this->call([
             MahasiswaSeeder::class,
+            // Tambahkan data awal Prestasi (sebagian published untuk tampil di publik)
+            PrestasiMahasiswaSeeder::class,
         ]);
     }
 }
