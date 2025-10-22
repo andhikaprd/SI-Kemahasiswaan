@@ -76,7 +76,7 @@
                 <div class="col-md-4">
                     <label class="form-label text-muted small">Cari Prestasi</label>
                     <input type="text" name="q" value="{{ request('q') }}" class="form-control"
-                        placeholder="Nama, NIM, kompetisi...">
+                        placeholder="Nama, kompetisi...">
                 </div>
 
                 <div class="col-md-2">
@@ -129,7 +129,7 @@
                                 <div>
                                     <h5 class="fw-bold mb-1">{{ $prestasi->nama }}</h5>
                                     <p class="text-muted small mb-1">
-                                        {{ $prestasi->nim ?? '-' }} &middot; {{ $prestasi->jurusan ?? '-' }} &middot;
+                                        {{ $prestasi->jurusan ?? '-' }} &middot;
                                         Angkatan {{ $prestasi->angkatan ?? '-' }}
                                     </p>
                                     <p class="mb-0"><strong>{{ $prestasi->kompetisi }}</strong></p>

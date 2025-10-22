@@ -56,12 +56,26 @@ class MahasiswaBerprestasi extends Model
 
     public function getSertifikatUrlAttribute(): ?string
     {
-        return $this->sertifikat_path ? Storage::url($this->sertifikat_path) : null;
+        if (!$this->sertifikat_path) {
+            return null;
+        }
+        // Jika sudah absolute URL, kembalikan apa adanya
+        if (preg_match('/^https?:\/\//i', $this->sertifikat_path)) {
+            return $this->sertifikat_path;
+        }
+        // Gunakan asset agar mengikuti origin saat ini (hindari mismatch APP_URL)
+        return asset('storage/' . ltrim($this->sertifikat_path, '/'));
     }
 
     public function getFotoUrlAttribute(): ?string
     {
-        return $this->foto_path ? Storage::url($this->foto_path) : null;
+        if (!$this->foto_path) {
+            return null;
+        }
+        if (preg_match('/^https?:\/\//i', $this->foto_path)) {
+            return $this->foto_path;
+        }
+        return asset('storage/' . ltrim($this->foto_path, '/'));
     }
 
     protected static function booted()
