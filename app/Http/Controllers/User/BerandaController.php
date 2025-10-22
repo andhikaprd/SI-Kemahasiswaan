@@ -9,6 +9,6 @@ class BerandaController extends Controller
 {
     public function index()
     {
-        return view('user.beranda'); // pastikan file view-nya ada di resources/views/user/beranda.blade.php
+        return view('user.beranda'); 
     }
 }

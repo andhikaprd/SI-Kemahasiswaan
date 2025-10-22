@@ -60,7 +60,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // CRUD Data Admin
-    Route::resource('berita', AdminBeritaController::class)->except(['show'])->names('berita');
+    // Tetapkan nama parameter menjadi {berita} (bukan "beritum") agar binding & route() konsisten
+    Route::resource('berita', AdminBeritaController::class)
+        ->parameters(['berita' => 'berita'])
+        ->except(['show'])
+        ->names('berita');
     Route::resource('account', AdminAccountController::class)->except(['show'])->names('account');
     Route::resource('divisi', AdminDivisiController::class)
         ->only(['index', 'create', 'store'])

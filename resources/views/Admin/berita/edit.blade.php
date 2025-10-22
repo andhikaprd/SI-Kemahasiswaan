@@ -23,7 +23,7 @@
             @endif
 
             {{-- Form Update Berita --}}
-            <form action="{{ route('admin.berita.update', $berita->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.berita.update', $berita) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

@@ -24,6 +24,19 @@
                         <input type="text" name="nim" value="{{ old('nim', $prestasi->nim) }}" class="form-control" required>
                     </div>
 
+                    {{-- Tambahkan ke Mahasiswa Lain (opsional) --}}
+                    <div class="col-12">
+                        <label class="form-label">Tambahkan juga ke Mahasiswa (opsional, bisa banyak)</label>
+                        <select id="mahasiswa_ids" name="mahasiswa_ids[]" class="form-select" multiple>
+                            @isset($mahasiswas)
+                                @foreach($mahasiswas as $m)
+                                    <option value="{{ $m->id }}">{{ $m->nama }} ({{ $m->nim }})</option>
+                                @endforeach
+                            @endisset
+                        </select>
+                        <small class="text-muted">Jika dipilih, sistem akan membuat salinan prestasi ini untuk setiap mahasiswa terpilih.</small>
+                    </div>
+
                     <div class="col-md-4">
                         <label class="form-label">Jurusan </label>
                         <input type="text" name="jurusan" value="{{ old('jurusan', $prestasi->jurusan) }}" class="form-control" required>
@@ -114,4 +127,14 @@
         </div>
     </div>
 </div>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(function(){
+        $('#mahasiswa_ids').select2({
+            width: '100%', placeholder: 'Pilih mahasiswa lain', allowClear: true
+        });
+    });
+    </script>
 @endsection

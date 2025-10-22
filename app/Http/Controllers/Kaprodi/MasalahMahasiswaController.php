@@ -43,14 +43,25 @@ class MasalahMahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // Normalisasi input mahasiswa_id jika user mengetik 'id - nama (nim)'
-        $raw = (string) $request->input('mahasiswa_id');
-        if (preg_match('/^\s*(\d+)/', $raw, $m)) {
-            $request->merge(['mahasiswa_id' => (int) $m[1]]);
+        // Dukung input banyak: mahasiswa_id[] (multi-select)
+        $ids = $request->input('mahasiswa_id');
+
+        if (!is_array($ids)) {
+            $raw = (string) ($ids ?? '');
+            if (preg_match('/^\s*(\d+)/', $raw, $m)) {
+                $ids = [(int) $m[1]];
+            } elseif ($raw !== '') {
+                $ids = [(int) $raw];
+            } else {
+                $ids = [];
+            }
         }
 
+        $request->merge(['mahasiswa_id' => $ids]);
+
         $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'mahasiswa_id' => 'required|array|min:1',
+            'mahasiswa_id.*' => 'required|integer|exists:mahasiswas,id',
             'semester' => 'nullable|integer|min:1',
             'ipk' => 'nullable|numeric|between:0,4',
             'jenis_masalah' => 'required|string|max:255',
@@ -59,11 +70,20 @@ class MasalahMahasiswaController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        MasalahMahasiswa::create($request->all());
+        foreach ($ids as $mid) {
+            MasalahMahasiswa::create([
+                'mahasiswa_id' => $mid,
+                'semester' => $request->semester,
+                'ipk' => $request->ipk,
+                'jenis_masalah' => $request->jenis_masalah,
+                'status_peringatan' => $request->input('status_peringatan', 'Peringatan 1'),
+                'laporan_terakhir' => $request->laporan_terakhir,
+                'keterangan' => $request->keterangan,
+            ]);
+        }
 
-        return redirect()
-            ->route('kaprodi.pelanggaran_mahasiswa.index')
-            ->with('success', 'Data pelanggaran mahasiswa berhasil ditambahkan.');
+        return redirect()->route('kaprodi.pelanggaran_mahasiswa.index')
+            ->with('success', 'Data pelanggaran mahasiswa berhasil ditambahkan (' . count($ids) . ' entri).');
     }
 
     /**
@@ -105,9 +125,27 @@ class MasalahMahasiswaController extends Controller
             'status_peringatan' => 'required|string|in:Peringatan 1,Peringatan 2,Peringatan 3,Skorsing',
             'laporan_terakhir' => 'nullable|date',
             'keterangan' => 'nullable|string',
+            'tambahkan_mahasiswa_ids' => 'nullable|array',
+            'tambahkan_mahasiswa_ids.*' => 'integer|exists:mahasiswas,id',
         ]);
 
-        $masalahMahasiswa->update($request->all());
+        $masalahMahasiswa->update($request->only([
+            'mahasiswa_id','semester','ipk','jenis_masalah','status_peringatan','laporan_terakhir','keterangan'
+        ]));
+
+        // Jika ada tambahan mahasiswa saat edit, buat salinan data untuk mereka
+        $tambahan = (array) $request->input('tambahkan_mahasiswa_ids', []);
+        foreach ($tambahan as $mid) {
+            MasalahMahasiswa::create([
+                'mahasiswa_id' => $mid,
+                'semester' => $request->semester,
+                'ipk' => $request->ipk,
+                'jenis_masalah' => $request->jenis_masalah,
+                'status_peringatan' => $request->status_peringatan,
+                'laporan_terakhir' => $request->laporan_terakhir,
+                'keterangan' => $request->keterangan,
+            ]);
+        }
 
         return redirect()
             ->route('kaprodi.pelanggaran_mahasiswa.index')

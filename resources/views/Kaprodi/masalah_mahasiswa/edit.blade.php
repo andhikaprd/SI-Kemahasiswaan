@@ -20,6 +20,15 @@
                 @endforeach
             </select>
         </div>
+        <div class="mb-3">
+            <label class="block font-medium mb-1">Tambahkan juga ke Mahasiswa (opsional)</label>
+            <select id="tambahkan_mahasiswa_ids" name="tambahkan_mahasiswa_ids[]" class="border rounded-lg w-full px-3 py-2" multiple>
+                @foreach ($mahasiswas as $m)
+                    <option value="{{ $m->id }}">{{ $m->nama }} ({{ $m->nim }})</option>
+                @endforeach
+            </select>
+            <p class="text-sm text-gray-500 mt-1">Sistem akan membuat salinan pelanggaran ini untuk setiap mahasiswa yang dipilih.</p>
+        </div>
 
         <div class="grid md:grid-cols-2 gap-3">
             <div>
@@ -75,8 +84,12 @@
                 placeholder: 'Ketik atau pilih mahasiswa...',
                 allowClear: true
             });
+            $('#tambahkan_mahasiswa_ids').select2({
+                width: '100%',
+                placeholder: 'Pilih tambahan mahasiswa',
+                allowClear: true
+            });
         });
     </script>
 </div>
 @endsection
-

@@ -11,9 +11,7 @@ use Illuminate\Support\Str;
 
 class BeritaController extends Controller
 {
-    /**
-     * 📰 Tampilkan daftar berita dengan filter dan pencarian.
-     */
+
     public function index(Request $request)
     {
         $beritas = Berita::query()

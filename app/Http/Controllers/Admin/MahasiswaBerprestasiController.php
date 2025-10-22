@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MahasiswaBerprestasi;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -46,7 +47,8 @@ class MahasiswaBerprestasiController extends Controller
     public function create()
     {
         $filterTingkat = ['Internasional', 'Nasional', 'Provinsi', 'Kab/Kota', 'Kampus'];
-        return view('Admin.mahasiswa_berprestasi.create', compact('filterTingkat'));
+        $mahasiswas = Mahasiswa::orderBy('nama')->get(['id','nama','nim','angkatan']);
+        return view('Admin.mahasiswa_berprestasi.create', compact('filterTingkat','mahasiswas'));
     }
 
     /**
@@ -54,6 +56,115 @@ class MahasiswaBerprestasiController extends Controller
      */
     public function store(Request $r)
     {
+        // Mode: pilih banyak mahasiswa (prestasi tim) via Select2
+        if ($r->filled('mahasiswa_ids')) {
+            $validated = $r->validate([
+                'mahasiswa_ids'   => ['array','min:1'],
+                'mahasiswa_ids.*' => ['integer','exists:mahasiswas,id'],
+                'jurusan'         => ['required', 'string', 'max:100'],
+                'kompetisi'       => ['required', 'string', 'max:200'],
+                'jenis'           => ['nullable', 'string', 'max:150'],
+                'tingkat'         => ['required', 'string', 'max:50'],
+                'peringkat'       => ['nullable', 'string', 'max:50'],
+                'poin'            => ['nullable', 'integer', 'min:0'],
+                'penyelenggara'   => ['nullable', 'string', 'max:150'],
+                'tanggal'         => ['nullable', 'date'],
+                'tahun'           => ['nullable', 'integer', 'digits:4'],
+                'status'          => ['required', Rule::in(['published', 'draft'])],
+                'deskripsi'       => ['nullable', 'string'],
+                'sertifikat'      => ['nullable','file','mimes:pdf,jpg,jpeg,png','max:5120'],
+                'foto'            => ['nullable','image','max:4096'],
+            ]);
+
+            $sertifikatPath = null; $fotoPath = null;
+            if ($r->hasFile('sertifikat')) {
+                $sertifikatPath = $r->file('sertifikat')->store('prestasi/sertifikat','public');
+            }
+            if ($r->hasFile('foto')) {
+                $fotoPath = $r->file('foto')->store('prestasi/foto','public');
+            }
+
+            $list = Mahasiswa::whereIn('id', $validated['mahasiswa_ids'])->get();
+            foreach ($list as $m) {
+                MahasiswaBerprestasi::create([
+                    'nama'            => $m->nama,
+                    'nim'             => $m->nim,
+                    'jurusan'         => $validated['jurusan'],
+                    'angkatan'        => $m->angkatan,
+                    'kompetisi'       => $validated['kompetisi'],
+                    'jenis'           => $validated['jenis'] ?? null,
+                    'tingkat'         => $validated['tingkat'],
+                    'peringkat'       => $validated['peringkat'] ?? null,
+                    'poin'            => $validated['poin'] ?? null,
+                    'penyelenggara'   => $validated['penyelenggara'] ?? null,
+                    'tanggal'         => $validated['tanggal'] ?? null,
+                    'tahun'           => $validated['tahun'] ?? null,
+                    'status'          => $validated['status'],
+                    'deskripsi'       => $validated['deskripsi'] ?? null,
+                    'sertifikat_path' => $sertifikatPath,
+                    'foto_path'       => $fotoPath,
+                ]);
+            }
+
+            return redirect()->route('admin.mahasiswa_berprestasi.index')
+                ->with('success', 'Prestasi tim berhasil ditambahkan untuk ' . $list->count() . ' mahasiswa.');
+        }
+        // Mode bulk: jika field nama adalah array, proses banyak baris sekaligus
+        if (is_array($r->input('nama'))) {
+            $r->validate([
+                'nama'          => ['required','array','min:1'],
+                'nama.*'        => ['required','string','max:150'],
+                'nim'           => ['nullable','array'],
+                'nim.*'         => ['nullable','string','max:50'],
+                'jurusan'       => ['required','array'],
+                'jurusan.*'     => ['required','string','max:100'],
+                'angkatan'      => ['nullable','array'],
+                'angkatan.*'    => ['nullable','string','max:20'],
+                'kompetisi'     => ['required','array'],
+                'kompetisi.*'   => ['required','string','max:200'],
+                'jenis'         => ['nullable','array'],
+                'jenis.*'       => ['nullable','string','max:150'],
+                'tingkat'       => ['required','array'],
+                'tingkat.*'     => ['required','string','max:50'],
+                'peringkat'     => ['nullable','array'],
+                'peringkat.*'   => ['nullable','string','max:50'],
+                'poin'          => ['nullable','array'],
+                'poin.*'        => ['nullable','integer','min:0'],
+                'penyelenggara' => ['nullable','array'],
+                'penyelenggara.*'=> ['nullable','string','max:150'],
+                'tanggal'       => ['nullable','array'],
+                'tanggal.*'     => ['nullable','date'],
+                'tahun'         => ['nullable','array'],
+                'tahun.*'       => ['nullable','integer','digits:4'],
+                'status'        => ['required','array'],
+                'status.*'      => ['required', Rule::in(['published','draft'])],
+                'deskripsi'     => ['nullable','array'],
+                'deskripsi.*'   => ['nullable','string'],
+            ]);
+
+            $count = count($r->input('nama'));
+            for ($i=0; $i<$count; $i++) {
+                MahasiswaBerprestasi::create([
+                    'nama'          => $r->input("nama.$i"),
+                    'nim'           => $r->input("nim.$i"),
+                    'jurusan'       => $r->input("jurusan.$i"),
+                    'angkatan'      => $r->input("angkatan.$i"),
+                    'kompetisi'     => $r->input("kompetisi.$i"),
+                    'jenis'         => $r->input("jenis.$i"),
+                    'tingkat'       => $r->input("tingkat.$i"),
+                    'peringkat'     => $r->input("peringkat.$i"),
+                    'poin'          => $r->input("poin.$i"),
+                    'penyelenggara' => $r->input("penyelenggara.$i"),
+                    'tanggal'       => $r->input("tanggal.$i"),
+                    'tahun'         => $r->input("tahun.$i"),
+                    'status'        => $r->input("status.$i", 'draft'),
+                    'deskripsi'     => $r->input("deskripsi.$i"),
+                ]);
+            }
+
+            return redirect()->route('admin.mahasiswa_berprestasi.index')
+                ->with('success', "Berhasil menambahkan {$count} data prestasi.");
+        }
         $data = $r->validate([
             'nama'          => ['required', 'string', 'max:150'],
             'nim'           => ['nullable', 'string', 'max:50'],
@@ -95,7 +206,8 @@ class MahasiswaBerprestasiController extends Controller
     public function edit(MahasiswaBerprestasi $prestasi)
     {
         $filterTingkat = ['Internasional', 'Nasional', 'Provinsi', 'Kab/Kota', 'Kampus'];
-        return view('Admin.mahasiswa_berprestasi.edit', compact('prestasi', 'filterTingkat'));
+        $mahasiswas = \App\Models\Mahasiswa::orderBy('nama')->get(['id','nama','nim','angkatan']);
+        return view('Admin.mahasiswa_berprestasi.edit', compact('prestasi', 'filterTingkat','mahasiswas'));
     }
 
     /**
@@ -140,9 +252,38 @@ class MahasiswaBerprestasiController extends Controller
         // Simpan update
         $prestasi->update($data);
 
+        // Jika pilih banyak mahasiswa tambahan saat edit, buat salinan data untuk mereka
+        if ($r->filled('mahasiswa_ids')) {
+            $ids = $r->validate([
+                'mahasiswa_ids' => ['array','min:1'],
+                'mahasiswa_ids.*' => ['integer','exists:mahasiswas,id'],
+            ])['mahasiswa_ids'];
+
+            $ms = \App\Models\Mahasiswa::whereIn('id', $ids)->get();
+            foreach ($ms as $m) {
+                MahasiswaBerprestasi::create([
+                    'nama'            => $m->nama,
+                    'nim'             => $m->nim,
+                    'jurusan'         => $data['jurusan'],
+                    'angkatan'        => $m->angkatan,
+                    'kompetisi'       => $data['kompetisi'],
+                    'jenis'           => $data['jenis'] ?? null,
+                    'tingkat'         => $data['tingkat'],
+                    'peringkat'       => $data['peringkat'] ?? null,
+                    'poin'            => $data['poin'] ?? null,
+                    'penyelenggara'   => $data['penyelenggara'] ?? null,
+                    'tanggal'         => $data['tanggal'] ?? null,
+                    'tahun'           => $data['tahun'] ?? null,
+                    'status'          => $data['status'],
+                    'deskripsi'       => $data['deskripsi'] ?? null,
+                    'sertifikat_path' => $prestasi->sertifikat_path,
+                    'foto_path'       => $prestasi->foto_path,
+                ]);
+            }
+        }
+
         // ✅ Perbaikan route redirect (sesuai resource route)
-        return redirect()
-            ->route('admin.mahasiswa_berprestasi.index')
+        return redirect()->route('admin.mahasiswa_berprestasi.index')
             ->with('success', 'Prestasi berhasil diperbarui.');
     }
 

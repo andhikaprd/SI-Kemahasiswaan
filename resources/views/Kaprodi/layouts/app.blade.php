@@ -11,7 +11,7 @@
     {{-- Font Awesome --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    {{-- Tailwind (CDN agar tidak error tanpa Vite) --}}
+    {{-- Tailwind (CDN agar utilitas di view tetap bekerja) --}}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
@@ -20,23 +20,20 @@
             font-family: 'Inter', sans-serif;
         }
         .kaprodi-header {
-            background-color: #2563eb;
+            /* Samakan warna dengan header Admin */
+            background-color: #4A90E2;
             color: white;
         }
         .kaprodi-header h4 {
             font-weight: 700;
         }
-        .btn-logout {
-            background: white;
-            color: #2563eb;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        .btn-logout:hover {
-            background-color: #e0e7ff;
-            color: #1e3a8a;
-        }
+        .btn-logout { background: #fff; color: #1f2937; font-weight: 500; border-radius: 8px; transition: .2s }
+        .btn-logout:hover { background-color: #eef2ff; color: #111827 }
+
+        /* Gaya nav tab agar selaras dengan Admin */
+        .nav-tabs .nav-link { border: none; color: #6c757d; transition: .2s }
+        .nav-tabs .nav-link:hover { color: #007bff }
+        .nav-tabs .nav-link.active { font-weight: 600; color: #4A90E2; border-bottom: 3px solid #4A90E2; background: transparent }
         footer {
             color: #6b7280;
             font-size: 0.85rem;
