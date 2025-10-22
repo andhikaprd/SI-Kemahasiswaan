@@ -49,38 +49,27 @@
                     </div>
                 </div>
 
-                {{-- Status & File --}}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">Status *</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="pending" {{ old('status', $laporan->status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="approved" {{ old('status', $laporan->status) == 'approved' ? 'selected' : '' }}>Disetujui</option>
-                            <option value="revisi" {{ old('status', $laporan->status) == 'revisi' ? 'selected' : '' }}>Revisi</option>
-                        </select>
-                    </div>
+                {{-- File --}}
+                <div class="mb-3">
+                    <label for="file_laporan" class="form-label">Ganti File Laporan (PDF)</label>
+                    <input type="file"
+                        class="form-control"
+                        id="file_laporan"
+                        name="file_laporan"
+                        accept=".pdf">
+                    <small class="text-muted d-block mt-1">
+                        Kosongkan jika tidak ingin mengganti file.
+                    </small>
 
-                    <div class="col-md-6 mb-3">
-                        <label for="file_laporan" class="form-label">Ganti File Laporan (PDF)</label>
-                        <input type="file"
-                            class="form-control"
-                            id="file_laporan"
-                            name="file_laporan"
-                            accept=".pdf">
-                        <small class="text-muted d-block mt-1">
-                            Kosongkan jika tidak ingin mengganti file.
+                    {{-- Tampilkan file lama --}}
+                    @if($laporan->file_path)
+                        <small class="text-muted">
+                            File saat ini:
+                            <a href="{{ $laporan->file_url }}" target="_blank" class="text-primary">
+                                Lihat PDF
+                            </a>
                         </small>
-
-                        {{-- Tampilkan file lama --}}
-                        @if($laporan->file_path)
-                            <small class="text-muted">
-                                File saat ini:
-                                <a href="{{ $laporan->file_url }}" target="_blank" class="text-primary">
-                                    Lihat PDF
-                                </a>
-                            </small>
-                        @endif
-                    </div>
+                    @endif
                 </div>
 
                 {{-- Deskripsi --}}

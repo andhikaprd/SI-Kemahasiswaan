@@ -43,19 +43,9 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">Status </label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Disetujui</option>
-                            <option value="revisi" {{ old('status') == 'revisi' ? 'selected' : '' }}>Revisi</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="file_laporan" class="form-label">File Laporan (PDF)</label>
-                        <input type="file" class="form-control" id="file_laporan" name="file_laporan" accept=".pdf">
-                    </div>
+                <div class="mb-3">
+                    <label for="file_laporan" class="form-label">File Laporan (PDF)</label>
+                    <input type="file" class="form-control" id="file_laporan" name="file_laporan" accept=".pdf">
                 </div>
 
                 <div class="mb-3">

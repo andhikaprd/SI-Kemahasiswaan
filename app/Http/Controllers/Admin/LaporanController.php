@@ -47,7 +47,6 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'status' => 'required|in:pending,approved,revisi',
             'deskripsi' => 'nullable|string',
             'file_laporan' => 'nullable|file|mimes:pdf|max:5120', // 5MB
         ]);
@@ -86,7 +85,7 @@ class LaporanController extends Controller
             'judul' => $request->judul,
             'periode' => $request->periode,
             'kategori' => $request->kategori,
-            'status' => $request->status,
+            'status' => 'pending',
             'deskripsi' => $request->deskripsi,
             'file_path' => $pathFile,
         ]);
@@ -111,12 +110,11 @@ class LaporanController extends Controller
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'status' => 'required|in:pending,approved,revisi',
             'deskripsi' => 'nullable|string',
             'file_laporan' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        $data = $request->only(['judul', 'periode', 'kategori', 'status', 'deskripsi']);
+        $data = $request->only(['judul', 'periode', 'kategori', 'deskripsi']);
 
         // Ganti file jika ada upload baru
         if ($request->hasFile('file_laporan')) {
