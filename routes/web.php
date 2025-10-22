@@ -21,8 +21,7 @@ use App\Http\Controllers\Admin\MahasiswaBerprestasiController as AdminMahasiswaB
 
 // === Kaprodi ===
 use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
-use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;
-use App\Http\Controllers\Kaprodi\VerifikasiLaporanController;
+use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;\nuse App\\Http\\Controllers\\Kaprodi\\VerifikasiLaporanController;\nuse App\\Http\\Controllers\\Kaprodi\\DownloadController as KaprodiDownloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +105,8 @@ Route::prefix('kaprodi')->name('kaprodi.')->group(function () {
     Route::get('/verifikasi', [VerifikasiLaporanController::class, 'index'])->name('verifikasi.index');
     Route::post('/verifikasi/{id}/setujui', [VerifikasiLaporanController::class, 'setujui'])->name('verifikasi.setujui');
     Route::post('/verifikasi/{id}/tolak', [VerifikasiLaporanController::class, 'tolak'])->name('verifikasi.tolak');
+    Route::get('/verifikasi/{laporan}/download', [KaprodiDownloadController::class, 'laporan'])->name('verifikasi.download');
+    Route::get('/laporan/{laporan}/download', [KaprodiLaporanController::class, 'download'])->name('laporan.download');
 });
 
 /*
@@ -117,3 +118,4 @@ Route::post('/logout', function () {
     Auth::logout();
     return redirect()->route('beranda');
 })->name('logout');
+

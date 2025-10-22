@@ -54,7 +54,7 @@
 
                             {{-- Link File --}}
                             @if ($laporan->file_path)
-                                <a href="{{ $laporan->file_url }}" 
+                                <a href="{{ route('kaprodi.verifikasi.download', $laporan) }}" 
                                    class="text-blue-600 text-sm mt-3 inline-flex items-center gap-1 hover:underline">
                                     <i class="fas fa-download"></i> Unduh File
                                 </a>
