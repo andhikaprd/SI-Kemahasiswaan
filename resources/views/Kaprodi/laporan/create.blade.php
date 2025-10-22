@@ -19,6 +19,17 @@
     <form action="{{ route('kaprodi.laporan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nama Mahasiswa</label>
+                <input type="text" name="nama_mahasiswa" value="{{ old('nama_mahasiswa') }}" class="mt-1 w-full border rounded-lg px-3 py-2" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">NIM</label>
+                <input type="text" name="nim" value="{{ old('nim') }}" class="mt-1 w-full border rounded-lg px-3 py-2" required>
+            </div>
+        </div>
+
         <div>
             <label class="block text-sm font-medium text-gray-700">Judul</label>
             <input type="text" name="judul" value="{{ old('judul') }}" class="mt-1 w-full border rounded-lg px-3 py-2" required>
@@ -56,4 +67,3 @@
     </form>
 </div>
 @endsection
-

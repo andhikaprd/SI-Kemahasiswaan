@@ -12,6 +12,17 @@
             <form action="{{ route('admin.laporan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nama_mahasiswa" class="form-label">Nama Mahasiswa</label>
+                        <input type="text" class="form-control" id="nama_mahasiswa" name="nama_mahasiswa" value="{{ old('nama_mahasiswa') }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="nim" class="form-label">NIM</label>
+                        <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim') }}" required>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="judul" class="form-label">Judul Laporan </label>
                     <input type="text" class="form-control" id="judul" name="judul" value="{{ old('judul') }}" required>

@@ -47,7 +47,6 @@
                 <tr>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Laporan</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Mahasiswa</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Mata Kuliah</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Tanggal Submit</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
                     <th class="py-3 px-4 text-center text-sm font-semibold">Aksi</th>
@@ -63,9 +62,6 @@
                         <td class="py-3 px-4">
                             <div class="font-medium text-gray-800">{{ $laporan->mahasiswa->nama ?? '-' }}</div>
                             <div class="text-sm text-gray-500">{{ $laporan->mahasiswa->nim ?? '-' }}</div>
-                        </td>
-                        <td class="py-3 px-4 text-gray-700">
-                            {{ $laporan->mataKuliah->nama ?? '-' }}
                         </td>
                         <td class="py-3 px-4 text-gray-700">
                             {{ $laporan->tanggal_submit ? $laporan->tanggal_submit->format('Y-m-d H:i') : '-' }}
@@ -115,7 +111,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-6 text-gray-500">
+                        <td colspan="5" class="text-center py-6 text-gray-500">
                             Belum ada laporan yang tersedia.
                         </td>
                     </tr>

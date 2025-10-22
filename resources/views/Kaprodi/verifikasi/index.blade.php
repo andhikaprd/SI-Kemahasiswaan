@@ -42,10 +42,7 @@
                                 <strong>NIM:</strong> {{ $laporan->mahasiswa->nim ?? '-' }}
                             </p>
 
-                            {{-- Mata Kuliah --}}
-                            <p class="text-sm text-gray-600 mt-1">
-                                <strong>Mata Kuliah:</strong> {{ $laporan->mataKuliah->nama ?? '-' }}
-                            </p>
+                            {{-- Mata Kuliah dihilangkan sesuai permintaan --}}
 
                             {{-- Deskripsi --}}
                             <p class="mt-2 text-sm text-gray-700">

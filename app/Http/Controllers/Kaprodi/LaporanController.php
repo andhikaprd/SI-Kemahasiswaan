@@ -41,6 +41,8 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nama_mahasiswa' => 'required|string|max:255',
+            'nim' => 'required|string|max:30',
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:50',
             'kategori' => 'required|string|max:100',
@@ -59,8 +61,16 @@ class LaporanController extends Controller
             $size = $file->getSize();
         }
 
-        // Pastikan FK tersedia (hindari gagal di MySQL pada DB kosong)
-        $mahasiswaId = \App\Models\Mahasiswa::value('id');
+        // Temukan/buat Mahasiswa dari input NIM
+        $mahasiswa = \App\Models\Mahasiswa::firstOrCreate(
+            ['nim' => $request->nim],
+            ['nama' => $request->nama_mahasiswa]
+        );
+        if ($mahasiswa->nama !== $request->nama_mahasiswa) {
+            $mahasiswa->nama = $request->nama_mahasiswa;
+            $mahasiswa->save();
+        }
+        $mahasiswaId = $mahasiswa->id;
         $mataKuliahId = \App\Models\MataKuliah::value('id');
 
         if (!$mataKuliahId) {
@@ -71,16 +81,7 @@ class LaporanController extends Controller
             $mataKuliahId = $mataKuliah->id;
         }
 
-        if (!$mahasiswaId) {
-            $m = \App\Models\Mahasiswa::create([
-                'nama' => 'Tanpa Nama',
-                'nim' => '0000000000',
-                'prodi_id' => null,
-                'angkatan' => null,
-                'email' => null,
-            ]);
-            $mahasiswaId = $m->id;
-        }
+        // $mahasiswaId sudah terisi dari input pengguna
 
         Laporan::create([
             'judul' => $request->judul,

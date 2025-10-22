@@ -42,6 +42,8 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nama_mahasiswa' => 'required|string|max:255',
+            'nim' => 'required|string|max:30',
             'judul' => 'required|string|max:255',
             'periode' => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
@@ -55,8 +57,17 @@ class LaporanController extends Controller
             $pathFile = $request->file('file_laporan')->store('laporan', 'public');
         }
 
-        // Pastikan FK terisi agar tidak gagal di MySQL
-        $mahasiswaId = \App\Models\Mahasiswa::value('id');
+        // Temukan atau buat Mahasiswa dari NIM yang diinput
+        $mahasiswa = \App\Models\Mahasiswa::firstOrCreate(
+            ['nim' => $request->nim],
+            ['nama' => $request->nama_mahasiswa]
+        );
+        // Sinkronkan nama jika berbeda
+        if ($mahasiswa->nama !== $request->nama_mahasiswa) {
+            $mahasiswa->nama = $request->nama_mahasiswa;
+            $mahasiswa->save();
+        }
+        $mahasiswaId = $mahasiswa->id;
         $mataKuliahId = \App\Models\MataKuliah::value('id');
 
         if (!$mataKuliahId) {
@@ -67,17 +78,7 @@ class LaporanController extends Controller
             $mataKuliahId = $mataKuliah->id;
         }
 
-        if (!$mahasiswaId) {
-            // Buat placeholder minimal jika belum ada data mahasiswa
-            $m = \App\Models\Mahasiswa::create([
-                'nama' => 'Tanpa Nama',
-                'nim' => '0000000000',
-                'prodi_id' => null,
-                'angkatan' => null,
-                'email' => null,
-            ]);
-            $mahasiswaId = $m->id;
-        }
+        // $mahasiswaId sudah pasti terisi dari input pengguna
 
         Laporan::create([
             'mahasiswa_id' => $mahasiswaId,

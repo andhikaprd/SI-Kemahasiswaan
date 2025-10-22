@@ -21,7 +21,9 @@ use App\Http\Controllers\Admin\MahasiswaBerprestasiController as AdminMahasiswaB
 
 // === Kaprodi ===
 use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
-use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;\nuse App\\Http\\Controllers\\Kaprodi\\VerifikasiLaporanController;\nuse App\\Http\\Controllers\\Kaprodi\\DownloadController as KaprodiDownloadController;
+use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;
+use App\Http\Controllers\Kaprodi\VerifikasiLaporanController;
+use App\Http\Controllers\Kaprodi\DownloadController as KaprodiDownloadController;
 
 /*
 |--------------------------------------------------------------------------
