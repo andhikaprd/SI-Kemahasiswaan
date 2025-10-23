@@ -9,7 +9,7 @@ use App\Models\Berita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+https://www.canva.com/design/DAG2fR4wSSM/wo6QtQ50zJhSeCaOt0kxhA/edit
 class LaporanController extends Controller
 {
     /**
