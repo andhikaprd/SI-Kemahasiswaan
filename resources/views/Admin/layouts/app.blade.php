@@ -46,7 +46,7 @@
                 <!-- Kiri: Judul Panel -->
                 <div>
                     <h4 class="fw-bold mb-0">Panel Admin</h4>
-                    <p class="mb-0 small">Kelola Data Prestasi dan Akun Pengguna</p>
+                    <p class="mb-0 small">Data Prestasi dan Akun Pengguna</p>
                 </div>
 
                 <!-- Kanan: Dropdown Profil -->
@@ -99,7 +99,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.mahasiswa_berprestasi.*') ? 'active' : '' }}" 
                            href="{{ route('admin.mahasiswa_berprestasi.index') }}">
-                            <i class="fas fa-trophy me-2"></i>Kelola Prestasi
+                            <i class="fas fa-trophy me-2"></i>Prestasi
                         </a>
                     </li>
 
@@ -107,7 +107,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.account.*') ? 'active' : '' }}" 
                            href="{{ route('admin.account.index') }}">
-                            <i class="fas fa-users-cog me-2"></i>Kelola Akun
+                            <i class="fas fa-users-cog me-2"></i>Akun
                         </a>
                     </li>
 
@@ -115,7 +115,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" 
                            href="{{ route('admin.berita.index') }}">
-                            <i class="fas fa-newspaper me-2"></i>Kelola Berita
+                            <i class="fas fa-newspaper me-2"></i>Berita
                         </a>
                     </li>
 

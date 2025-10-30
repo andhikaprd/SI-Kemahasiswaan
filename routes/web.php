@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\SocialiteController;
 
 // === User / Publik ===
 use App\Http\Controllers\User\BerandaController;
@@ -33,7 +34,8 @@ use App\Http\Controllers\Kaprodi\DownloadController as KaprodiDownloadController
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/divisi', [DivisiController::class, 'index'])->name('divisi');
 
-Route::prefix('pendaftaran')->name('pendaftaran.')->group(function () {
+// Pendaftaran wajib login (redirect ke login jika belum auth)
+Route::middleware('auth')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
     Route::get('/', [PendaftaranController::class, 'create'])->name('create');
     Route::post('/', [PendaftaranController::class, 'store'])->name('store');
 });
@@ -55,8 +57,8 @@ Route::prefix('prestasi')->name('prestasi.')->group(function () {
 | ADMIN PANEL
 |--------------------------------------------------------------------------
 */
-// sementara buka akses admin tanpa login agar tidak error route login
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin: wajib login + role admin
+Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -82,8 +84,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | KAPRODI PANEL
 |--------------------------------------------------------------------------
 */
-// sementara buka akses kaprodi tanpa login agar mudah uji CRUD
-Route::prefix('kaprodi')->name('kaprodi.')->group(function () {
+// Kaprodi: wajib login + role kaprodi
+Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')->group(function () {
 
     // 🔹 Daftar Laporan (CRUD Kaprodi)
     Route::resource('laporan', KaprodiLaporanController::class)
@@ -120,4 +122,16 @@ Route::post('/logout', function () {
     Auth::logout();
     return redirect()->route('beranda');
 })->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| AUTH / LOGIN (Google SSO)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [SocialiteController::class, 'login'])->name('login');
+    Route::post('/login', [SocialiteController::class, 'handlePasswordLogin'])->name('login.attempt');
+    Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+    Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+});
 

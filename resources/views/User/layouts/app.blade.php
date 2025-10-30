@@ -43,7 +43,7 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #4A90E2;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: {{ $navColor }};">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('beranda') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo HIMA TI" class="d-inline-block align-text-top me-2" style="width:40px;height:40px;object-fit:contain;border-radius:50%;">
@@ -61,8 +61,32 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil') ? 'active' : '' }}" href="{{ route('profil') }}">Profil</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('prestasi.*') ? 'active' : '' }}" href="{{ route('prestasi.index') }}">Prestasi Mahasiswa</a></li>
                 </ul>
-                <ul class="navbar-nav ms-lg-3">
-                     <li class="nav-item"><a href="#" class="btn btn-outline-light">Login</a></li>
+                <ul class="navbar-nav ms-lg-3 align-items-center">
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-user me-2"></i>
+                                {{ auth()->user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                @if (auth()->user()->role === 'admin')
+                                    <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Panel Admin</a></li>
+                                @endif
+                                @if (auth()->user()->role === 'kaprodi')
+                                    <li><a class="dropdown-item" href="{{ route('kaprodi.laporan.index') }}">Panel Kaprodi</a></li>
+                                @endif
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" class="px-3 py-1">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">Keluar</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item"><a href="{{ route('login') }}" class="btn btn-outline-light">Login</a></li>
+                    @endauth
                 </ul>
             </div>
         </div>

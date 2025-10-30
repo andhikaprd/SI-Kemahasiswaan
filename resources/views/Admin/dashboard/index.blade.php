@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <i class="fas fa-newspaper fa-2x mb-2"></i>
                     <h5>{{ $totalBerita }}</h5>
-                    <p class="text-muted mb-0">Total Berita</p>
+                    <p class="text-muted mb-0">Berita</p>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <i class="fas fa-users fa-2x mb-2"></i>
                     <h5>{{ $totalPengguna }}</h5>
-                    <p class="text-muted mb-0">Total Pengguna</p>
+                    <p class="text-muted mb-0">Pengguna</p>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <i class="fas fa-trophy fa-2x mb-2"></i>
                     <h5>{{ $totalPrestasi }}</h5>
-                    <p class="text-muted mb-0">Total Prestasi</p>
+                    <p class="text-muted mb-0"> Prestasi</p>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <div class="card-body">
                     <i class="fas fa-file-alt fa-2x mb-2"></i>
                     <h5>{{ $totalLaporan }}</h5>
-                    <p class="text-muted mb-0">Total Laporan</p>
+                    <p class="text-muted mb-0">Laporan</p>
                 </div>
             </div>
         </div>
