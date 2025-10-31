@@ -88,7 +88,7 @@
             @if (Route::has('register'))
                 <a href="{{ route('register') }}">Daftar sekarang</a>
             @else
-                <span>Hubungi admin untuk pembuatan akun.</span>
+                <span>Gunakan akun email politala.</span>
             @endif
         </div>
     </div>

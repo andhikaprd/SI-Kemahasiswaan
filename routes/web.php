@@ -120,7 +120,9 @@ Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')-
 */
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect()->route('beranda');
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('beranda')->with('status', 'Anda telah keluar.');
 })->name('logout');
 
 /*
@@ -134,4 +136,3 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
     Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
-

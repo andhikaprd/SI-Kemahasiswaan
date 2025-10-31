@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@himati.ac.id'],
             [
-                'name' => 'Admin System',
+                'name' => 'Admin',
                 'password' => Hash::make('password'), // password: "password"
                 'role' => 'admin',
                 'status' => 'aktif',

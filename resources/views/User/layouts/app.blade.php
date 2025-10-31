@@ -21,16 +21,8 @@
             request()->routeIs('prestasi.*') => 'prestasi',
             default => 'default',
         };
-        $colors = [
-            'beranda' => '#4A90E2',
-            'divisi' => '#198754',
-            'pendaftaran' => '#6f42c1',
-            'berita' => '#0d6efd',
-            'profil' => '#20c997',
-            'prestasi' => '#dc3545',
-            'default' => '#4A90E2',
-        ];
-        $navColor = $colors[$section] ?? '#4A90E2';
+        // Samakan warna navbar menjadi biru pada semua halaman
+        $navColor = '#4A90E2';
     @endphp
     <style>
         .hero-section { background: linear-gradient(120deg, #4A90E2, #6EC1E4); padding: 5rem 0; }
@@ -60,13 +52,25 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('berita.*') ? 'active' : '' }}" href="{{ route('berita.index') }}">Berita</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil') ? 'active' : '' }}" href="{{ route('profil') }}">Profil</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('prestasi.*') ? 'active' : '' }}" href="{{ route('prestasi.index') }}">Prestasi Mahasiswa</a></li>
+                    @auth
+                        @if (auth()->user()->role === 'admin')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        @endif
+                        @if (auth()->user()->role === 'kaprodi')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('kaprodi.pelanggaran_mahasiswa.index') }}">Pelanggaran Mahasiswa</a></li>
+                        @endif
+                    @endauth
                 </ul>
                 <ul class="navbar-nav ms-lg-3 align-items-center">
                     @auth
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-regular fa-user me-2"></i>
-                                {{ auth()->user()->name }}
+                                @php($role = auth()->user()->role)
+                                {{ $role === 'admin' ? 'Admin' : auth()->user()->name }}
+                                <span class="badge ms-2" style="background: rgba(255,255,255,.25); border:1px solid rgba(255,255,255,.35); color:#fff;">
+                                    {{ $role === 'admin' ? 'Admin' : ($role === 'kaprodi' ? 'Kaprodi' : 'Mahasiswa') }}
+                                </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                                 @if (auth()->user()->role === 'admin')
@@ -93,6 +97,11 @@
     </nav>
 
     <main>
+        @if (session('status'))
+            <div class="container mt-3">
+                <div class="alert alert-info py-2 mb-0">{{ session('status') }}</div>
+            </div>
+        @endif
         @yield('content')
     </main>
 
@@ -107,4 +116,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
