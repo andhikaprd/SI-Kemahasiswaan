@@ -26,7 +26,7 @@ class BeritaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.berita.index', compact('beritas'));
+        return view('Admin.berita.index', compact('beritas'));
     }
 
     /**
@@ -34,7 +34,7 @@ class BeritaController extends Controller
      */
     public function create()
     {
-        return view('admin.berita.create');
+        return view('Admin.berita.create');
     }
 
     /**
@@ -79,7 +79,7 @@ class BeritaController extends Controller
      */
     public function edit(Berita $berita)
     {
-        return view('admin.berita.edit', compact('berita'));
+        return view('Admin.berita.edit', compact('berita'));
     }
 
     /**

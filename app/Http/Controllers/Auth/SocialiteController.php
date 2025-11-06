@@ -14,9 +14,12 @@ class SocialiteController extends Controller
 {
     private function fallbackForRole(User $user): string
     {
-        // Untuk pengalaman yang konsisten, arahkan ke Beranda.
-        // Link cepat ke panel tersedia di navbar sesuai role.
-        return route('beranda');
+        $role = $user->role ?? 'mahasiswa';
+        return match ($role) {
+            'admin' => route('admin.dashboard'),
+            'kaprodi' => route('kaprodi.laporan.index'),
+            default => route('beranda'),
+        };
     }
 
     public function login(): \Illuminate\View\View

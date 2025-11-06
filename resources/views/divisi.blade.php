@@ -1,6 +1,6 @@
 {{-- File: resources/views/divisi.blade.php --}}
 
-@extends('layouts.app')
+@extends('user.layouts.app')
 
 @section('title', 'Divisi HIMA - TI')
 

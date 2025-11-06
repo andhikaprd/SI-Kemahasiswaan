@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -9,7 +9,7 @@ use App\Models\Berita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-https://www.canva.com/design/DAG2fR4wSSM/wo6QtQ50zJhSeCaOt0kxhA/edit
+
 class LaporanController extends Controller
 {
     /**
@@ -19,7 +19,7 @@ class LaporanController extends Controller
     {
         $laporans = Laporan::latest()->paginate(10);
 
-        return view('admin.laporan.index', [
+        return view('Admin.laporan.index', [
             'laporans' => $laporans,
             'totalPrestasi' => MahasiswaBerprestasi::count() ?? 0,
             'totalPengguna' => User::count() ?? 0,
@@ -33,7 +33,7 @@ class LaporanController extends Controller
      */
     public function create()
     {
-        return view('admin.laporan.create');
+        return view('Admin.laporan.create');
     }
 
     /**
@@ -90,7 +90,7 @@ class LaporanController extends Controller
             'file_path' => $pathFile,
         ]);
 
-        return redirect()->route('admin.laporan.index')->with('success', '✅ Laporan berhasil ditambahkan!');
+        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan!');
     }
 
     /**
@@ -98,7 +98,7 @@ class LaporanController extends Controller
      */
     public function edit(Laporan $laporan)
     {
-        return view('admin.laporan.edit', compact('laporan'));
+        return view('Admin.laporan.edit', compact('laporan'));
     }
 
     /**
@@ -126,7 +126,7 @@ class LaporanController extends Controller
 
         $laporan->update($data);
 
-        return redirect()->route('admin.laporan.index')->with('success', '✅ Laporan berhasil diperbarui!');
+        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui!');
     }
 
     /**
@@ -140,6 +140,6 @@ class LaporanController extends Controller
 
         $laporan->delete();
 
-        return redirect()->route('admin.laporan.index')->with('success', '🗑️ Laporan berhasil dihapus!');
+        return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil dihapus!');
     }
 }

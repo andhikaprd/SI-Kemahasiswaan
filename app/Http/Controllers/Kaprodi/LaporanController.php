@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Kaprodi;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class LaporanController extends Controller
 {
     /**
-     * 🔹 Menampilkan daftar laporan dengan pagination & filter status.
+     * ðŸ”¹ Menampilkan daftar laporan dengan pagination & filter status.
      */
     public function index(Request $request)
     {
@@ -27,7 +27,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * 🔹 (Optional) Form tambah laporan baru.
+     * ðŸ”¹ (Optional) Form tambah laporan baru.
      * Tidak wajib untuk Kaprodi, tapi disediakan jika dibutuhkan nanti.
      */
     public function create()
@@ -36,7 +36,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * 🔹 Menyimpan laporan baru (jika Kaprodi perlu input manual).
+     * ðŸ”¹ Menyimpan laporan baru (jika Kaprodi perlu input manual).
      */
     public function store(Request $request)
     {
@@ -96,11 +96,11 @@ class LaporanController extends Controller
             'mata_kuliah_id' => $mataKuliahId,
         ]);
 
-        return redirect()->route('kaprodi.laporan.index')->with('success', '✅ Laporan berhasil ditambahkan!');
+        return redirect()->route('kaprodi.laporan.index')->with('success', 'Laporan berhasil ditambahkan!');
     }
 
     /**
-     * 🔹 Form edit laporan.
+     * ðŸ”¹ Form edit laporan.
      */
     public function edit(Laporan $laporan)
     {
@@ -108,7 +108,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * 🔹 Update data laporan.
+     * ðŸ”¹ Update data laporan.
      */
     public function update(Request $request, Laporan $laporan)
     {
@@ -148,11 +148,11 @@ class LaporanController extends Controller
             'file_size' => $size,
         ]);
 
-        return redirect()->route('kaprodi.laporan.index')->with('success', '✅ Laporan berhasil diperbarui!');
+        return redirect()->route('kaprodi.laporan.index')->with('success', 'Laporan berhasil diperbarui!');
     }
 
     /**
-     * 🔹 Hapus laporan dari sistem.
+     * ðŸ”¹ Hapus laporan dari sistem.
      */
     public function destroy(Laporan $laporan)
     {
@@ -162,6 +162,6 @@ class LaporanController extends Controller
 
         $laporan->delete();
 
-        return redirect()->route('kaprodi.laporan.index')->with('success', '🗑️ Laporan berhasil dihapus!');
+        return redirect()->route('kaprodi.laporan.index')->with('success', 'Laporan berhasil dihapus!');
     }
 }

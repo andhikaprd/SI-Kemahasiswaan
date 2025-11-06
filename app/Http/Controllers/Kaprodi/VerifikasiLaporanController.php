@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Kaprodi;
 
@@ -35,7 +35,7 @@ class VerifikasiLaporanController extends Controller
             'verified_at' => now(),
         ]);
 
-        return back()->with('success', "✅ Laporan '{$laporan->judul}' berhasil disetujui.");
+        return back()->with('success', "Laporan '{$laporan->judul}' berhasil disetujui.");
     }
 
     /**
@@ -51,6 +51,6 @@ class VerifikasiLaporanController extends Controller
             'verified_at' => now(),
         ]);
 
-        return back()->with('success', "❌ Laporan '{$laporan->judul}' memerlukan revisi.");
+        return back()->with('success', "Laporan '{$laporan->judul}' memerlukan revisi.");
     }
 }

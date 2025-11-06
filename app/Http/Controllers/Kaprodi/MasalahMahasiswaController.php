@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Kaprodi;
 
@@ -23,10 +23,10 @@ class MasalahMahasiswaController extends Controller
                       ->orWhere('nim', 'like', "%$search%");
                 });
             })
-            ->latest('id') // ✅ ganti dari orderByDesc('created_at')
+            ->latest('id') // ganti dari orderByDesc('created_at')
             ->paginate(10);
 
-        return view('kaprodi.masalah_mahasiswa.index', compact('kasus', 'search'));
+        return view('Kaprodi.masalah_mahasiswa.index', compact('kasus', 'search'));
     }
 
     /**
@@ -35,7 +35,7 @@ class MasalahMahasiswaController extends Controller
     public function create()
     {
         $mahasiswas = Mahasiswa::all(); // daftar mahasiswa untuk dropdown
-        return view('kaprodi.masalah_mahasiswa.create', compact('mahasiswas'));
+        return view('Kaprodi.masalah_mahasiswa.create', compact('mahasiswas'));
     }
 
     /**
@@ -91,7 +91,7 @@ class MasalahMahasiswaController extends Controller
      */
     public function show(MasalahMahasiswa $masalahMahasiswa)
     {
-        return view('kaprodi.masalah_mahasiswa.show', ['kasus' => $masalahMahasiswa]);
+        return view('Kaprodi.masalah_mahasiswa.show', ['kasus' => $masalahMahasiswa]);
     }
 
     /**
@@ -100,7 +100,7 @@ class MasalahMahasiswaController extends Controller
     public function edit(MasalahMahasiswa $masalahMahasiswa)
     {
         $mahasiswas = Mahasiswa::all();
-        return view('kaprodi.masalah_mahasiswa.edit', [
+        return view('Kaprodi.masalah_mahasiswa.edit', [
             'kasus' => $masalahMahasiswa,
             'mahasiswas' => $mahasiswas,
         ]);

@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $totalPrestasi = MahasiswaBerprestasi::count();
         $totalLaporan = Laporan::count();
 
-        return view('admin.dashboard.index', [
+        return view('Admin.dashboard.index', [
             'totalBerita' => $totalBerita,
             'totalPengguna' => $totalPengguna,
             'totalPrestasi' => $totalPrestasi,

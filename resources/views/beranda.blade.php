@@ -1,6 +1,6 @@
 {{-- File: resources/views/beranda.blade.php --}}
 
-@extends('layouts.app')
+@extends('user.layouts.app')
 
 @section('title', 'Beranda - HIMA TI Politala')
 

@@ -15,7 +15,7 @@ class BeritaController extends Controller
             ->latest('tanggal_publikasi')
             ->paginate(10);
 
-        return view('User.berita.index', compact('beritas'));
+        return view('user.berita.index', compact('beritas'));
     }
 
     // Detail berita via slug; 404 jika belum published
@@ -25,6 +25,6 @@ class BeritaController extends Controller
             abort(404);
         }
 
-        return view('User.berita.show', compact('berita'));
+        return view('user.berita.show', compact('berita'));
     }
 }

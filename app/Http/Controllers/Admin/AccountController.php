@@ -27,12 +27,12 @@ class AccountController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.account.index', compact('accounts'));
+        return view('Admin.account.index', compact('accounts'));
     }
 
     public function create()
     {
-        return view('admin.account.create');
+        return view('Admin.account.create');
     }
 
     public function store(Request $request)
@@ -62,7 +62,7 @@ class AccountController extends Controller
     public function edit($id)
     {
         $account = Akun::findOrFail($id);
-        return view('admin.account.edit', compact('account'));
+        return view('Admin.account.edit', compact('account'));
     }
 
     public function update(Request $request, $id)

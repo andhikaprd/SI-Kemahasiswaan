@@ -16,10 +16,10 @@ class DivisiController extends Controller
     {
         // Nanti bisa ambil data dari database, contoh:
         // $divisi = Divisi::all();
-        // return view('admin.divisi.index', compact('divisi'));
+        // return view('Admin.divisi.index', compact('divisi'));
 
         // 2. UBAH PATH VIEW AGAR SESUAI STRUKTUR FOLDER ADMIN
-        return view('admin.divisi.index');
+        return view('Admin.divisi.index');
     }
 
     /**
@@ -27,7 +27,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
-        return view('admin.divisi.create');
+        return view('Admin.divisi.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class DivisiController extends Controller
      */
     public function edit(/*Divisi $divisi*/)
     {
-        // return view('admin.divisi.edit', compact('divisi'));
+        // return view('Admin.divisi.edit', compact('divisi'));
     }
 
     /**
