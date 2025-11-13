@@ -140,6 +140,14 @@
                             <i class="fas fa-user-graduate me-2"></i>Mahasiswa
                         </a>
                     </li>
+
+                    <!-- TPK -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.tpk.*') ? 'active' : '' }}" 
+                           href="{{ route('admin.tpk.criteria.index') }}">
+                            <i class="fas fa-project-diagram me-2"></i>TPK
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>

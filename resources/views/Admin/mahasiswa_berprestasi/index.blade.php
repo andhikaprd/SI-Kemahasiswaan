@@ -14,17 +14,9 @@
     <!-- Header Halaman -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0">Kelola Prestasi Mahasiswa</h3>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.mahasiswa_berprestasi.weights', ['tahun' => request('tahun') && request('tahun')!=='Semua' ? request('tahun') : null]) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-balance-scale me-2"></i>Bobot (AHP)
-            </a>
-            <a href="{{ route('admin.mahasiswa_berprestasi.ranking', ['tahun' => request('tahun') && request('tahun')!=='Semua' ? request('tahun') : null]) }}" class="btn btn-outline-primary">
-                <i class="fas fa-list-ol me-2"></i>Ranking (SAW)
-            </a>
-            <a href="{{ route('admin.mahasiswa_berprestasi.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Tambah Prestasi
-            </a>
-        </div>
+        <a href="{{ route('admin.mahasiswa_berprestasi.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Tambah Prestasi
+        </a>
     </div>
 
     <!-- Opsi Filter dan Pencarian -->

@@ -96,6 +96,15 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::resource('mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)
         ->only(['index','edit','update'])
         ->names('mahasiswa');
+
+    // Modul TPK generik (Criteria, Alternatives, Compute)
+    Route::prefix('tpk')->name('tpk.')->group(function () {
+        Route::redirect('/', '/admin/tpk/criteria');
+        Route::resource('criteria', \App\Http\Controllers\Admin\TPK\CriteriaController::class)->except(['show']);
+        Route::resource('alternatives', \App\Http\Controllers\Admin\TPK\AlternativeController::class)->except(['show']);
+        Route::get('compute', [\App\Http\Controllers\Admin\TPK\ComputeController::class, 'index'])->name('compute');
+        Route::get('compute/export', [\App\Http\Controllers\Admin\TPK\ComputeController::class, 'exportCsv'])->name('compute.export');
+    });
 });
 
 /*
