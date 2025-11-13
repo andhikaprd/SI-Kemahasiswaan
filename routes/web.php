@@ -77,6 +77,25 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
         ->parameters(['mahasiswa-berprestasi' => 'prestasi'])
         ->names('mahasiswa_berprestasi')
         ->except(['show']);
+
+    // Ranking (SAW) untuk alternatif Mahasiswa menggunakan bobot AHP
+    Route::get('mahasiswa-berprestasi/ranking', [AdminMahasiswaBerprestasiController::class, 'ranking'])
+        ->name('mahasiswa_berprestasi.ranking');
+    Route::get('mahasiswa-berprestasi/ranking/export', [AdminMahasiswaBerprestasiController::class, 'rankingExportCsv'])
+        ->name('mahasiswa_berprestasi.ranking.export');
+    Route::get('mahasiswa-berprestasi/ranking/export-pdf', [AdminMahasiswaBerprestasiController::class, 'rankingExportPdf'])
+        ->name('mahasiswa_berprestasi.ranking.export_pdf');
+
+    // Bobot (AHP) - form & simpan
+    Route::get('mahasiswa-berprestasi/weights', [AdminMahasiswaBerprestasiController::class, 'weightsForm'])
+        ->name('mahasiswa_berprestasi.weights');
+    Route::post('mahasiswa-berprestasi/weights', [AdminMahasiswaBerprestasiController::class, 'weightsStore'])
+        ->name('mahasiswa_berprestasi.weights.store');
+
+    // Kelola Mahasiswa (IPK & Bahasa Inggris)
+    Route::resource('mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)
+        ->only(['index','edit','update'])
+        ->names('mahasiswa');
 });
 
 /*

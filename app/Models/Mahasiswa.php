@@ -17,8 +17,15 @@ class Mahasiswa extends Model
         'prodi_id',
         'angkatan',
         'email',
-        'telepon',
-        'alamat',
+        // Tambahan untuk perankingan
+        'ipk',
+        'english_type',
+        'english_score',
+    ];
+
+    protected $casts = [
+        'ipk' => 'float',
+        'english_score' => 'float',
     ];
 
     public function masalahMahasiswa()

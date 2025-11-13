@@ -53,7 +53,7 @@
                 <label class="block text-sm font-medium text-gray-700">Ganti File (PDF)</label>
                 <input type="file" name="file_laporan" accept=".pdf" class="mt-1 w-full border rounded-lg px-3 py-2">
                 @if($laporan->file_path)
-                    <a href="{{ $laporan->file_url }}" target="_blank" class="text-blue-600 text-sm inline-block mt-1">Lihat file saat ini</a>
+                    <a href="{{ route('kaprodi.laporan.download', $laporan->id) }}" target="_blank" class="text-blue-600 text-sm inline-block mt-1">Lihat/Unduh file saat ini</a>
                 @endif
             </div>
         </div>
@@ -70,4 +70,3 @@
     </form>
 </div>
 @endsection
-

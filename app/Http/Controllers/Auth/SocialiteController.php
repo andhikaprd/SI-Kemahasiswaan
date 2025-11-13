@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Log;
 
 class SocialiteController extends Controller
 {
@@ -49,7 +50,16 @@ class SocialiteController extends Controller
 
     public function redirectToGoogle(): RedirectResponse
     {
-        return Socialite::driver('google')->redirect();
+        $redirect = config('services.google.redirect');
+        Log::info('Google SSO redirect init', [
+            'redirect' => $redirect,
+            'client_id' => config('services.google.client_id'),
+            'app_url' => config('app.url'),
+        ]);
+
+        return Socialite::driver('google')
+            ->redirectUrl($redirect)
+            ->redirect();
     }
 
     public function handleGoogleCallback(): RedirectResponse

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Kaprodi;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class LaporanController extends Controller
 {
     /**
-     * ðŸ”¹ Menampilkan daftar laporan dengan pagination & filter status.
+     * Menampilkan daftar laporan dengan pagination & filter status.
      */
     public function index(Request $request)
     {
@@ -27,7 +27,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * ðŸ”¹ (Optional) Form tambah laporan baru.
+     * (Optional) Form tambah laporan baru.
      * Tidak wajib untuk Kaprodi, tapi disediakan jika dibutuhkan nanti.
      */
     public function create()
@@ -36,7 +36,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * ðŸ”¹ Menyimpan laporan baru (jika Kaprodi perlu input manual).
+     * Menyimpan laporan baru (jika Kaprodi perlu input manual).
      */
     public function store(Request $request)
     {
@@ -100,7 +100,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * ðŸ”¹ Form edit laporan.
+     * Form edit laporan.
      */
     public function edit(Laporan $laporan)
     {
@@ -108,7 +108,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * ðŸ”¹ Update data laporan.
+     * Update data laporan.
      */
     public function update(Request $request, Laporan $laporan)
     {
@@ -152,7 +152,7 @@ class LaporanController extends Controller
     }
 
     /**
-     * ðŸ”¹ Hapus laporan dari sistem.
+     * Hapus laporan dari sistem.
      */
     public function destroy(Laporan $laporan)
     {
@@ -164,4 +164,17 @@ class LaporanController extends Controller
 
         return redirect()->route('kaprodi.laporan.index')->with('success', 'Laporan berhasil dihapus!');
     }
+
+    /**
+     * Unduh file laporan secara terproteksi.
+     */
+    public function download(Laporan $laporan)
+    {
+        if (!$laporan->file_path || !Storage::disk('public')->exists($laporan->file_path)) {
+            abort(404);
+        }
+        $filename = basename($laporan->file_path) ?: 'laporan.pdf';
+        return Storage::disk('public')->download($laporan->file_path, $filename);
+    }
 }
+

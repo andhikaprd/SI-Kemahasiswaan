@@ -132,6 +132,14 @@
                             <i class="fas fa-file-alt me-2"></i>Laporan
                         </a>
                     </li>
+
+                    <!-- Mahasiswa -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.mahasiswa.*') ? 'active' : '' }}" 
+                           href="{{ route('admin.mahasiswa.index') }}">
+                            <i class="fas fa-user-graduate me-2"></i>Mahasiswa
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>

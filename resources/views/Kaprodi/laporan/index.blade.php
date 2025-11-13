@@ -93,7 +93,7 @@
                                    <i class="fas fa-edit"></i>
                                 </a>
                                 @if ($laporan->file_path)
-                                    <a href="{{ asset('storage/' . $laporan->file_path) }}"
+                                    <a href="{{ route('kaprodi.laporan.download', $laporan->id) }}"
                                        class="text-gray-600 hover:text-gray-800" title="Unduh">
                                        <i class="fas fa-download"></i>
                                     </a>
