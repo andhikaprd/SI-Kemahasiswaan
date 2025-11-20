@@ -41,6 +41,13 @@ class ComputeController extends Controller
         $normalized = [];
         foreach ($criteria as $c) {
             $col = $values[$c->id];
+            // Jika belum ada alternatif / kolom kosong, lewati saja
+            if (empty($col)) {
+                foreach ($alts as $a) {
+                    $normalized[$c->id][$a->id] = 0;
+                }
+                continue;
+            }
             $max = max(1e-9, max($col));
             $min = min($col);
             foreach ($alts as $a) {
@@ -93,6 +100,12 @@ class ComputeController extends Controller
             $col = [];
             foreach ($alts as $a) { $col[$a->id]=(float)(TpkScore::where('alternative_id',$a->id)->where('criterion_id',$c->id)->value('value') ?? 0); }
             $values[$c->id]=$col;
+            if (empty($col)) {
+                foreach ($alts as $a) {
+                    $normalized[$c->id][$a->id] = 0;
+                }
+                continue;
+            }
             $max=max(1e-9,max($col)); $min=min($col);
             foreach ($alts as $a) {
                 $x=$col[$a->id];

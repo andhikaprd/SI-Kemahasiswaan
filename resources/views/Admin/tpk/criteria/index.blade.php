@@ -7,7 +7,7 @@
       <h5 class="mb-0">Data Kriteria</h5>
       <div class="d-flex gap-2">
         <a href="{{ route('admin.tpk.compute') }}" class="btn btn-outline-primary"><i class="fas fa-calculator me-1"></i> Hitung</a>
-        <a href="{{ route('admin.tpk.criteria.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i> Tambah Kriteria</a>
+        <a href="{{ route('admin.tpk.criteria.create') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Tambah Kriteria</a>
       </div>
     </div>
     @if (!empty($needs_migration))

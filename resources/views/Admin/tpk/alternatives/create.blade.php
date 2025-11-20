@@ -19,10 +19,9 @@
     @endforeach
 
     <div class="col-12">
-      <button class="btn btn-success">Create</button>
+      <button class="btn btn-primary">Create</button>
       <a href="{{ route('admin.tpk.alternatives.index') }}" class="btn btn-light">Kembali</a>
     </div>
   </form>
 </div></div>
 @endsection
-

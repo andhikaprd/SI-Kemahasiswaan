@@ -6,7 +6,7 @@
     <h5 class="mb-0">Data Alternatif</h5>
     <div class="d-flex gap-2">
       <a href="{{ route('admin.tpk.compute') }}" class="btn btn-outline-primary"><i class="fas fa-calculator me-1"></i> Hitung</a>
-      <a href="{{ route('admin.tpk.alternatives.create') }}" class="btn btn-success"><i class="fas fa-plus me-1"></i> Tambah Alternatif</a>
+      <a href="{{ route('admin.tpk.alternatives.create') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Tambah Alternatif</a>
     </div>
   </div>
   @if (!empty($needs_migration))

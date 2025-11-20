@@ -10,7 +10,7 @@
     <div>
       <a href="{{ route('admin.tpk.criteria.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Kriteria</a>
       <a href="{{ route('admin.tpk.alternatives.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Alternatif</a>
-      <a href="{{ route('admin.tpk.compute.export') }}" class="btn btn-sm btn-success">Export CSV</a>
+      <a href="{{ route('admin.tpk.compute.export') }}" class="btn btn-sm btn-primary">Export CSV</a>
     </div>
   </div>
   <div class="table-responsive">
@@ -25,7 +25,7 @@
       <tbody>
         <tr>
           @foreach ($criteria as $c)
-            <td>{{ number_format($weights[$c->id] ?? 0, 3) }}</td>
+            <td>{{ number_format($weights[$c->id] ?? 0, 2) }}</td>
           @endforeach
         </tr>
       </tbody>
@@ -50,7 +50,7 @@
           <tr>
             <td>{{ $a->code }}</td>
             @foreach ($criteria as $c)
-              <td>{{ number_format($normalized[$c->id][$a->id] ?? 0, 3) }}</td>
+              <td>{{ number_format($normalized[$c->id][$a->id] ?? 0, 2) }}</td>
             @endforeach
           </tr>
         @empty
@@ -79,7 +79,7 @@
             <td>{{ $r['rank'] }}</td>
             <td>{{ $r['alt']->code }}</td>
             <td>{{ $r['alt']->name }}</td>
-            <td class="text-end">{{ number_format($r['score'], 4) }}</td>
+            <td class="text-end">{{ number_format($r['score'], 2) }}</td>
           </tr>
         @empty
           <tr><td colspan="4" class="text-center text-muted">Tidak ada data.</td></tr>

@@ -17,10 +17,9 @@
     </div>
     <div class="col-md-2"><label class="form-label">Urutan</label><input name="order" type="number" min="0" class="form-control" value="{{ old('order',0) }}"></div>
     <div class="col-12">
-      <button class="btn btn-success">Create</button>
+      <button class="btn btn-primary">Create</button>
       <a class="btn btn-light" href="{{ route('admin.tpk.criteria.index') }}">Kembali</a>
     </div>
   </form>
 </div></div>
 @endsection
-
