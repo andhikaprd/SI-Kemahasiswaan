@@ -89,68 +89,77 @@
             </div>
         </header>
 
-        <!-- Navigasi Tab -->
-        <nav class="bg-white shadow-sm py-2 mb-4">
-            <div class="container">
-                <ul class="nav nav-tabs">
-                    <!-- Dashboard -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
-                           href="{{ route('admin.dashboard') }}">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a>
-                    </li>
+        @php $role = optional(Auth::user())->role; @endphp
+        @if ($role === 'admin')
+            <!-- Navigasi Tab (khusus admin) -->
+            <nav class="bg-white shadow-sm py-2 mb-4">
+                <div class="container">
+                    <ul class="nav nav-tabs">
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
+                               href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
 
-                    <!-- Prestasi -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.mahasiswa_berprestasi.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.mahasiswa_berprestasi.index') }}">
-                            <i class="fas fa-trophy me-2"></i>Prestasi
-                        </a>
-                    </li>
+                        <!-- Prestasi -->
+                        @can('viewAny', \App\Models\MahasiswaBerprestasi::class)
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.mahasiswa_berprestasi.*') ? 'active' : '' }}" 
+                                   href="{{ route('admin.mahasiswa_berprestasi.index') }}">
+                                    <i class="fas fa-trophy me-2"></i>Prestasi
+                                </a>
+                            </li>
+                        @endcan
 
-                    <!-- Akun -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.account.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.account.index') }}">
-                            <i class="fas fa-users-cog me-2"></i>Akun
-                        </a>
-                    </li>
+                        <!-- Akun -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.account.*') ? 'active' : '' }}" 
+                               href="{{ route('admin.account.index') }}">
+                                <i class="fas fa-users-cog me-2"></i>Akun
+                            </a>
+                        </li>
 
-                    <!-- Berita -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.berita.index') }}">
-                            <i class="fas fa-newspaper me-2"></i>Berita
-                        </a>
-                    </li>
+                        <!-- Berita -->
+                        @can('viewAny', \App\Models\Berita::class)
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" 
+                                   href="{{ route('admin.berita.index') }}">
+                                    <i class="fas fa-newspaper me-2"></i>Berita
+                                </a>
+                            </li>
+                        @endcan
 
-                    <!-- Laporan -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.laporan.index') }}">
-                            <i class="fas fa-file-alt me-2"></i>Laporan
-                        </a>
-                    </li>
+                        <!-- Laporan -->
+                        @can('viewAny', \App\Models\Laporan::class)
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}" 
+                                   href="{{ route('admin.laporan.index') }}">
+                                    <i class="fas fa-file-alt me-2"></i>Laporan
+                                </a>
+                            </li>
+                        @endcan
 
-                    <!-- Mahasiswa -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.mahasiswa.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.mahasiswa.index') }}">
-                            <i class="fas fa-user-graduate me-2"></i>Mahasiswa
-                        </a>
-                    </li>
-
-                    <!-- TPK -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.tpk.*') ? 'active' : '' }}" 
-                           href="{{ route('admin.tpk.criteria.index') }}">
-                            <i class="fas fa-project-diagram me-2"></i>TPK
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                        <!-- TPK -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.tpk.*') ? 'active' : '' }}" 
+                               href="{{ route('admin.tpk.criteria.index') }}">
+                                <i class="fas fa-project-diagram me-2"></i>TPK
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        @else
+            <nav class="bg-white shadow-sm py-2 mb-4">
+                <div class="container">
+                    <div class="alert alert-warning mb-0">
+                        Menu admin tidak tersedia untuk role ini.
+                    </div>
+                </div>
+            </nav>
+        @endif
 
         <!-- Konten Halaman -->
         <main class="py-4">

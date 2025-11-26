@@ -79,12 +79,16 @@
                         @php $st = strtolower($account->status ?? 'aktif'); @endphp
                         <span class="badge {{ $st === 'aktif' ? 'bg-success' : 'bg-secondary' }}">{{ $account->status ?? 'aktif' }}</span>
                     </div>
-                <div class="col-md-2 d-flex justify-content-end">
-                        <a href="{{ route('admin.account.edit', $account->id) }}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+                <div class="col-md-2 d-flex justify-content-end align-items-center gap-3">
+                        <a href="{{ route('admin.account.edit', $account->id) }}" class="text-secondary" title="Edit">
+                            <i class="fas fa-pen fa-lg"></i>
+                        </a>
                         <form action="{{ route('admin.account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                            <button type="submit" class="btn btn-link p-0 text-danger" title="Hapus" style="text-decoration: none;">
+                                <i class="fas fa-trash fa-lg"></i>
+                            </button>
                         </form>
                     </div>
                 </div>

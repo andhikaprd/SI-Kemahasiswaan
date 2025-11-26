@@ -86,17 +86,17 @@
                     </div>
 
                     <!-- Aksi -->
-                    <div class="col-md-2 d-flex align-items-center justify-content-end">
+                    <div class="col-md-2 d-flex align-items-center justify-content-end gap-3">
                         <a href="{{ route('admin.berita.edit', $berita->id) }}"
-                           class="btn btn-sm btn-outline-primary me-2">
-                            <i class="fas fa-edit"></i> Edit
+                           class="text-primary" title="Edit">
+                            <i class="fas fa-pen fa-lg"></i>
                         </a>
                         <form action="{{ route('admin.berita.destroy', $berita->id) }}"
                               method="POST" onsubmit="return confirm('Hapus berita ini?');" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-trash"></i>
+                            <button type="submit" class="btn btn-link p-0 text-danger" title="Hapus" style="text-decoration: none;">
+                                <i class="fas fa-trash fa-lg"></i>
                             </button>
                         </form>
                     </div>

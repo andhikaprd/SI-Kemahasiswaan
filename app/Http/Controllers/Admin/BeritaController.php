@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 
 class BeritaController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Berita::class, 'berita');
+    }
 
     public function index(Request $request)
     {

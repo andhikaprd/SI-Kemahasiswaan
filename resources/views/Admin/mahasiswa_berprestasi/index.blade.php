@@ -95,9 +95,9 @@
                     </div>
 
                     <!-- Aksi -->
-                    <div class="col-md-2 d-flex align-items-center justify-content-end">
-                        <a href="{{ route('admin.mahasiswa_berprestasi.edit', $item->id) }}" class="btn btn-sm btn-outline-secondary me-2">
-                            <i class="fas fa-edit"></i> Edit
+                    <div class="col-md-2 d-flex align-items-center justify-content-end gap-3">
+                        <a href="{{ route('admin.mahasiswa_berprestasi.edit', $item->id) }}" class="text-secondary" title="Edit">
+                            <i class="fas fa-pen fa-lg"></i>
                         </a>
                         <form 
                             action="{{ route('admin.mahasiswa_berprestasi.destroy', $item->id) }}" 
@@ -105,8 +105,8 @@
                             onsubmit="return confirm('Yakin ingin menghapus prestasi ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-trash"></i> Hapus
+                            <button type="submit" class="btn btn-link p-0 text-danger" title="Hapus" style="text-decoration: none;">
+                                <i class="fas fa-trash fa-lg"></i>
                             </button>
                         </form>
                     </div>

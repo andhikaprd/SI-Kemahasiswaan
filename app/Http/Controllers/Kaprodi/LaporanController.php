@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Laporan::class, 'laporan');
+    }
+
     /**
      * Menampilkan daftar laporan dengan pagination & filter status.
      */

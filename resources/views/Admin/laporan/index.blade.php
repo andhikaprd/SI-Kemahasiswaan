@@ -83,19 +83,33 @@
                                 <td>{{ $laporan->periode ?? '-' }}</td>
                                 <td><span class="badge bg-primary">{{ $laporan->kategori ?? '-' }}</span></td>
                                 <td>{{ $laporan->created_at?->format('d M Y') ?? '-' }}</td>
-                                <td><span class="badge bg-success">{{ ucfirst($laporan->status ?? 'Final') }}</span></td>
+                                @php
+                                    $status = $laporan->status ?? 'pending';
+                                    $statusClass = match ($status) {
+                                        'approved' => 'bg-success',
+                                        'revisi', 'rejected' => 'bg-danger',
+                                        default => 'bg-warning text-dark',
+                                    };
+                                @endphp
+                                <td><span class="badge {{ $statusClass }}">{{ ucfirst($status) }}</span></td>
                                 <td class="text-center">
-                                    @if($laporan->file_path)
-                                        <a href="{{ $laporan->file_url }}" target="_blank" class="btn btn-sm btn-outline-info me-1">
-                                            <i class="fas fa-file-pdf"></i>
+                                    <div class="d-flex justify-content-center align-items-center gap-3">
+                                        @if($laporan->file_path)
+                                            <a href="{{ $laporan->file_url }}" target="_blank" class="text-info" title="Lihat berkas">
+                                                <i class="fas fa-file-pdf fa-lg"></i>
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('admin.laporan.edit', $laporan->id) }}" class="text-secondary" title="Edit">
+                                            <i class="fas fa-pen fa-lg"></i>
                                         </a>
-                                    @endif
-                                    <a href="{{ route('admin.laporan.edit', $laporan->id) }}" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
-                                    <form action="{{ route('admin.laporan.destroy', $laporan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus laporan ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                                    </form>
+                                        <form action="{{ route('admin.laporan.destroy', $laporan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus laporan ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-link p-0 text-danger" title="Hapus" style="text-decoration: none;">
+                                                <i class="fas fa-trash fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

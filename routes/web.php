@@ -80,11 +80,6 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
 
     // (Dinonaktifkan) SAW & Bobot AHP untuk Prestasi — routes dihapus sesuai permintaan
 
-    // Kelola Mahasiswa (IPK & Bahasa Inggris)
-    Route::resource('mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)
-        ->only(['index','edit','update'])
-        ->names('mahasiswa');
-
     // Modul TPK generik (Criteria, Alternatives, Compute)
     Route::prefix('tpk')->name('tpk.')->group(function () {
         Route::redirect('/', '/admin/tpk/criteria');

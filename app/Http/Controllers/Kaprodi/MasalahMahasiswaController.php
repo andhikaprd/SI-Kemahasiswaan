@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class MasalahMahasiswaController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(MasalahMahasiswa::class, 'masalahMahasiswa');
+    }
+
     /**
      * Menampilkan daftar pelanggaran mahasiswa.
      */
