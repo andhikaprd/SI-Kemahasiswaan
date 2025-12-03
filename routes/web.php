@@ -144,6 +144,8 @@ Route::post('/logout', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [SocialiteController::class, 'login'])->name('login');
     Route::post('/login', [SocialiteController::class, 'handlePasswordLogin'])->name('login.attempt');
+    Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'show'])->name('register');
+    Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('register.store');
     Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
     Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });

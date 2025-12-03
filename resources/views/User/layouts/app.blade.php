@@ -30,6 +30,9 @@
         .navbar .nav-link:hover { color: #fff; }
         .navbar .nav-link.active { color: #fff; border-bottom: 2px solid #fff; }
         .navbar-brand img { border-radius: 50%; }
+        .user-identity { max-width: 180px; overflow: hidden; }
+        .user-identity .name { color:#fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-identity .meta { color: rgba(255,255,255,.8); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
@@ -64,11 +67,14 @@
                 <ul class="navbar-nav ms-lg-3 align-items-center">
                     @auth
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-regular fa-user me-2"></i>
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-user"></i>
                                 @php($role = auth()->user()->role)
-                                {{ $role === 'admin' ? 'Admin' : auth()->user()->name }}
-                                <span class="badge ms-2" style="background: rgba(255,255,255,.25); border:1px solid rgba(255,255,255,.35); color:#fff;">
+                                <div class="user-identity text-start">
+                                    <div class="meta">{{ auth()->user()->nim ?? '' }}</div>
+                                    <div class="name">{{ $role === 'admin' ? 'Admin' : auth()->user()->name }}</div>
+                                </div>
+                                <span class="badge ms-1" style="background: rgba(255,255,255,.25); border:1px solid rgba(255,255,255,.35); color:#fff;">
                                     {{ $role === 'admin' ? 'Admin' : ($role === 'kaprodi' ? 'Kaprodi' : 'Mahasiswa') }}
                                 </span>
                             </a>

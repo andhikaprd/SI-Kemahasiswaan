@@ -85,11 +85,7 @@
 
         <div class="foot">
             Belum punya akun?
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}">Daftar sekarang</a>
-            @else
-                <span>Gunakan akun email politala.</span>
-            @endif
+            <a href="{{ route('register') }}">Daftar sekarang</a>
         </div>
     </div>
 </div>

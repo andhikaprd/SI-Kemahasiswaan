@@ -62,12 +62,34 @@ class SocialiteController extends Controller
             ->redirect();
     }
 
+    private function isAllowedDomain(?string $email): bool
+    {
+        if (!$email) {
+            return false;
+        }
+        $allowed = config('auth.google_allowed_domains', []);
+        if (empty($allowed)) {
+            return true; // allow all if not configured
+        }
+        $domain = Str::afterLast($email, '@');
+        return in_array(strtolower($domain), array_map('strtolower', $allowed), true);
+    }
+
     public function handleGoogleCallback(): RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->user();
+        // Gunakan stateless untuk menghindari InvalidStateException saat pengembangan/local
+        $googleUser = Socialite::driver('google')->stateless()->user();
+
+        $email = $googleUser->getEmail();
+        if (!$this->isAllowedDomain($email)) {
+            Log::warning('Google SSO blocked: domain not allowed', ['email' => $email]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Email kampus diperlukan. Silakan gunakan akun Google dengan domain yang diizinkan.',
+            ]);
+        }
 
         $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
+            ['email' => $email],
             [
                 'name' => $googleUser->getName() ?: ($googleUser->getNickname() ?: 'User'),
                 // set random password (not used for SSO)

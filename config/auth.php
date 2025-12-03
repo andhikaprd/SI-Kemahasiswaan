@@ -112,4 +112,17 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Allowed Domains
+    |--------------------------------------------------------------------------
+    |
+    | Batasi login Google hanya untuk domain tertentu. Isi env
+    | GOOGLE_ALLOWED_DOMAINS dengan daftar dipisah koma (contoh:
+    | "politala.ac.id,student.politala.ac.id"). Kosongkan untuk
+    | mengizinkan semua domain.
+    |
+    */
+    'google_allowed_domains' => array_filter(array_map('trim', explode(',', env('GOOGLE_ALLOWED_DOMAINS', '')))),
+
 ];
