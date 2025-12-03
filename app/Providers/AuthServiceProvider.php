@@ -21,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         Berita::class => BeritaPolicy::class,
         Laporan::class => LaporanPolicy::class,
         MasalahMahasiswa::class => MasalahMahasiswaPolicy::class,
+        \App\Models\MahasiswaBerprestasi::class => \App\Policies\MahasiswaBerprestasiPolicy::class,
     ];
 
     /**
