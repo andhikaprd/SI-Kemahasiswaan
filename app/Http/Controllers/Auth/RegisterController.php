@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    private function fallbackForRole(User $user): string
+     private function fallbackForRole(User $user): string
     {
         $role = $user->role ?? 'mahasiswa';
         return match ($role) {

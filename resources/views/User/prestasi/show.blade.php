@@ -63,6 +63,42 @@
                                 </div>
                             @endif
 
+                            @php
+                                $isOwner = auth()->check() && (
+                                    auth()->user()->role === 'admin' ||
+                                    strcasecmp(trim(auth()->user()->nim ?? ''), trim($prestasi->nim ?? '')) === 0
+                                );
+                                $approved = $prestasi->approvedCertificates()->with('user')->get();
+                            @endphp
+
+                            @if($approved->count())
+                                <hr>
+                                <div class="mb-3">
+                                    <div class="text-muted small mb-1">Sertifikat Terverifikasi</div>
+                                    <div class="d-flex flex-column gap-2">
+                                        @foreach($approved as $cert)
+                                            <div class="d-flex align-items-center justify-content-between gap-2 border rounded px-2 py-1">
+                                                <div class="text-truncate">
+                                                    <a href="{{ $cert->url }}" class="text-success" target="_blank">
+                                                        <i class="bi bi-file-earmark-text me-1"></i>
+                                                        {{ $cert->original_name ?? 'Sertifikat' }}
+                                                    </a>
+                                                    @php($size = $cert->size ? round($cert->size/1024,1).' KB' : '')
+                                                    @if($size)<span class="text-muted small ms-1">({{ $size }})</span>@endif
+                                                </div>
+                                                @if($isOwner || (auth()->check() && auth()->user()->role === 'admin') || (auth()->id() === $cert->user_id))
+                                                    <form method="POST" action="{{ route('prestasi.certificate.destroy', [$prestasi, $cert->id]) }}" onsubmit="return confirm('Hapus sertifikat ini?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="d-flex justify-content-between align-items-center mt-4">
                                 <a href="{{ route('prestasi.index') }}" class="btn btn-outline-secondary">
                                     &larr; Kembali
@@ -76,6 +112,11 @@
                                     @if($prestasi->foto_url)
                                         <a href="{{ $prestasi->foto_url }}" target="_blank" class="btn btn-outline-primary">
                                             <i class="bi bi-image me-1"></i> Lihat Foto
+                                        </a>
+                                    @endif
+                                    @if($isOwner)
+                                        <a href="{{ route('prestasi.certificate.create', $prestasi) }}" class="btn btn-primary">
+                                            <i class="bi bi-upload me-1"></i> Upload Sertifikat
                                         </a>
                                     @endif
                                 </div>
@@ -94,4 +135,3 @@
         })();
     </script>
 @endsection
-

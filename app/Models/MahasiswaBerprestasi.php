@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\PrestasiCertificate;
 
 class MahasiswaBerprestasi extends Model
 {
@@ -78,6 +79,16 @@ class MahasiswaBerprestasi extends Model
         return asset('storage/' . ltrim($this->foto_path, '/'));
     }
 
+    public function certificates()
+    {
+        return $this->hasMany(PrestasiCertificate::class, 'prestasi_id');
+    }
+
+    public function approvedCertificates()
+    {
+        return $this->certificates()->where('status', 'approved');
+    }
+
     protected static function booted()
     {
         static::saving(function (self $m) {
@@ -88,5 +99,10 @@ class MahasiswaBerprestasi extends Model
                 $m->slug = Str::slug(($m->nama ?? 'prestasi') . ' ' . ($m->kompetisi ?? '') . '-' . now()->timestamp);
             }
         });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 }

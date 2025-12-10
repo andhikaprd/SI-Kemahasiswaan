@@ -1,10 +1,10 @@
 @extends('Admin.layouts.app')
-@section('title','TPK - Kriteria')
+@section('title','Hitung Prestasi - Kriteria')
 @section('content')
 <div class="card">
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Data Kriteria</h5>
+      <h5 class="mb-0">Data Kriteria (Hitung Prestasi)</h5>
       <div class="d-flex gap-2">
         <a href="{{ route('admin.tpk.compute') }}" class="btn btn-outline-primary"><i class="fas fa-calculator me-1"></i> Hitung</a>
         <a href="{{ route('admin.tpk.criteria.create') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Tambah Kriteria</a>

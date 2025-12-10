@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Str;
 
 class LaporanController extends Controller
 {
@@ -27,8 +29,9 @@ class LaporanController extends Controller
         }
 
         $laporans = $query->paginate(10);
+        $periodes = Laporan::select('periode')->distinct()->orderBy('periode', 'desc')->pluck('periode');
 
-        return view('Kaprodi.laporan.index', compact('laporans'));
+        return view('Kaprodi.laporan.index', compact('laporans', 'periodes'));
     }
 
     /**
@@ -180,6 +183,41 @@ class LaporanController extends Controller
         }
         $filename = basename($laporan->file_path) ?: 'laporan.pdf';
         return Storage::disk('public')->download($laporan->file_path, $filename);
+    }
+
+    /**
+     * Unduh rekap laporan per periode dalam format CSV.
+     */
+    public function downloadPeriode(string $periode): StreamedResponse
+    {
+        $items = Laporan::with(['mahasiswa'])
+            ->where('periode', $periode)
+            ->get();
+
+        $filename = 'laporan-periode-' . Str::slug($periode) . '.csv';
+        $headers = [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $callback = function () use ($items) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Judul', 'Periode', 'Kategori', 'Mahasiswa', 'NIM', 'Status', 'Tanggal']);
+            foreach ($items as $lap) {
+                fputcsv($handle, [
+                    $lap->judul,
+                    $lap->periode,
+                    $lap->kategori,
+                    optional($lap->mahasiswa)->nama,
+                    optional($lap->mahasiswa)->nim,
+                    $lap->status,
+                    optional($lap->created_at)?->format('Y-m-d'),
+                ]);
+            }
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
 

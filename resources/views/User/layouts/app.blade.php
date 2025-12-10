@@ -71,12 +71,17 @@
                                 <i class="fa-regular fa-user"></i>
                                 @php($role = auth()->user()->role)
                                 <div class="user-identity text-start">
-                                    <div class="meta">{{ auth()->user()->nim ?? '' }}</div>
-                                    <div class="name">{{ $role === 'admin' ? 'Admin' : auth()->user()->name }}</div>
+                                    <div class="name">{{ auth()->user()->name }}</div>
+                                    <div class="meta">
+                                        @if($role === 'admin')
+                                            Admin
+                                        @elseif($role === 'kaprodi')
+                                            Kaprodi
+                                        @else
+                                            Mahasiswa
+                                        @endif
+                                    </div>
                                 </div>
-                                <span class="badge ms-1" style="background: rgba(255,255,255,.25); border:1px solid rgba(255,255,255,.35); color:#fff;">
-                                    {{ $role === 'admin' ? 'Admin' : ($role === 'kaprodi' ? 'Kaprodi' : 'Mahasiswa') }}
-                                </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                                 @if (auth()->user()->role === 'admin')

@@ -112,6 +112,13 @@
                                 </a>
                             </li>
                         @endcan
+                        <!-- Sertifikat Prestasi -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.prestasi_certificates.*') ? 'active' : '' }}" 
+                               href="{{ route('admin.prestasi_certificates.index') }}">
+                                <i class="fas fa-file-alt me-2"></i>Sertifikat
+                            </a>
+                        </li>
 
                         <!-- Akun -->
                         <li class="nav-item">
@@ -141,11 +148,11 @@
                             </li>
                         @endcan
 
-                        <!-- TPK -->
+                        <!-- Hitung Prestasi -->
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.tpk.*') ? 'active' : '' }}" 
                                href="{{ route('admin.tpk.criteria.index') }}">
-                                <i class="fas fa-project-diagram me-2"></i>TPK
+                                <i class="fas fa-project-diagram me-2"></i>Hitung Prestasi
                             </a>
                         </li>
                     </ul>

@@ -25,6 +25,8 @@ use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
 use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;
 use App\Http\Controllers\Kaprodi\VerifikasiLaporanController;
 use App\Http\Controllers\Kaprodi\DownloadController as KaprodiDownloadController;
+use App\Http\Controllers\User\PrestasiCertificateController as UserPrestasiCertificateController;
+use App\Http\Controllers\Admin\PrestasiCertificateController as AdminPrestasiCertificateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +52,12 @@ Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::prefix('prestasi')->name('prestasi.')->group(function () {
     Route::get('/', [MahasiswaBerprestasiController::class, 'index'])->name('index');
     Route::get('/{prestasi:slug}', [MahasiswaBerprestasiController::class, 'show'])->name('show');
+});
+// Upload sertifikat prestasi (user harus login, prestasi sudah ada)
+Route::middleware('auth')->group(function () {
+    Route::get('/prestasi/{prestasi:slug}/upload-sertifikat', [UserPrestasiCertificateController::class, 'create'])->name('prestasi.certificate.create');
+    Route::post('/prestasi/{prestasi:slug}/upload-sertifikat', [UserPrestasiCertificateController::class, 'store'])->name('prestasi.certificate.store');
+    Route::delete('/prestasi/{prestasi:slug}/sertifikat/{certificate}', [UserPrestasiCertificateController::class, 'destroy'])->name('prestasi.certificate.destroy');
 });
 
 /*
@@ -77,6 +85,9 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
         ->parameters(['mahasiswa-berprestasi' => 'prestasi'])
         ->names('mahasiswa_berprestasi')
         ->except(['show']);
+    Route::get('sertifikat-prestasi', [AdminPrestasiCertificateController::class, 'index'])->name('prestasi_certificates.index');
+    Route::get('sertifikat-prestasi/{certificate}/download', [AdminPrestasiCertificateController::class, 'download'])->name('prestasi_certificates.download');
+    Route::delete('sertifikat-prestasi/{certificate}', [AdminPrestasiCertificateController::class, 'destroy'])->name('prestasi_certificates.destroy');
 
     // (Dinonaktifkan) SAW & Bobot AHP untuk Prestasi — routes dihapus sesuai permintaan
 
@@ -122,6 +133,7 @@ Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')-
     Route::post('/verifikasi/{id}/tolak', [VerifikasiLaporanController::class, 'tolak'])->name('verifikasi.tolak');
     Route::get('/verifikasi/{laporan}/download', [KaprodiDownloadController::class, 'laporan'])->name('verifikasi.download');
     Route::get('/laporan/{laporan}/download', [KaprodiLaporanController::class, 'download'])->name('laporan.download');
+    Route::get('/laporan/periode/{periode}/download', [KaprodiLaporanController::class, 'downloadPeriode'])->name('laporan.download_periode');
 });
 
 /*

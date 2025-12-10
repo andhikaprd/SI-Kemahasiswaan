@@ -32,12 +32,26 @@
             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
         </div>
 
-        <select class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-100 focus:border-blue-400">
-            <option value="all">Semua Status</option>
-            <option value="pending">Menunggu Verifikasi</option>
-            <option value="approved">Disetujui</option>
-            <option value="revisi">Perlu Revisi</option>
-        </select>
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <select class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-100 focus:border-blue-400">
+                <option value="all">Semua Status</option>
+                <option value="pending">Menunggu Verifikasi</option>
+                <option value="approved">Disetujui</option>
+                <option value="revisi">Perlu Revisi</option>
+            </select>
+            <form action="#" method="GET" class="flex gap-2" onsubmit="return setPeriodeValue(this);" data-base="{{ url('kaprodi/laporan/periode') }}">
+                <select id="periodeInput" name="periode_select" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-100 focus:border-blue-400 w-40">
+                    <option value="">Pilih Periode</option>
+                    @foreach($periodes as $p)
+                        <option value="{{ $p }}">{{ $p }}</option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="periode" value="">
+                <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    Hasil Unduh Periode
+                </button>
+            </form>
+        </div>
     </div>
 
     {{-- Tabel Laporan --}}
@@ -125,4 +139,16 @@
         {{ $laporans->links() }}
     </div>
 </div>
+<script>
+    function setPeriodeValue(form) {
+        const select = document.getElementById('periodeInput');
+        if (!select.value) {
+            alert('Pilih periode terlebih dahulu.');
+            return false;
+        }
+        form.periode.value = select.value;
+        form.action = form.action.replace(/periode\\/[^/]*$/, 'periode/' + encodeURIComponent(select.value) + '/download');
+        return true;
+    }
+</script>
 @endsection

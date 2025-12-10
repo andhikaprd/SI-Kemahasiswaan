@@ -169,7 +169,18 @@
                                     <span class="text-muted small">Penyelenggara:</span>
                                     <span class="fw-semibold">{{ $prestasi->penyelenggara ?? '-' }}</span>
                                 </div>
-                                <div class="text-end mt-2 mt-md-0">
+                                @php
+                                    $isOwner = auth()->check() && (
+                                        auth()->user()->role === 'admin' ||
+                                        strcasecmp(trim(auth()->user()->nim ?? ''), trim($prestasi->nim ?? '')) === 0
+                                    );
+                                @endphp
+                                <div class="text-end mt-2 mt-md-0 d-flex gap-2 justify-content-end flex-wrap">
+                                    @if($isOwner)
+                                        <a href="{{ route('prestasi.certificate.create', $prestasi) }}" class="btn btn-outline-primary btn-sm" title="Upload sertifikat">
+                                            <i class="bi bi-cloud-upload me-1"></i> Upload
+                                        </a>
+                                    @endif
                                     @if($prestasi->sertifikat_url)
                                         <a href="{{ $prestasi->sertifikat_url }}" target="_blank" class="btn btn-outline-success btn-sm">
                                             <i class="bi bi-file-earmark-text me-1"></i> Sertifikat

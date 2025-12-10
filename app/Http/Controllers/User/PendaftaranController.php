@@ -13,6 +13,16 @@ class PendaftaranController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
+        if ($user) {
+            $sudahDaftar = Pendaftaran::where('email', $user->email)
+                ->orWhere('nim', $user->nim)
+                ->exists();
+            if ($sudahDaftar) {
+                return redirect()->route('beranda')
+                    ->with('status', 'Anda sudah mengirim pendaftaran sebelumnya. Satu akun hanya bisa mendaftar sekali.');
+            }
+        }
         return view('user.pendaftaran.form');
     }
 
@@ -21,6 +31,15 @@ class PendaftaranController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        $sudahDaftar = Pendaftaran::where('email', $user->email)
+            ->orWhere('nim', $user->nim)
+            ->exists();
+        if ($sudahDaftar) {
+            return redirect()->route('pendaftaran.create')
+                ->withErrors(['email' => 'Anda sudah mengirim pendaftaran. Satu akun hanya bisa mendaftar sekali.']);
+        }
+
         // Validasi semua input dari form
         $request->validate([
             'nama' => 'required|string|max:255',
