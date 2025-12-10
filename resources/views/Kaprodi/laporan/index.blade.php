@@ -60,7 +60,7 @@
             <thead class="bg-gray-50 text-gray-700">
                 <tr>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Laporan</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Mahasiswa</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Dibuat Oleh</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Tanggal Submit</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
                     <th class="py-3 px-4 text-center text-sm font-semibold">Aksi</th>
