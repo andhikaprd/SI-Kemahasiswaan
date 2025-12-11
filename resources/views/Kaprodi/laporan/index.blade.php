@@ -39,15 +39,14 @@
                 <option value="approved">Disetujui</option>
                 <option value="revisi">Perlu Revisi</option>
             </select>
-            <form action="#" method="GET" class="flex gap-2" onsubmit="return setPeriodeValue(this);" data-base="{{ url('kaprodi/laporan/periode') }}">
+            <form class="flex gap-2" data-base="{{ url('kaprodi/laporan/periode') }}">
                 <select id="periodeInput" name="periode_select" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-100 focus:border-blue-400 w-40">
                     <option value="">Pilih Periode</option>
                     @foreach($periodes as $p)
                         <option value="{{ $p }}">{{ $p }}</option>
                     @endforeach
                 </select>
-                <input type="hidden" name="periode" value="">
-                <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                <button type="button" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" onclick="setPeriodeValue(this.form)">
                     Hasil Unduh Periode
                 </button>
             </form>
@@ -142,13 +141,13 @@
 <script>
     function setPeriodeValue(form) {
         const select = document.getElementById('periodeInput');
-        if (!select.value) {
+        if (!select || !select.value) {
             alert('Pilih periode terlebih dahulu.');
-            return false;
+            return;
         }
-        form.periode.value = select.value;
-        form.action = form.action.replace(/periode\\/[^/]*$/, 'periode/' + encodeURIComponent(select.value) + '/download');
-        return true;
+        const base = form.getAttribute('data-base');
+        window.location.href = `${base}/${encodeURIComponent(select.value)}/download`;
     }
 </script>
 @endsection
+
