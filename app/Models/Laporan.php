@@ -48,8 +48,15 @@ class Laporan extends Model
         if (!$this->file_path) {
             return null;
         }
+        // Gunakan route terproteksi, bukan URL publik
+        if (auth()->check() && auth()->user()->role === 'admin' && app('router')->has('admin.laporan.download')) {
+            return route('admin.laporan.download', $this);
+        }
+        if (app('router')->has('kaprodi.laporan.download')) {
+            return route('kaprodi.laporan.download', $this);
+        }
 
-        return Storage::disk('public')->url($this->file_path);
+        return null;
     }
 
     /**

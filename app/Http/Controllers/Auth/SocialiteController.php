@@ -40,6 +40,13 @@ class SocialiteController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $user = $request->user();
+
+            if (($user->status ?? 'aktif') !== 'aktif') {
+                Auth::logout();
+                return back()
+                    ->withErrors(['email' => 'Akun Anda tidak aktif. Hubungi admin untuk mengaktifkan.'])
+                    ->withInput(['email' => $request->email]);
+            }
             return redirect()->intended($this->fallbackForRole($user));
         }
 
@@ -98,6 +105,13 @@ class SocialiteController extends Controller
                 'status' => 'aktif',
             ]
         );
+
+        if (($user->status ?? 'aktif') !== 'aktif') {
+            Log::warning('Google SSO blocked: user inactive', ['email' => $email]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda tidak aktif. Hubungi admin.',
+            ]);
+        }
 
         // If name changed on Google, keep our name in sync (optional)
         if ($googleUser->getName() && $user->name !== $googleUser->getName()) {

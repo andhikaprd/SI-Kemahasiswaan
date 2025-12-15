@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kaprodi;
 use App\Http\Controllers\Controller;
 use App\Models\MasalahMahasiswa;
 use App\Models\Mahasiswa;
+use App\Models\PelanggaranMaster;
 use Illuminate\Http\Request;
 
 class MasalahMahasiswaController extends Controller
@@ -40,7 +41,13 @@ class MasalahMahasiswaController extends Controller
     public function create()
     {
         $mahasiswas = Mahasiswa::all(); // daftar mahasiswa untuk dropdown
-        return view('Kaprodi.masalah_mahasiswa.create', compact('mahasiswas'));
+        $pelanggarans = PelanggaranMaster::orderBy('kategori')->orderBy('nama')->get();
+        // Hitung riwayat pelanggaran per mahasiswa (total)
+        $riwayat = MasalahMahasiswa::selectRaw('mahasiswa_id, COUNT(*) as total')
+            ->groupBy('mahasiswa_id')
+            ->pluck('total', 'mahasiswa_id');
+
+        return view('Kaprodi.masalah_mahasiswa.create', compact('mahasiswas','pelanggarans','riwayat'));
     }
 
     /**
@@ -64,24 +71,47 @@ class MasalahMahasiswaController extends Controller
 
         $request->merge(['mahasiswa_id' => $ids]);
 
-        $request->validate([
+        $validated = $request->validate([
             'mahasiswa_id' => 'required|array|min:1',
             'mahasiswa_id.*' => 'required|integer|exists:mahasiswas,id',
             'semester' => 'nullable|integer|min:1',
             'ipk' => 'nullable|numeric|between:0,4',
-            'jenis_masalah' => 'required|string|max:255',
-            'status_peringatan' => 'required|string|in:Peringatan 1,Peringatan 2,Peringatan 3,Skorsing',
+            'pelanggaran_id' => 'required|integer|exists:pelanggaran_masters,id',
             'laporan_terakhir' => 'nullable|date',
             'keterangan' => 'nullable|string',
         ]);
 
+        $master = PelanggaranMaster::findOrFail($validated['pelanggaran_id']);
+
+        $kategori = strtolower($master->kategori ?? '');
+        $baseNama = $master->nama ?? 'Pelanggaran';
+
+        $computeSanksi = function (int $count) use ($kategori) {
+            if ($kategori === 'ringan') {
+                if ($count >= 3) return 'Skorsing';
+                if ($count == 2) return 'Peringatan 3';
+                if ($count == 1) return 'Peringatan 2';
+                return 'Peringatan 1';
+            }
+            if ($kategori === 'sedang') {
+                return 'Skorsing';
+            }
+            if ($kategori === 'berat') {
+                return 'Pemberhentian (DO)';
+            }
+            return 'Peringatan 1';
+        };
+
         foreach ($ids as $mid) {
+            $riwayatCount = MasalahMahasiswa::where('mahasiswa_id', $mid)->count();
+            $status = $computeSanksi($riwayatCount);
+
             MasalahMahasiswa::create([
                 'mahasiswa_id' => $mid,
                 'semester' => $request->semester,
                 'ipk' => $request->ipk,
-                'jenis_masalah' => $request->jenis_masalah,
-                'status_peringatan' => $request->input('status_peringatan', 'Peringatan 1'),
+                'jenis_masalah' => $baseNama,
+                'status_peringatan' => $status,
                 'laporan_terakhir' => $request->laporan_terakhir,
                 'keterangan' => $request->keterangan,
             ]);
@@ -126,17 +156,16 @@ class MasalahMahasiswaController extends Controller
             'mahasiswa_id' => 'required|exists:mahasiswas,id',
             'semester' => 'nullable|integer|min:1',
             'ipk' => 'nullable|numeric|between:0,4',
-            'jenis_masalah' => 'required|string|max:255',
-            'status_peringatan' => 'required|string|in:Peringatan 1,Peringatan 2,Peringatan 3,Skorsing',
             'laporan_terakhir' => 'nullable|date',
             'keterangan' => 'nullable|string',
             'tambahkan_mahasiswa_ids' => 'nullable|array',
             'tambahkan_mahasiswa_ids.*' => 'integer|exists:mahasiswas,id',
         ]);
 
-        $masalahMahasiswa->update($request->only([
-            'mahasiswa_id','semester','ipk','jenis_masalah','status_peringatan','laporan_terakhir','keterangan'
-        ]));
+        $updateData = $request->only([
+            'mahasiswa_id','semester','ipk','laporan_terakhir','keterangan'
+        ]);
+        $masalahMahasiswa->update($updateData);
 
         // Jika ada tambahan mahasiswa saat edit, buat salinan data untuk mereka
         $tambahan = (array) $request->input('tambahkan_mahasiswa_ids', []);

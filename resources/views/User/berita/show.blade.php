@@ -18,7 +18,7 @@
                             <span class="badge bg-primary mb-2">{{ $berita->kategori }}</span>
                             <h1 class="fw-bold">{{ $berita->judul }}</h1>
                             <div class="text-muted">
-                                Dipublikasikan {{ $berita->tanggal_publikasi ? \Illuminate\Support\Carbon::parse($berita->tanggal_publikasi)->translatedFormat('d M Y') : '-' }}
+                                Dipublikasikan {{ $berita->tanggal_publikasi ? \Illuminate\Support\Carbon::parse($berita->tanggal_publikasi)->translatedFormat('d F Y H:i') : '-' }}
                                 oleh <strong>{{ $berita->penulis }}</strong>
                             </div>
                         </header>

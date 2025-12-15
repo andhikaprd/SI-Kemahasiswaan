@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DivisiController as AdminDivisiController;
 use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\MahasiswaBerprestasiController as AdminMahasiswaBerprestasiController;
+use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 
 // === Kaprodi ===
 use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
@@ -57,6 +58,7 @@ Route::prefix('prestasi')->name('prestasi.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/prestasi/{prestasi:slug}/upload-sertifikat', [UserPrestasiCertificateController::class, 'create'])->name('prestasi.certificate.create');
     Route::post('/prestasi/{prestasi:slug}/upload-sertifikat', [UserPrestasiCertificateController::class, 'store'])->name('prestasi.certificate.store');
+    Route::get('/prestasi/{prestasi:slug}/sertifikat/{certificate}/download', [UserPrestasiCertificateController::class, 'download'])->name('prestasi.certificate.download');
     Route::delete('/prestasi/{prestasi:slug}/sertifikat/{certificate}', [UserPrestasiCertificateController::class, 'destroy'])->name('prestasi.certificate.destroy');
 });
 
@@ -74,20 +76,29 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     // Tetapkan nama parameter menjadi {berita} (bukan "beritum") agar binding & route() konsisten
     Route::resource('berita', AdminBeritaController::class)
         ->parameters(['berita' => 'berita'])
-        ->except(['show'])
         ->names('berita');
     Route::resource('account', AdminAccountController::class)->except(['show'])->names('account');
     Route::resource('divisi', AdminDivisiController::class)
         ->only(['index', 'create', 'store'])
         ->names('divisi');
-    Route::resource('laporan', AdminLaporanController::class)->except(['show'])->names('laporan');
+    Route::resource('laporan', AdminLaporanController::class)->names('laporan');
+    Route::get('laporan/{laporan}/download', [AdminLaporanController::class, 'download'])->name('laporan.download');
     Route::resource('mahasiswa-berprestasi', AdminMahasiswaBerprestasiController::class)
         ->parameters(['mahasiswa-berprestasi' => 'prestasi'])
         ->names('mahasiswa_berprestasi')
         ->except(['show']);
     Route::get('sertifikat-prestasi', [AdminPrestasiCertificateController::class, 'index'])->name('prestasi_certificates.index');
     Route::get('sertifikat-prestasi/{certificate}/download', [AdminPrestasiCertificateController::class, 'download'])->name('prestasi_certificates.download');
+    Route::patch('sertifikat-prestasi/{certificate}/status', [AdminPrestasiCertificateController::class, 'updateStatus'])->name('prestasi_certificates.update_status');
     Route::delete('sertifikat-prestasi/{certificate}', [AdminPrestasiCertificateController::class, 'destroy'])->name('prestasi_certificates.destroy');
+
+    // Manajemen pendaftaran HIMA
+    Route::get('pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::patch('pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'update'])->name('pendaftaran.update');
+    Route::delete('pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+    Route::post('pendaftaran/process-bulk', [AdminPendaftaranController::class, 'processBulk'])->name('pendaftaran.process_bulk');
+    Route::get('pendaftaran/process-bulk', fn() => redirect()->route('admin.pendaftaran.index'))->name('pendaftaran.process_bulk.get');
+    Route::get('pendaftaran/export', [AdminPendaftaranController::class, 'exportCsv'])->name('pendaftaran.export');
 
     // (Dinonaktifkan) SAW & Bobot AHP untuk Prestasi — routes dihapus sesuai permintaan
 
@@ -117,9 +128,10 @@ Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')-
     // 🔹 Mahasiswa Bermasalah
     // Pelanggaran Mahasiswa (alias dari MasalahMahasiswaController)
     Route::resource('pelanggaran-mahasiswa', KaprodiMasalahMahasiswaController::class)
-        ->except(['show'])
         ->parameters(['pelanggaran-mahasiswa' => 'masalahMahasiswa'])
         ->names('pelanggaran_mahasiswa');
+    Route::get('pelanggaran-mahasiswa/{masalahMahasiswa}', [KaprodiMasalahMahasiswaController::class, 'show'])
+        ->name('pelanggaran_mahasiswa.show');
 
     // Alias lama (kompatibilitas), tetap mengarah ke controller yang sama
     Route::resource('masalah-mahasiswa', KaprodiMasalahMahasiswaController::class)
@@ -155,7 +167,7 @@ Route::post('/logout', function () {
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [SocialiteController::class, 'login'])->name('login');
-    Route::post('/login', [SocialiteController::class, 'handlePasswordLogin'])->name('login.attempt');
+    Route::post('/login', [SocialiteController::class, 'handlePasswordLogin'])->middleware('throttle:5,1')->name('login.attempt');
     Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'show'])->name('register');
     Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('register.store');
     Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');

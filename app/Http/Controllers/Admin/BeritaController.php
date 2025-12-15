@@ -87,6 +87,14 @@ class BeritaController extends Controller
     }
 
     /**
+     * Tampilkan detail berita (admin).
+     */
+    public function show(Berita $berita)
+    {
+        return view('Admin.berita.show', compact('berita'));
+    }
+
+    /**
      * 🔁 Update berita.
      */
     public function update(Request $request, Berita $berita)

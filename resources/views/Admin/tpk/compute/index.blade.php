@@ -68,7 +68,12 @@
 </div></div>
 
 <div class="card"><div class="card-body">
-  <h5 class="mb-2">Hasil</h5>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Hasil</h5>
+    <a href="{{ route('admin.tpk.compute.export') }}" class="btn btn-sm btn-outline-primary">
+      <i class="fas fa-download me-1"></i> Unduh Hasil (CSV)
+    </a>
+  </div>
   <div class="table-responsive">
     <table class="table table-hover align-middle">
       <thead class="table-light">

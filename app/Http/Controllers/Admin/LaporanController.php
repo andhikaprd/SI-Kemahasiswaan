@@ -58,7 +58,7 @@ class LaporanController extends Controller
 
         $pathFile = null;
         if ($request->hasFile('file_laporan')) {
-            $pathFile = $request->file('file_laporan')->store('laporan', 'public');
+            $pathFile = $request->file('file_laporan')->store('laporan', 'local');
         }
 
         // Temukan atau buat Mahasiswa dari NIM yang diinput
@@ -107,6 +107,14 @@ class LaporanController extends Controller
     }
 
     /**
+     * Detail laporan (admin).
+     */
+    public function show(Laporan $laporan)
+    {
+        return view('Admin.laporan.show', compact('laporan'));
+    }
+
+    /**
      * Update data laporan.
      */
     public function update(Request $request, Laporan $laporan)
@@ -123,10 +131,8 @@ class LaporanController extends Controller
 
         // Ganti file jika ada upload baru
         if ($request->hasFile('file_laporan')) {
-            if ($laporan->file_path) {
-                Storage::disk('public')->delete($laporan->file_path);
-            }
-            $data['file_path'] = $request->file('file_laporan')->store('laporan', 'public');
+            $this->deleteFileIfExists($laporan->file_path);
+            $data['file_path'] = $request->file('file_laporan')->store('laporan', 'local');
         }
 
         $laporan->update($data);
@@ -139,12 +145,32 @@ class LaporanController extends Controller
      */
     public function destroy(Laporan $laporan)
     {
-        if ($laporan->file_path) {
-            Storage::disk('public')->delete($laporan->file_path);
-        }
+        $this->deleteFileIfExists($laporan->file_path);
 
         $laporan->delete();
 
         return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil dihapus!');
+    }
+
+    public function download(Laporan $laporan)
+    {
+        if (!$laporan->file_path) {
+            abort(404);
+        }
+        $disk = Storage::disk('local')->exists($laporan->file_path) ? 'local' : (Storage::disk('public')->exists($laporan->file_path) ? 'public' : null);
+        if (!$disk) {
+            abort(404);
+        }
+        $filename = basename($laporan->file_path) ?: 'laporan.pdf';
+        return Storage::disk($disk)->download($laporan->file_path, $filename);
+    }
+
+    private function deleteFileIfExists(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+        Storage::disk('local')->delete($path);
+        Storage::disk('public')->delete($path); // fallback untuk file lama
     }
 }

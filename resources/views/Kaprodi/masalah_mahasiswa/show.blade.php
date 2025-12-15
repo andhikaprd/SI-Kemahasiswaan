@@ -1,11 +1,8 @@
-@extends('layouts.app')
+@extends('Kaprodi.layouts.app')
 
 @section('title', 'Detail Pelanggaran Mahasiswa')
 
 @section('content')
-@include('Kaprodi.partials.header')
-@include('Kaprodi.partials.tabs')
-
 <div class="bg-white shadow rounded-xl p-6 max-w-2xl mx-auto">
     <h2 class="text-xl font-bold mb-4">Detail Pelanggaran Mahasiswa</h2>
 

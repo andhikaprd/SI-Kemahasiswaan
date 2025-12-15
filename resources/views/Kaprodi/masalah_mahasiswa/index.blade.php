@@ -56,6 +56,10 @@
                         </td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex justify-center gap-3">
+                                <a href="{{ route('kaprodi.pelanggaran_mahasiswa.show', $row->id) }}" 
+                                   class="text-blue-600 hover:text-blue-800" title="Lihat">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                                 <a href="{{ route('kaprodi.pelanggaran_mahasiswa.edit', $row->id) }}" 
                                    class="text-yellow-600 hover:text-yellow-800" title="Edit">
                                     <i class="fas fa-edit"></i>

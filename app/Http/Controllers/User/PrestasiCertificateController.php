@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MahasiswaBerprestasi;
 use App\Models\PrestasiCertificate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PrestasiCertificateController extends Controller
 {
@@ -25,7 +26,8 @@ class PrestasiCertificateController extends Controller
         ]);
 
         foreach ($data['files'] as $file) {
-            $path = $file->store('prestasi/sertifikat','public');
+            // Simpan di storage privat agar tidak bisa diakses bebas lewat URL
+            $path = $file->store('prestasi/sertifikat', 'local');
             PrestasiCertificate::create([
                 'prestasi_id'    => $prestasi->id,
                 'user_id'        => $r->user()->id,
@@ -33,12 +35,12 @@ class PrestasiCertificateController extends Controller
                 'original_name'  => $file->getClientOriginalName(),
                 'mime'           => $file->getClientMimeType(),
                 'size'           => $file->getSize(),
-                'status'         => 'approved', // auto-approve untuk pemilik
+                'status'         => 'pending',
             ]);
         }
 
         return redirect()->route('prestasi.show', $prestasi->slug)
-            ->with('status','Sertifikat berhasil diunggah.');
+            ->with('status','Sertifikat berhasil diunggah dan menunggu persetujuan admin.');
     }
 
     public function destroy(MahasiswaBerprestasi $prestasi, PrestasiCertificate $certificate)
@@ -47,6 +49,28 @@ class PrestasiCertificateController extends Controller
         $certificate->delete();
 
         return back()->with('status', 'Sertifikat berhasil dihapus.');
+    }
+
+    public function download(MahasiswaBerprestasi $prestasi, PrestasiCertificate $certificate)
+    {
+        $this->authorizeManage($prestasi, $certificate);
+        if ($certificate->prestasi_id !== $prestasi->id) {
+            abort(404);
+        }
+
+        if (!$certificate->path) {
+            abort(404);
+        }
+
+        $disk = Storage::disk('local')->exists($certificate->path) ? 'local' : (Storage::disk('public')->exists($certificate->path) ? 'public' : null);
+        if (!$disk) {
+            abort(404);
+        }
+
+        return Storage::disk($disk)->download(
+            $certificate->path,
+            $certificate->original_name ?? 'sertifikat.pdf'
+        );
     }
 
     private function authorizeUpload(MahasiswaBerprestasi $prestasi): void
@@ -70,6 +94,9 @@ class PrestasiCertificateController extends Controller
         $user = auth()->user();
         if ($user && $user->role === 'admin') {
             return;
+        }
+        if ($certificate->prestasi_id !== $prestasi->id) {
+            abort(404);
         }
         $userNim = trim((string) ($user->nim ?? ''));
         $prestasiNim = trim((string) ($prestasi->nim ?? ''));

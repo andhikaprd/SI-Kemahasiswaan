@@ -26,15 +26,31 @@ class PrestasiCertificateController extends Controller
 
     public function download(PrestasiCertificate $certificate)
     {
-        if (!$certificate->path || !Storage::disk('public')->exists($certificate->path)) {
+        if (!$certificate->path) {
             abort(404);
         }
-        return Storage::disk('public')->download($certificate->path, $certificate->original_name ?? 'sertifikat.pdf');
+        $disk = Storage::disk('local')->exists($certificate->path) ? 'local' : (Storage::disk('public')->exists($certificate->path) ? 'public' : null);
+        if (!$disk) {
+            abort(404);
+        }
+        return Storage::disk($disk)->download($certificate->path, $certificate->original_name ?? 'sertifikat.pdf');
     }
 
     public function destroy(PrestasiCertificate $certificate)
     {
         $certificate->delete();
         return back()->with('success', 'Sertifikat berhasil dihapus.');
+    }
+
+    public function updateStatus(Request $request, PrestasiCertificate $certificate)
+    {
+        $data = $request->validate([
+            'status' => ['required', 'in:approved,rejected,pending'],
+            'note'   => ['nullable','string','max:500'],
+        ]);
+
+        $certificate->update($data);
+
+        return back()->with('success', 'Status sertifikat diperbarui.');
     }
 }

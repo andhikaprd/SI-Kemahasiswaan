@@ -2,6 +2,7 @@
 
 @section('title', 'Kelola Prestasi - Panel Admin')
 
+@php use Illuminate\Support\Str; @endphp
 @section('content')
 <div class="container">
     @if (session('success'))
@@ -86,8 +87,7 @@
                         <div class="mt-2">
                             <p class="mb-1"><strong>Kompetisi:</strong> {{ $item->kompetisi }}</p>
                             <p class="mb-0">
-                                <strong>Peringkat:</strong> {{ $item->peringkat ?? '-' }} 
-                                ({{ $item->poin ?? 'N/A' }} Poin)
+                                <strong>Peringkat:</strong> {{ $item->peringkat ?? '-' }}
                             </p>
                             <span class="badge bg-primary">{{ ucfirst($item->tingkat) }}</span>
                             <span class="badge bg-secondary">{{ $item->tahun ?? '-' }}</span>
@@ -96,11 +96,18 @@
 
                     <!-- Aksi -->
                     <div class="col-md-2 d-flex align-items-center justify-content-end gap-3">
-                        <a href="{{ route('admin.mahasiswa_berprestasi.edit', $item->id) }}" class="text-secondary" title="Edit">
+                        @php
+                            // Gunakan slug jika ada, fallback ke ID agar binding route selalu terpenuhi
+                            $routeKey = $item->slug ?: $item->getKey();
+                        @endphp
+                        <a href="{{ route('prestasi.show', $routeKey) }}" class="text-info" title="Lihat" target="_blank" rel="noopener">
+                            <i class="fas fa-eye fa-lg"></i>
+                        </a>
+                        <a href="{{ route('admin.mahasiswa_berprestasi.edit', ['prestasi' => $routeKey]) }}" class="text-secondary" title="Edit">
                             <i class="fas fa-pen fa-lg"></i>
                         </a>
                         <form 
-                            action="{{ route('admin.mahasiswa_berprestasi.destroy', $item->id) }}" 
+                            action="{{ route('admin.mahasiswa_berprestasi.destroy', ['prestasi' => $routeKey]) }}" 
                             method="POST" 
                             onsubmit="return confirm('Yakin ingin menghapus prestasi ini?');">
                             @csrf

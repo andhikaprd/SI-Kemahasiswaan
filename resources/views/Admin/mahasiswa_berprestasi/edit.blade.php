@@ -10,7 +10,7 @@
         </div>
 
         <div class="card-body p-4">
-            <form action="{{ route('admin.mahasiswa_berprestasi.update', $prestasi->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.mahasiswa_berprestasi.update', $prestasi) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -67,10 +67,6 @@
                         <input type="text" name="peringkat" value="{{ old('peringkat', $prestasi->peringkat) }}" class="form-control" required>
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label">Poin</label>
-                        <input type="number" name="poin" value="{{ old('poin', $prestasi->poin) }}" class="form-control">
-                    </div>
                     <div class="col-md-3">
                         <label class="form-label">Tahun</label>
                         <input type="number" name="tahun" value="{{ old('tahun', $prestasi->tahun) }}" class="form-control" required>

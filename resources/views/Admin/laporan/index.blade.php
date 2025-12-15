@@ -94,6 +94,9 @@
                                 <td><span class="badge {{ $statusClass }}">{{ ucfirst($status) }}</span></td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center align-items-center gap-3">
+                                        <a href="{{ route('admin.laporan.show', $laporan) }}" class="text-primary" title="Lihat detail">
+                                            <i class="fas fa-eye fa-lg"></i>
+                                        </a>
                                         @if($laporan->file_path)
                                             <a href="{{ $laporan->file_url }}" target="_blank" class="text-info" title="Lihat berkas">
                                                 <i class="fas fa-file-pdf fa-lg"></i>

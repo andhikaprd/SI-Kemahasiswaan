@@ -20,6 +20,13 @@ class RoleMiddleware
             return redirect()->route('beranda');
         }
 
+        if (($user->status ?? 'aktif') !== 'aktif') {
+            auth()->logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda tidak aktif.',
+            ]);
+        }
+
         $allowed = collect(explode(',', $roles))
             ->map(fn($r) => trim($r))
             ->filter()
@@ -36,4 +43,3 @@ class RoleMiddleware
         return $next($request);
     }
 }
-

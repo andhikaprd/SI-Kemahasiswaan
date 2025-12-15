@@ -64,7 +64,7 @@ class LaporanController extends Controller
 
         if ($request->hasFile('file_laporan')) {
             $file = $request->file('file_laporan');
-            $filePath = $file->store('laporan', 'public');
+            $filePath = $file->store('laporan', 'local');
             $mime = $file->getClientMimeType();
             $size = $file->getSize();
         }
@@ -135,12 +135,10 @@ class LaporanController extends Controller
 
         if ($request->hasFile('file_laporan')) {
             // Hapus file lama jika ada
-            if ($filePath) {
-                Storage::disk('public')->delete($filePath);
-            }
+            $this->deleteFileIfExists($filePath);
 
             $file = $request->file('file_laporan');
-            $filePath = $file->store('laporan', 'public');
+            $filePath = $file->store('laporan', 'local');
             $mime = $file->getClientMimeType();
             $size = $file->getSize();
         }
@@ -165,7 +163,7 @@ class LaporanController extends Controller
     public function destroy(Laporan $laporan)
     {
         if ($laporan->file_path) {
-            Storage::disk('public')->delete($laporan->file_path);
+            $this->deleteFileIfExists($laporan->file_path);
         }
 
         $laporan->delete();
@@ -178,11 +176,15 @@ class LaporanController extends Controller
      */
     public function download(Laporan $laporan)
     {
-        if (!$laporan->file_path || !Storage::disk('public')->exists($laporan->file_path)) {
+        if (!$laporan->file_path) {
+            abort(404);
+        }
+        $disk = Storage::disk('local')->exists($laporan->file_path) ? 'local' : (Storage::disk('public')->exists($laporan->file_path) ? 'public' : null);
+        if (!$disk) {
             abort(404);
         }
         $filename = basename($laporan->file_path) ?: 'laporan.pdf';
-        return Storage::disk('public')->download($laporan->file_path, $filename);
+        return Storage::disk($disk)->download($laporan->file_path, $filename);
     }
 
     /**
@@ -219,5 +221,13 @@ class LaporanController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
-}
 
+    private function deleteFileIfExists(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+        Storage::disk('local')->delete($path);
+        Storage::disk('public')->delete($path); // fallback file lama
+    }
+}

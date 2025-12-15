@@ -34,7 +34,7 @@
                                 @endif
                                 <div class="card-body d-flex flex-column">
                                     <span class="text-muted small mb-2">
-                                        {{ $berita->tanggal_publikasi ? \Illuminate\Support\Carbon::parse($berita->tanggal_publikasi)->translatedFormat('d M Y') : '-' }}
+                                        {{ $berita->tanggal_publikasi ? \Illuminate\Support\Carbon::parse($berita->tanggal_publikasi)->translatedFormat('d F Y H:i') : '-' }}
                                     </span>
                                     <h5 class="card-title fw-bold">{{ $berita->judul }}</h5>
                                     <p class="card-text text-muted">{{ \Illuminate\Support\Str::limit($berita->ringkasan, 160) }}</p>

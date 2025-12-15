@@ -3,8 +3,9 @@
 @section('title', 'Tambah Pelanggaran Mahasiswa')
 
 @section('content')
-<div class="bg-white shadow rounded-xl p-6 max-w-3xl mx-auto">
-    <h2 class="text-xl font-bold mb-4">Tambah Pelanggaran Mahasiswa</h2>
+    <div class="bg-white shadow rounded-xl p-6 max-w-3xl mx-auto">
+    <h2 class="text-xl font-bold mb-2">Tambah Pelanggaran Mahasiswa</h2>
+    <p class="text-sm text-gray-600 mb-4">Pilih jenis pelanggaran, sistem akan mengisi kategori & sanksi otomatis sesuai SK.</p>
 
     <div class="alert alert-info mb-4">
         <strong>Mode Input:</strong>
@@ -62,21 +63,38 @@
             </div>
         </div>
 
-        {{-- Jenis Masalah --}}
+        {{-- Jenis Pelanggaran dari master --}}
         <div class="mt-3">
             <label class="block font-medium mb-1">Jenis Pelanggaran</label>
-            <input type="text" name="jenis_masalah" class="border rounded-lg w-full px-3 py-2" value="{{ old('jenis_masalah') }}">
+            <select name="pelanggaran_id" id="pelanggaran_id" class="border rounded-lg w-full px-3 py-2">
+                <option value="" disabled selected>Pilih jenis pelanggaran...</option>
+                @foreach ($pelanggarans as $p)
+                    <option value="{{ $p->id }}" data-kategori="{{ $p->kategori }}">{{ $p->nama }}</option>
+                @endforeach
+            </select>
+            @error('pelanggaran_id')
+                <p class="text-red-600 text-sm">{{ $message }}</p>
+            @enderror
         </div>
 
-        {{-- Status Peringatan --}}
-        <div class="mt-3">
-            <label class="block font-medium mb-1">Status Peringatan</label>
-            <select name="status_peringatan" class="border rounded-lg w-full px-3 py-2">
-                <option value="Peringatan 1">Peringatan 1</option>
-                <option value="Peringatan 2">Peringatan 2</option>
-                <option value="Peringatan 3">Peringatan 3</option>
-                <option value="Skorsing">Skorsing</option>
-            </select>
+        <div class="mt-3 grid md:grid-cols-2 gap-3">
+            <div>
+                <label class="block font-medium mb-1">Kategori</label>
+                <input type="text" id="kategori_auto" class="border rounded-lg w-full px-3 py-2 bg-gray-100" value="-" readonly>
+            </div>
+            <div>
+                <label class="block font-medium mb-1">Sanksi (Rekomendasi)</label>
+                <input type="text" id="sanksi_auto" class="border rounded-lg w-full px-3 py-2 bg-gray-100" value="-" readonly>
+            </div>
+        </div>
+
+        <div class="mt-2 text-sm text-gray-600">
+            <p class="mb-1">Catatan: Rekomendasi mengikuti riwayat pelanggaran mahasiswa.</p>
+            <ul class="list-disc list-inside">
+                <li>Pelanggaran ringan: P1 &rarr; P2 &rarr; P3 &rarr; Skorsing.</li>
+                <li>Pelanggaran sedang: Skorsing.</li>
+                <li>Pelanggaran berat: Pemberhentian (DO).</li>
+            </ul>
         </div>
 
         {{-- Tanggal Laporan --}}
@@ -113,9 +131,47 @@
             const $wrapSingle = $('#wrap-single');
             const $wrapBulk = $('#wrap-bulk');
             const radios = $('input[name="mode"]');
+            const $pelanggaran = $('#pelanggaran_id');
+            const $kategori = $('#kategori_auto');
+            const $sanksi = $('#sanksi_auto');
+            const riwayatMap = @json($riwayat);
+
+            function computeSanksi(kategori, count) {
+                kategori = (kategori || '').toLowerCase();
+                if (kategori === 'ringan') {
+                    if (count >= 3) return 'Skorsing';
+                    if (count === 2) return 'Peringatan 3';
+                    if (count === 1) return 'Peringatan 2';
+                    return 'Peringatan 1';
+                }
+                if (kategori === 'sedang') return 'Skorsing';
+                if (kategori === 'berat') return 'Pemberhentian (DO)';
+                return '-';
+            }
+
+            function getSelectedMahasiswaIds() {
+                const mode = $('input[name="mode"]:checked').val();
+                if (mode === 'single') {
+                    const v = $single.val();
+                    return v ? [parseInt(v, 10)] : [];
+                }
+                return ($multi.val() || []).map(v => parseInt(v, 10));
+            }
+
+            function updateSanksi() {
+                const selected = $pelanggaran.find(':selected');
+                const kategori = selected.data('kategori') || '-';
+                const ids = getSelectedMahasiswaIds();
+                // Jika belum pilih mahasiswa, gunakan count=0 untuk tetap tampilkan sanksi dasar
+                const count = ids.reduce((acc, id) => acc + (riwayatMap[id] ? parseInt(riwayatMap[id], 10) : 0), 0);
+                const rekom = computeSanksi(kategori, count);
+                $kategori.val(kategori);
+                $sanksi.val(rekom);
+            }
 
             $single.select2({ width: '100%', placeholder: 'Pilih satu mahasiswa...', allowClear: true });
             $multi.select2({ width: '100%', placeholder: 'Pilih beberapa mahasiswa...', allowClear: true });
+            $pelanggaran.select2({ width: '100%', placeholder: 'Pilih jenis pelanggaran...', allowClear: true });
 
             function updateMode() {
                 const v = $('input[name="mode"]:checked').val();
@@ -130,8 +186,12 @@
                     $multi.prop('disabled', false);
                     $single.prop('disabled', true);
                 }
+                updateSanksi();
             }
             radios.on('change', updateMode);
+            $single.on('change', updateSanksi);
+            $multi.on('change', updateSanksi);
+            $pelanggaran.on('change', updateSanksi);
             updateMode();
         });
     </script>

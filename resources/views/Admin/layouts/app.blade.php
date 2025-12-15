@@ -148,6 +148,14 @@
                             </li>
                         @endcan
 
+                        <!-- Pendaftaran HIMA -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}" 
+                               href="{{ route('admin.pendaftaran.index') }}">
+                                <i class="fas fa-clipboard-check me-2"></i>Pendaftaran
+                            </a>
+                        </li>
+
                         <!-- Hitung Prestasi -->
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.tpk.*') ? 'active' : '' }}" 

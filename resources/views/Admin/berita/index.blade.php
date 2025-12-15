@@ -73,7 +73,7 @@
                         <div class="d-flex small text-muted mb-2 flex-wrap">
                             <span class="me-3"><i class="fas fa-user me-1"></i> {{ $berita->penulis ?? 'Admin' }}</span>
                             <span class="me-3"><i class="fas fa-calendar-alt me-1"></i> 
-                                {{ $berita->tanggal_publikasi ? $berita->tanggal_publikasi->format('d M Y') : '-' }}
+                                {{ $berita->tanggal_publikasi ? $berita->tanggal_publikasi->translatedFormat('d F Y H:i') : '-' }}
                             </span>
                         </div>
                         <p class="text-muted mb-1">{{ Str::limit($berita->ringkasan, 120) }}</p>
@@ -87,6 +87,10 @@
 
                     <!-- Aksi -->
                     <div class="col-md-2 d-flex align-items-center justify-content-end gap-3">
+                        <a href="{{ route('admin.berita.show', $berita) }}"
+                           class="text-info" title="Lihat">
+                            <i class="fas fa-eye fa-lg"></i>
+                        </a>
                         <a href="{{ route('admin.berita.edit', $berita->id) }}"
                            class="text-primary" title="Edit">
                             <i class="fas fa-pen fa-lg"></i>

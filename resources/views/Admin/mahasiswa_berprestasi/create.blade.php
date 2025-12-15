@@ -64,10 +64,6 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label">Poin</label>
-                        <input type="number" name="poin" value="{{ old('poin') }}" class="form-control" placeholder="misal: 100">
-                    </div>
-                    <div class="col-md-3">
                         <label class="form-label">Tahun </label>
                         <input type="number" name="tahun" value="{{ old('tahun') }}" class="form-control" placeholder="2025" required>
                     </div>
@@ -151,10 +147,6 @@
                     <div class="col-md-3">
                         <label class="form-label">Peringkat </label>
                         <input type="text" name="peringkat" value="{{ old('peringkat') }}" class="form-control" placeholder="Juara 1, 2, 3...">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Poin</label>
-                        <input type="number" name="poin" value="{{ old('poin') }}" class="form-control" placeholder="misal: 100">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Tahun </label>
