@@ -7,6 +7,7 @@ use App\Models\MahasiswaBerprestasi;
 use App\Models\PrestasiCertificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PrestasiCertificateController extends Controller
 {
@@ -27,7 +28,17 @@ class PrestasiCertificateController extends Controller
 
         foreach ($data['files'] as $file) {
             // Simpan di storage privat agar tidak bisa diakses bebas lewat URL
-            $path = $file->store('prestasi/sertifikat', 'local');
+            try {
+                $path = $file->store('prestasi/sertifikat', 'local');
+            } catch (\Throwable $e) {
+                Log::error('prestasi_certificate_upload_failed', [
+                    'prestasi_id' => $prestasi->id,
+                    'user_id' => $r->user()->id ?? null,
+                    'filename' => $file->getClientOriginalName(),
+                    'error' => $e->getMessage(),
+                ]);
+                return back()->withErrors(['files' => 'Gagal mengunggah berkas, coba lagi.']);
+            }
             PrestasiCertificate::create([
                 'prestasi_id'    => $prestasi->id,
                 'user_id'        => $r->user()->id,
@@ -59,11 +70,22 @@ class PrestasiCertificateController extends Controller
         }
 
         if (!$certificate->path) {
+            Log::warning('prestasi_certificate_missing_path', [
+                'scope' => 'user',
+                'certificate_id' => $certificate->id,
+                'user_id' => auth()->id(),
+            ]);
             abort(404);
         }
 
         $disk = Storage::disk('local')->exists($certificate->path) ? 'local' : (Storage::disk('public')->exists($certificate->path) ? 'public' : null);
         if (!$disk) {
+            Log::warning('prestasi_certificate_file_not_found', [
+                'scope' => 'user',
+                'certificate_id' => $certificate->id,
+                'user_id' => auth()->id(),
+                'path' => $certificate->path,
+            ]);
             abort(404);
         }
 

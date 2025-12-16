@@ -9,6 +9,7 @@ use App\Models\Berita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class LaporanController extends Controller
 {
@@ -58,7 +59,17 @@ class LaporanController extends Controller
 
         $pathFile = null;
         if ($request->hasFile('file_laporan')) {
-            $pathFile = $request->file('file_laporan')->store('laporan', 'local');
+            try {
+                $pathFile = $request->file('file_laporan')->store('laporan', 'local');
+            } catch (\Throwable $e) {
+                Log::error('laporan_upload_failed', [
+                    'scope' => 'admin',
+                    'action' => 'store',
+                    'user_id' => auth()->id(),
+                    'error' => $e->getMessage(),
+                ]);
+                return back()->withErrors(['file_laporan' => 'Gagal menyimpan file laporan, coba lagi.']);
+            }
         }
 
         // Temukan atau buat Mahasiswa dari NIM yang diinput
@@ -132,7 +143,18 @@ class LaporanController extends Controller
         // Ganti file jika ada upload baru
         if ($request->hasFile('file_laporan')) {
             $this->deleteFileIfExists($laporan->file_path);
-            $data['file_path'] = $request->file('file_laporan')->store('laporan', 'local');
+            try {
+                $data['file_path'] = $request->file('file_laporan')->store('laporan', 'local');
+            } catch (\Throwable $e) {
+                Log::error('laporan_upload_failed', [
+                    'scope' => 'admin',
+                    'action' => 'update',
+                    'laporan_id' => $laporan->id,
+                    'user_id' => auth()->id(),
+                    'error' => $e->getMessage(),
+                ]);
+                return back()->withErrors(['file_laporan' => 'Gagal menyimpan file laporan, coba lagi.']);
+            }
         }
 
         $laporan->update($data);
@@ -155,10 +177,21 @@ class LaporanController extends Controller
     public function download(Laporan $laporan)
     {
         if (!$laporan->file_path) {
+            Log::warning('laporan_download_missing_path', [
+                'scope' => 'admin',
+                'laporan_id' => $laporan->id,
+                'user_id' => auth()->id(),
+            ]);
             abort(404);
         }
         $disk = Storage::disk('local')->exists($laporan->file_path) ? 'local' : (Storage::disk('public')->exists($laporan->file_path) ? 'public' : null);
         if (!$disk) {
+            Log::warning('laporan_download_file_not_found', [
+                'scope' => 'admin',
+                'laporan_id' => $laporan->id,
+                'user_id' => auth()->id(),
+                'path' => $laporan->file_path,
+            ]);
             abort(404);
         }
         $filename = basename($laporan->file_path) ?: 'laporan.pdf';

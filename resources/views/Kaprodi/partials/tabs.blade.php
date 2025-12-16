@@ -9,6 +9,11 @@
                     </a>
                 </li>
             @endcan
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('kaprodi.pelanggaran_master.*') ? 'active' : '' }}" href="{{ route('kaprodi.pelanggaran_master.index') }}">
+                    <i class="fas fa-clipboard-list me-2"></i>Master Pelanggaran
+                </a>
+            </li>
             @can('viewAny', \App\Models\Laporan::class)
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('kaprodi.laporan.*') ? 'active' : '' }}" href="{{ route('kaprodi.laporan.index') }}">

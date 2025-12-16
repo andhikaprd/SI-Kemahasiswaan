@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PrestasiCertificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PrestasiCertificateController extends Controller
 {
@@ -27,10 +28,21 @@ class PrestasiCertificateController extends Controller
     public function download(PrestasiCertificate $certificate)
     {
         if (!$certificate->path) {
+            Log::warning('prestasi_certificate_missing_path', [
+                'scope' => 'admin',
+                'certificate_id' => $certificate->id,
+                'user_id' => auth()->id(),
+            ]);
             abort(404);
         }
         $disk = Storage::disk('local')->exists($certificate->path) ? 'local' : (Storage::disk('public')->exists($certificate->path) ? 'public' : null);
         if (!$disk) {
+            Log::warning('prestasi_certificate_file_not_found', [
+                'scope' => 'admin',
+                'certificate_id' => $certificate->id,
+                'user_id' => auth()->id(),
+                'path' => $certificate->path,
+            ]);
             abort(404);
         }
         return Storage::disk($disk)->download($certificate->path, $certificate->original_name ?? 'sertifikat.pdf');

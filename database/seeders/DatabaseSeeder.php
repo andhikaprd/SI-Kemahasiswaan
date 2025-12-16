@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             MahasiswaSeeder::class,
             // Tambahkan data awal Prestasi (sebagian published untuk tampil di publik)
             PrestasiMahasiswaSeeder::class,
+            // Master data untuk operasional
+            PelanggaranMasterSeeder::class,
+            DivisiSeeder::class,
+            TpkSeeder::class,
         ]);
     }
 }

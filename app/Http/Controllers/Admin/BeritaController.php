@@ -34,7 +34,7 @@ class BeritaController extends Controller
     }
 
     /**
-     * 🆕 Tampilkan form untuk tambah berita.
+     * Tampilkan form untuk tambah berita.
      */
     public function create()
     {
@@ -42,7 +42,7 @@ class BeritaController extends Controller
     }
 
     /**
-     * 💾 Simpan berita baru.
+     * Simpan berita baru.
      */
     public function store(Request $request)
     {
@@ -75,11 +75,11 @@ class BeritaController extends Controller
         Berita::create($validated);
 
         return redirect()->route('admin.berita.index')
-            ->with('success', '✅ Berita berhasil ditambahkan!');
+            ->with('success', 'Berita berhasil ditambahkan!');
     }
 
     /**
-     * ✏ Tampilkan form edit berita.
+     * Tampilkan form edit berita.
      */
     public function edit(Berita $berita)
     {
@@ -95,7 +95,7 @@ class BeritaController extends Controller
     }
 
     /**
-     * 🔁 Update berita.
+     * Update berita.
      */
     public function update(Request $request, Berita $berita)
     {
@@ -127,11 +127,11 @@ class BeritaController extends Controller
         $berita->update($validated);
 
         return redirect()->route('admin.berita.index')
-            ->with('success', '✅ Berita berhasil diperbarui!');
+            ->with('success', 'Berita berhasil diperbarui!');
     }
 
     /**
-     * 🗑 Hapus berita dari database & hapus gambar di storage.
+     * Hapus berita dari database & hapus gambar di storage.
      */
     public function destroy(Berita $berita)
     {
@@ -142,6 +142,6 @@ class BeritaController extends Controller
         $berita->delete();
 
         return redirect()->route('admin.berita.index')
-            ->with('success', '🗑 Berita berhasil dihapus!');
+            ->with('success', 'Berita berhasil dihapus!');
     }
 }

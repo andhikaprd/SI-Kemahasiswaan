@@ -63,7 +63,7 @@
                                     <label for="divisi" class="form-label">Divisi Pilihan</label>
                                     <select name="divisi" id="divisi" class="form-select @error('divisi') is-invalid @enderror" required>
                                         <option value="" disabled {{ old('divisi') ? '' : 'selected' }}>Pilih salah satu</option>
-                                        @foreach(['Kaderisasi','Media Informasi','Technopreneurship','Public Relations'] as $divisi)
+                                        @foreach($divisiOptions as $divisi)
                                             <option value="{{ $divisi }}" {{ old('divisi') === $divisi ? 'selected' : '' }}>{{ $divisi }}</option>
                                         @endforeach
                                     </select>

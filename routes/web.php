@@ -20,12 +20,14 @@ use App\Http\Controllers\Admin\DivisiController as AdminDivisiController;
 use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\MahasiswaBerprestasiController as AdminMahasiswaBerprestasiController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
+use App\Http\Controllers\Admin\PelanggaranMasterController as AdminPelanggaranMasterController;
 
 // === Kaprodi ===
 use App\Http\Controllers\Kaprodi\LaporanController as KaprodiLaporanController;
 use App\Http\Controllers\Kaprodi\MasalahMahasiswaController as KaprodiMasalahMahasiswaController;
 use App\Http\Controllers\Kaprodi\VerifikasiLaporanController;
 use App\Http\Controllers\Kaprodi\DownloadController as KaprodiDownloadController;
+use App\Http\Controllers\Kaprodi\PelanggaranMasterController as KaprodiPelanggaranMasterController;
 use App\Http\Controllers\User\PrestasiCertificateController as UserPrestasiCertificateController;
 use App\Http\Controllers\Admin\PrestasiCertificateController as AdminPrestasiCertificateController;
 
@@ -87,6 +89,9 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
         ->parameters(['mahasiswa-berprestasi' => 'prestasi'])
         ->names('mahasiswa_berprestasi')
         ->except(['show']);
+    Route::resource('pelanggaran-master', AdminPelanggaranMasterController::class)
+        ->parameters(['pelanggaran-master' => 'pelanggaran_master'])
+        ->names('pelanggaran_master');
     Route::get('sertifikat-prestasi', [AdminPrestasiCertificateController::class, 'index'])->name('prestasi_certificates.index');
     Route::get('sertifikat-prestasi/{certificate}/download', [AdminPrestasiCertificateController::class, 'download'])->name('prestasi_certificates.download');
     Route::patch('sertifikat-prestasi/{certificate}/status', [AdminPrestasiCertificateController::class, 'updateStatus'])->name('prestasi_certificates.update_status');
@@ -100,7 +105,7 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::get('pendaftaran/process-bulk', fn() => redirect()->route('admin.pendaftaran.index'))->name('pendaftaran.process_bulk.get');
     Route::get('pendaftaran/export', [AdminPendaftaranController::class, 'exportCsv'])->name('pendaftaran.export');
 
-    // (Dinonaktifkan) SAW & Bobot AHP untuk Prestasi — routes dihapus sesuai permintaan
+    // (Dinonaktifkan) SAW & Bobot AHP untuk Prestasi - routes dihapus sesuai permintaan
 
     // Modul TPK generik (Criteria, Alternatives, Compute)
     Route::prefix('tpk')->name('tpk.')->group(function () {
@@ -120,12 +125,12 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
 // Kaprodi: wajib login + role kaprodi
 Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')->group(function () {
 
-    // 🔹 Daftar Laporan (CRUD Kaprodi)
+    // Daftar Laporan (CRUD Kaprodi)
     Route::resource('laporan', KaprodiLaporanController::class)
         ->except(['show'])
         ->names('laporan');
 
-    // 🔹 Mahasiswa Bermasalah
+    // Mahasiswa Bermasalah
     // Pelanggaran Mahasiswa (alias dari MasalahMahasiswaController)
     Route::resource('pelanggaran-mahasiswa', KaprodiMasalahMahasiswaController::class)
         ->parameters(['pelanggaran-mahasiswa' => 'masalahMahasiswa'])
@@ -139,7 +144,11 @@ Route::middleware(['auth','role:kaprodi'])->prefix('kaprodi')->name('kaprodi.')-
         ->parameters(['masalah-mahasiswa' => 'masalahMahasiswa'])
         ->names('masalah_mahasiswa');
 
-    // 🔹 Verifikasi Laporan
+    Route::resource('pelanggaran-master', KaprodiPelanggaranMasterController::class)
+        ->parameters(['pelanggaran-master' => 'pelanggaran_master'])
+        ->names('pelanggaran_master');
+
+    // Verifikasi Laporan
     Route::get('/verifikasi', [VerifikasiLaporanController::class, 'index'])->name('verifikasi.index');
     Route::post('/verifikasi/{id}/setujui', [VerifikasiLaporanController::class, 'setujui'])->name('verifikasi.setujui');
     Route::post('/verifikasi/{id}/tolak', [VerifikasiLaporanController::class, 'tolak'])->name('verifikasi.tolak');
