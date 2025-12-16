@@ -20,20 +20,18 @@
             font-family: 'Inter', sans-serif;
         }
         .kaprodi-header {
-            /* Samakan warna dengan header Admin */
             background-color: #4A90E2;
             color: white;
         }
-        .kaprodi-header h4 {
-            font-weight: 700;
-        }
-        .btn-logout { background: #fff; color: #1f2937; font-weight: 500; border-radius: 8px; transition: .2s }
+        .kaprodi-header h4 { font-weight: 700; }
+        .btn-logout { background: #fff; color: #1f2937; font-weight: 500; border-radius: 10px; transition: .2s }
         .btn-logout:hover { background-color: #eef2ff; color: #111827 }
 
-        /* Gaya nav tab agar selaras dengan Admin */
-        .nav-tabs .nav-link { border: none; color: #6c757d; transition: .2s }
+        .nav-tabs { border: none; }
+        .nav-tabs .nav-link { border: none; color: #6c757d; transition: .2s; padding: 0.85rem 1rem; }
         .nav-tabs .nav-link:hover { color: #007bff }
         .nav-tabs .nav-link.active { font-weight: 600; color: #4A90E2; border-bottom: 3px solid #4A90E2; background: transparent }
+
         footer {
             color: #6b7280;
             font-size: 0.85rem;
@@ -46,26 +44,34 @@
 <body>
     {{-- ====== HEADER PANEL ====== --}}
     <header class="kaprodi-header py-3 shadow-sm">
-        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div>
-                <h4 class="mb-0">Panel Kaprodi</h4>
-                <p class="mb-0 small opacity-90">Kelola Data Mahasiswa dan Verifikasi Laporan</p>
+        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-user-tie fa-lg"></i>
+                <div>
+                    <h4 class="mb-0">Panel Kaprodi</h4>
+                    <p class="mb-0 small opacity-90">Kelola Data Mahasiswa dan Verifikasi Laporan</p>
+                </div>
             </div>
-
-            {{-- Tombol Logout --}}
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-logout d-flex align-items-center gap-2 px-3 py-2">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </button>
-            </form>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('beranda') }}" class="btn btn-light btn-sm d-flex align-items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> <span>Kembali ke Beranda</span>
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-logout d-flex align-items-center gap-2 px-3 py-2">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Keluar</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </header>
 
     {{-- ====== NAV TABS ====== --}}
     <nav class="bg-white shadow-sm mb-4 border-b">
-        @include('Kaprodi.partials.tabs')
+        <div class="container">
+            @include('Kaprodi.partials.tabs')
+        </div>
     </nav>
 
     {{-- ====== MAIN CONTENT ====== --}}

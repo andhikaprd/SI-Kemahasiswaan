@@ -44,9 +44,14 @@
         <header class="header-admin py-3 shadow-sm">
             <div class="container d-flex justify-content-between align-items-center">
                 <!-- Kiri: Judul Panel -->
-                <div>
-                    <h4 class="fw-bold mb-0">Panel Admin</h4>
-                    <p class="mb-0 small">Data Prestasi dan Akun Pengguna</p>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:38px;height:38px;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">Panel Admin</h4>
+                        <p class="mb-0 small">Data Prestasi dan Akun Pengguna</p>
+                    </div>
                 </div>
 
                 <!-- Kanan: Dropdown Profil -->

@@ -47,7 +47,7 @@
                                 <th>Jurusan</th>
                                 <th style="width:80px;">Angkatan</th>
                                 <th>Email</th>
-                                <th>No. Telp</th>
+                        <th>No. WhatsApp</th>
                                 <th>Divisi Pilihan</th>
                                 <th>Motivasi</th>
                                 <th style="width:220px;">Status & Aksi</th>

@@ -82,7 +82,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="telepon" class="form-label">No. Telepon</label>
+                                        <label for="telepon" class="form-label">No. WhatsApp</label>
                                         <input type="text" name="telepon" id="telepon" value="{{ old('telepon') }}" class="form-control @error('telepon') is-invalid @enderror" required>
                                         @error('telepon')
                                             <div class="invalid-feedback">{{ $message }}</div>
