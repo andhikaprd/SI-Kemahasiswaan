@@ -7,6 +7,7 @@
       <h5 class="mb-0">Data Kriteria (Hitung Prestasi)</h5>
       <div class="d-flex gap-2">
         <a href="{{ route('admin.tpk.compute') }}" class="btn btn-outline-primary"><i class="fas fa-calculator me-1"></i> Hitung</a>
+        <a href="{{ route('admin.tpk.pairwise.index') }}" class="btn btn-outline-secondary"><i class="fas fa-balance-scale me-1"></i> Perbandingan</a>
         <a href="{{ route('admin.tpk.criteria.create') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Tambah Kriteria</a>
       </div>
     </div>

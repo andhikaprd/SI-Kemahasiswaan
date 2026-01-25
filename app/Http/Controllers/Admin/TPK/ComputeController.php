@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\TPK;
 use App\Http\Controllers\Controller;
 use App\Models\TpkAlternative;
 use App\Models\TpkCriterion;
+use App\Models\TpkPairwise;
 use App\Models\TpkScore;
 use Illuminate\Support\Facades\Schema;
 
@@ -17,15 +18,14 @@ class ComputeController extends Controller
             $needs_migration = true;
             $criteria = collect(); $alts = collect();
             $weights = collect(); $values = $normalized = []; $rows = [];
-            return view('Admin.tpk.compute.index', compact('criteria','alts','weights','values','normalized','rows','needs_migration'));
+            $ahp_incomplete = true;
+            return view('Admin.tpk.compute.index', compact('criteria','alts','weights','values','normalized','rows','needs_migration','ahp_incomplete'));
         }
 
         $criteria = TpkCriterion::orderBy('order')->orderBy('id')->get();
-        $alts = TpkAlternative::orderBy('code')->get();
+        $alts = TpkAlternative::orderBy('id')->get();
 
-        $weightsRaw = $criteria->pluck('weight','id')->map(fn($v)=>(float)$v);
-        $wSum = max(1e-9, $weightsRaw->sum());
-        $weights = $weightsRaw->map(fn($v)=>$v/$wSum); // normalisasi ke jumlah 1
+        [$weights, $ahp_incomplete] = $this->resolveWeights($criteria);
 
         // matrix nilai
         $values = [];
@@ -83,16 +83,14 @@ class ComputeController extends Controller
         foreach ($rows as $i=>&$r) { $r['rank']=$i+1; }
         unset($r);
 
-        return view('Admin.tpk.compute.index', compact('criteria','alts','weights','values','normalized','rows','needs_migration'));
+        return view('Admin.tpk.compute.index', compact('criteria','alts','weights','values','normalized','rows','needs_migration','ahp_incomplete'));
     }
 
     public function exportCsv()
     {
         $criteria = TpkCriterion::orderBy('order')->orderBy('id')->get();
-        $alts = TpkAlternative::orderBy('code')->get();
-        $weightsRaw = $criteria->pluck('weight','id')->map(fn($v)=>(float)$v);
-        $wSum = max(1e-9, $weightsRaw->sum());
-        $weights = $weightsRaw->map(fn($v)=>$v/$wSum);
+        $alts = TpkAlternative::orderBy('id')->get();
+        [$weights] = $this->resolveWeights($criteria);
 
         // compute quickly (reuse logic)
         $values = [];$normalized=[];$scores=[];
@@ -137,5 +135,85 @@ class ComputeController extends Controller
             'Content-Type'=>'text/csv; charset=UTF-8',
             'Content-Disposition'=>'attachment; filename="tpk_compute.csv"',
         ]);
+    }
+
+    private function resolveWeights($criteria): array
+    {
+        if (Schema::hasTable('tpk_pairwise')) {
+            [$ahpWeights, $complete] = $this->computeAHPWeights($criteria);
+            if ($complete) {
+                return [$ahpWeights, false];
+            }
+        }
+
+        $weightsRaw = $criteria->pluck('weight','id')->map(fn($v)=>(float)$v);
+        $wSum = max(1e-9, $weightsRaw->sum());
+        $weights = $weightsRaw->map(fn($v)=>$v/$wSum); // fallback
+        return [$weights, true];
+    }
+
+    private function computeAHPWeights($criteria): array
+    {
+        $ids = $criteria->pluck('id')->all();
+        $pairs = TpkPairwise::whereIn('criterion_id_a', $ids)
+            ->whereIn('criterion_id_b', $ids)
+            ->get();
+
+        $pairMap = [];
+        foreach ($pairs as $p) {
+            $a = (int) $p->criterion_id_a;
+            $b = (int) $p->criterion_id_b;
+            if ($a === $b) {
+                continue;
+            }
+            $min = min($a, $b);
+            $max = max($a, $b);
+            $pairMap[$min][$max] = (float) $p->value;
+        }
+
+        $matrix = [];
+        $missing = false;
+        foreach ($criteria as $ci) {
+            foreach ($criteria as $cj) {
+                if ($ci->id === $cj->id) {
+                    $matrix[$ci->id][$cj->id] = 1.0;
+                    continue;
+                }
+                $min = min($ci->id, $cj->id);
+                $max = max($ci->id, $cj->id);
+                $val = $pairMap[$min][$max] ?? null;
+                if ($val === null || $val <= 0) {
+                    $missing = true;
+                    $matrix[$ci->id][$cj->id] = null;
+                    continue;
+                }
+                $matrix[$ci->id][$cj->id] = ($ci->id === $min) ? $val : (1 / $val);
+            }
+        }
+
+        if ($missing || count($criteria) === 0) {
+            return [collect(), false];
+        }
+
+        $colSums = [];
+        foreach ($criteria as $cj) {
+            $sum = 0.0;
+            foreach ($criteria as $ci) {
+                $sum += (float) ($matrix[$ci->id][$cj->id] ?? 0);
+            }
+            $colSums[$cj->id] = max(1e-9, $sum);
+        }
+
+        $weights = [];
+        foreach ($criteria as $ci) {
+            $rowSum = 0.0;
+            foreach ($criteria as $cj) {
+                $val = (float) ($matrix[$ci->id][$cj->id] ?? 0);
+                $rowSum += $val / $colSums[$cj->id];
+            }
+            $weights[$ci->id] = $rowSum / max(1, count($criteria));
+        }
+
+        return [collect($weights), true];
     }
 }

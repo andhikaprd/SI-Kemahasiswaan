@@ -5,10 +5,11 @@
   <div>
     <h5 class="mb-1">Hitung Prestasi</h5>
     <span class="badge bg-primary">Metode SAW</span>
-    <small class="text-muted ms-2">Bobot diambil dari kriteria (hasil AHP) untuk merangking mahasiswa</small>
+    <small class="text-muted ms-2">Bobot diambil dari perbandingan berpasangan (AHP) untuk merangking mahasiswa</small>
   </div>
   <div class="d-flex gap-2">
     <a href="{{ route('admin.tpk.criteria.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Kriteria</a>
+    <a href="{{ route('admin.tpk.pairwise.index') }}" class="btn btn-sm btn-outline-secondary">Perbandingan Kriteria</a>
     <a href="{{ route('admin.tpk.alternatives.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Alternatif</a>
     <a href="{{ route('admin.tpk.compute.export') }}" class="btn btn-sm btn-primary">Export CSV</a>
   </div>
@@ -17,6 +18,11 @@
 <div class="card mb-3"><div class="card-body">
   @if (!empty($needs_migration))
     <div class="alert alert-warning">Tabel TPK belum dibuat. Jalankan migrasi: <code>php artisan migrate</code></div>
+  @endif
+  @if (!empty($ahp_incomplete))
+    <div class="alert alert-warning">
+      Perbandingan berpasangan (AHP) belum lengkap. Lengkapi di menu <strong>Perbandingan Kriteria</strong> agar bobot dihitung otomatis.
+    </div>
   @endif
   <h5 class="mb-2">Bobot</h5>
   <div class="table-responsive">

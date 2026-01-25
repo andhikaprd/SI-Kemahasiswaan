@@ -112,6 +112,9 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
         Route::redirect('/', '/admin/tpk/criteria');
         Route::resource('criteria', \App\Http\Controllers\Admin\TPK\CriteriaController::class)->except(['show']);
         Route::resource('alternatives', \App\Http\Controllers\Admin\TPK\AlternativeController::class)->except(['show']);
+        Route::get('pairwise', [\App\Http\Controllers\Admin\TPK\PairwiseController::class, 'index'])->name('pairwise.index');
+        Route::post('pairwise', [\App\Http\Controllers\Admin\TPK\PairwiseController::class, 'store'])->name('pairwise.store');
+        Route::post('pairwise/criteria', [\App\Http\Controllers\Admin\TPK\PairwiseController::class, 'storeCriteria'])->name('pairwise.criteria.store');
         Route::get('compute', [\App\Http\Controllers\Admin\TPK\ComputeController::class, 'index'])->name('compute');
         Route::get('compute/export', [\App\Http\Controllers\Admin\TPK\ComputeController::class, 'exportCsv'])->name('compute.export');
     });

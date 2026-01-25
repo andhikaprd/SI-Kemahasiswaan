@@ -11,6 +11,20 @@ use Illuminate\Support\Facades\Schema;
 
 class AlternativeController extends Controller
 {
+    private function nextAlternativeIndex(): int
+    {
+        $max = TpkAlternative::where('code', 'like', 'A%')->get()
+            ->map(function ($alt) {
+                if (preg_match('/^A(\\d+)$/', $alt->code, $m)) {
+                    return (int) $m[1];
+                }
+                return 0;
+            })
+            ->max();
+
+        return ($max ?? 0) + 1;
+    }
+
     public function index()
     {
         $needs_migration = false;
@@ -42,6 +56,55 @@ class AlternativeController extends Controller
     public function store(Request $r)
     {
         $criteria = TpkCriterion::pluck('id');
+        $nextCodeIndex = $this->nextAlternativeIndex();
+
+        // Bulk input: multiple alternatives in one request
+        if (is_array($r->input('alts'))) {
+            $r->validate([
+                'alts' => ['required', 'array', 'min:1'],
+                'alts.*.code' => ['nullable', 'string', 'max:50', 'distinct'],
+                'alts.*.name' => ['required', 'string', 'max:150'],
+                'scores' => ['required', 'array'],
+            ]);
+
+            $created = 0;
+            foreach ((array) $r->input('alts') as $idx => $row) {
+                $name = trim((string) ($row['name'] ?? ''));
+                if ($name === '') {
+                    continue;
+                }
+                $code = trim((string) ($row['code'] ?? ''));
+                if ($code === '') {
+                    $code = 'A' . $nextCodeIndex;
+                    $nextCodeIndex++;
+                }
+                if (TpkAlternative::where('code', $code)->exists()) {
+                    $code = $code . '-' . uniqid();
+                }
+
+                $alt = TpkAlternative::create([
+                    'code' => $code,
+                    'name' => $name,
+                    'note' => null,
+                ]);
+                $created++;
+
+                foreach ($criteria as $cid) {
+                    $val = $r->input("scores.$idx.$cid");
+                    if ($val !== null && $val !== '') {
+                        TpkScore::updateOrCreate(
+                            ['alternative_id' => $alt->id, 'criterion_id' => $cid],
+                            ['value' => (float) $val]
+                        );
+                    }
+                }
+            }
+
+            return redirect()->route('admin.tpk.alternatives.index')
+                ->with('success', "Alternatif ditambahkan ({$created} data).");
+        }
+
+        // Single input (legacy)
         $data = $r->validate([
             'code' => 'required|string|max:50|unique:tpk_alternatives,code',
             'name' => 'required|string|max:150',

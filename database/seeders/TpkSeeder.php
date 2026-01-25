@@ -25,11 +25,10 @@ class TpkSeeder extends Seeder
         }
 
         $criteria = [
-            ['code' => 'C1', 'name' => 'IPK', 'weight' => 0.35, 'type' => 'benefit', 'order' => 1],
-            ['code' => 'C2', 'name' => 'Portofolio & Sertifikasi', 'weight' => 0.25, 'type' => 'benefit', 'order' => 2],
-            ['code' => 'C3', 'name' => 'Pengalaman Organisasi', 'weight' => 0.20, 'type' => 'benefit', 'order' => 3],
-            ['code' => 'C4', 'name' => 'Prestasi & Lomba', 'weight' => 0.10, 'type' => 'benefit', 'order' => 4],
-            ['code' => 'C5', 'name' => 'Kedisiplinan & Kehadiran', 'weight' => 0.10, 'type' => 'benefit', 'order' => 5],
+            ['code' => 'C1', 'name' => 'IPK', 'weight' => 0.25, 'type' => 'benefit', 'order' => 1],
+            ['code' => 'C2', 'name' => 'Tingkatan', 'weight' => 0.25, 'type' => 'benefit', 'order' => 2],
+            ['code' => 'C3', 'name' => 'Juara', 'weight' => 0.25, 'type' => 'benefit', 'order' => 3],
+            ['code' => 'C4', 'name' => 'Bahasa Inggris', 'weight' => 0.25, 'type' => 'benefit', 'order' => 4],
         ];
 
         $criteriaMap = [];
@@ -66,9 +65,9 @@ class TpkSeeder extends Seeder
 
         // Skor contoh untuk memudahkan QA (skala bebas).
         $scores = [
-            'ALT-01' => ['C1' => 3.6, 'C2' => 85, 'C3' => 80, 'C4' => 90, 'C5' => 75],
-            'ALT-02' => ['C1' => 3.9, 'C2' => 92, 'C3' => 60, 'C4' => 70, 'C5' => 80],
-            'ALT-03' => ['C1' => 3.4, 'C2' => 78, 'C3' => 95, 'C4' => 65, 'C5' => 90],
+            'ALT-01' => ['C1' => 3.6, 'C2' => 4, 'C3' => 1, 'C4' => 520],
+            'ALT-02' => ['C1' => 3.9, 'C2' => 3, 'C3' => 2, 'C4' => 480],
+            'ALT-03' => ['C1' => 3.4, 'C2' => 2, 'C3' => 3, 'C4' => 450],
         ];
 
         foreach ($scores as $altCode => $critScores) {
